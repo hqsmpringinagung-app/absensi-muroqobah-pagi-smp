@@ -4,73 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Presensi Pro - SMP Hamalatul Quran</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
-            --primary: #1e293b;
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
             --success: #16a34a;
             --warning: #ca8a04;
             --danger: #dc2626;
             --bg: #f8fafc;
+            --card-bg: #ffffff;
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: var(--primary); }
-        .header { background: var(--primary); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            color: var(--primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header Ciamik & Elegan */
+        .header { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
+            color: white; 
+            padding: 35px 20px 25px 20px; 
+            text-align: center; 
+            border-bottom-left-radius: 32px; 
+            border-bottom-right-radius: 32px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -20%;
+            width: 300px; height: 300px;
+            background: rgba(37, 99, 235, 0.2);
+            border-radius: 50%;
+            filter: blur(80px);
+        }
         
-        .container { padding: 20px; max-width: 1400px; margin: 0 auto; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .container { padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 25px; }
         
-        .class-box { background: white; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; }
-        .class-box h2 { background: #f1f5f9; padding: 15px; font-size: 1.1rem; text-align: center; margin: 0; border-bottom: 1px solid #e2e8f0; }
+        /* Desain Kelas Box Berbentuk Kartu Modern */
+        .class-box { 
+            background: var(--card-bg); 
+            border-radius: 24px; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02), 0 8px 10px -6px rgba(0,0,0,0.02), inset 0 0 0 1px rgba(0,0,0,0.04);
+            overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .class-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        .class-box h2 { 
+            background: #f1f5f9; 
+            padding: 18px; 
+            font-size: 1.15rem; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center; 
+            margin: 0; 
+            border-bottom: 1px solid #e2e8f0; 
+            color: var(--primary-light);
+        }
         
         .input-table { width: 100%; border-collapse: collapse; }
-        .input-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .input-table td { padding: 14px 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
         
-        .student-row { cursor: pointer; transition: 0.2s; }
-        .name-text { font-weight: 700; font-size: 0.95rem; }
-        .waktu-text { font-size: 0.75rem; font-weight: 800; color: #64748b; white-space: nowrap; }
+        /* Baris Siswa Efek Hover Lembut */
+        .student-row { cursor: pointer; transition: all 0.2s ease; }
+        .student-row:hover { background-color: #f8fafc; }
+        .name-text { font-weight: 600; font-size: 0.95rem; color: #334155; transition: color 0.2s ease; }
+        
+        /* Area Status Kanan (Jam & Centang) */
+        .status-container { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+        .waktu-text { font-size: 0.75rem; font-weight: 700; color: #94a3b8; white-space: nowrap; transition: color 0.2s ease; }
 
+        /* Tombol Check Bundar Keren */
         .check-icon { 
-            width: 22px; height: 22px; border: 2px solid #e2e8f0; 
+            width: 24px; height: 24px; border: 2px solid #cbd5e1; 
             border-radius: 50%; display: inline-flex; align-items: center; 
-            justify-content: center; color: transparent; font-size: 0.7rem;
+            justify-content: center; color: transparent; font-size: 0.75rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            flex-shrink: 0;
         }
 
-        /* Status Warna Input Utama */
-        .status-hijau { background-color: #f0fdf4 !important; color: #16a34a !important; }
-        .status-hijau .check-icon { background-color: #16a34a; border-color: #16a34a; color: white; }
-        .status-hijau .waktu-text { color: #16a34a !important; }
+        /* Legenda Jam di Header */
+        .time-legend-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            letter-spacing: 0.3px;
+        }
+        .badge-green { background-color: #22c55e; color: white; }
+        .badge-yellow { background-color: #eab308; color: #422006; }
+        .badge-red { background-color: #ef4444; color: white; }
 
-        .status-kuning { background-color: #fefce8 !important; color: #ca8a04 !important; }
-        .status-kuning .check-icon { background-color: #ca8a04; border-color: #ca8a04; color: white; }
-        .status-kuning .waktu-text { color: #ca8a04 !important; }
+        /* Blok Warna Baris Jelas & Kontras Sesuai Hasil Klik */
+        .status-hijau { background-color: #dcfce7 !important; }
+        .status-hijau:hover { background-color: #bbf7d0 !important; }
+        .status-hijau .name-text { color: #14532d; font-weight: 700; }
+        .status-hijau .check-icon { background-color: var(--success); border-color: var(--success); color: white; transform: scale(1.05); }
+        .status-hijau .waktu-text { color: #15803d !important; }
 
-        .status-merah { background-color: #fef2f2 !important; color: #dc2626 !important; }
-        .status-merah .check-icon { background-color: #dc2626; border-color: #dc2626; color: white; }
-        .status-merah .waktu-text { color: #dc2626 !important; }
+        .status-kuning { background-color: #fef9c3 !important; }
+        .status-kuning:hover { background-color: #fef08a !important; }
+        .status-kuning .name-text { color: #713f12; font-weight: 700; }
+        .status-kuning .check-icon { background-color: var(--warning); border-color: var(--warning); color: white; transform: scale(1.05); }
+        .status-kuning .waktu-text { color: #a16207 !important; }
 
-        .main-actions { text-align: center; margin: 30px 0; }
-        .btn-save { background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: 800; cursor: pointer; }
+        .status-merah { background-color: #fee2e2 !important; }
+        .status-merah:hover { background-color: #fecaca !important; }
+        .status-merah .name-text { color: #7f1d1d; font-weight: 700; }
+        .status-merah .check-icon { background-color: var(--danger); border-color: var(--danger); color: white; transform: scale(1.05); }
+        .status-merah .waktu-text { color: #b91c1c !important; }
 
-        .history-area { background: white; padding: 20px; border-radius: 20px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        /* Tombol Utama Simpan */
+        .main-actions { text-align: center; margin: 40px 0; }
+        .btn-save { 
+            background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%); 
+            color: white; 
+            border: none; 
+            padding: 16px 45px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            transition: all 0.2s ease;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(37, 99, 235, 0.3);
+        }
+        .btn-save:active { transform: translateY(0); }
+
+        /* Area Histori */
+        .history-area { background: white; padding: 25px; border-radius: 24px; margin-top: 40px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02); }
         .history-table { width: 100%; border-collapse: collapse; }
-        .history-table th { text-align: left; padding: 12px; color: #94a3b8; font-size: 0.8rem; border-bottom: 2px solid #f1f5f9; }
-        .history-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; font-weight: 700; }
+        .history-table th { text-align: left; padding: 14px; color: #64748b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #f1f5f9; }
+        .history-table td { padding: 16px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; font-weight: 600; color: var(--primary-light); }
 
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
-        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 95%; max-width: 900px; max-height: 85vh; overflow-y: auto; }
+        /* Modal Mewah Blur Glassmorphism */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(8px); animation: fadeIn 0.3s ease; }
+        .modal-content { background: white; padding: 30px; border-radius: 28px; width: 95%; max-width: 900px; max-height: 80vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
         
-        .btn-pdf { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 800; color: white; cursor: pointer; }
+        .btn-pdf { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 700; font-size: 0.95rem; color: white; cursor: pointer; transition: all 0.2s ease; }
+        .btn-pdf:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 style="margin:0; font-size: 1.5rem; letter-spacing: 1px;">SMP HAMALATUL QURAN RINGINAGUNG</h1>
-        <h2 style="margin:5px 0 0 0; font-size:1.1rem; opacity:0.9; font-weight:400;">PRESENSI DIGITAL PRO</h2>
-        <div id="label-tgl" style="margin-top:10px; opacity:0.7; font-size:0.9rem;"></div>
+        <h1 style="margin:0; font-size: 1.75rem; letter-spacing: 1px; font-weight: 800;">SMP HAMALATUL QURAN RINGINAGUNG</h1>
+        <h2 style="margin:6px 0 0 0; font-size:1.1rem; opacity:0.85; font-weight:500; letter-spacing: 0.5px;">PRESENSI DIGITAL PRO</h2>
+        <div style="margin-top:14px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div id="label-tgl" style="opacity:0.9; font-size:0.9rem; font-weight: 600; background: rgba(255,255,255,0.15); display: inline-block; padding: 6px 18px; border-radius: 50px; letter-spacing: 0.3px;"></div>
+            <div id="label-jam" style="opacity:1; font-size:1.2rem; font-weight: 800; background: rgba(255,255,255,0.25); display: inline-block; padding: 4px 20px; border-radius: 50px; letter-spacing: 1px; font-variant-numeric: tabular-nums; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">00:00:00</div>
+        </div>
+        <div class="time-legend-box">
+            <span class="legend-badge badge-green">🟢 07:00 - 07:20 Tepat Waktu</span>
+            <span class="legend-badge badge-yellow">🟡 07:21 - 07:45 Peringatan</span>
+            <span class="legend-badge badge-red">🔴 07:46 - 08:30 Terlambat</span>
+        </div>
     </div>
 
     <div class="container">
@@ -81,7 +199,7 @@
         </div>
 
         <div class="history-area">
-            <h2 style="margin: 0 0 15px 0; font-size: 1.1rem;">📂 Laporan Tersimpan</h2>
+            <h2 style="margin: 0 0 20px 0; font-size: 1.2rem; font-weight: 700;">📂 Laporan Tersimpan</h2>
             <div style="overflow-x: auto;">
                 <table class="history-table">
                     <thead><tr><th>Waktu Simpan</th><th>Total Hadir / Total Siswa</th><th style="text-align:right">Opsi</th></tr></thead>
@@ -93,26 +211,26 @@
 
     <div id="modalDetail" class="modal">
         <div class="modal-content">
-            <h3 id="judulModal" style="margin-top:0">Detail Laporan</h3>
-            <div style="overflow-x:auto">
+            <h3 id="judulModal" style="margin-top:0; font-size: 1.3rem; font-weight: 700; color: var(--primary);">Detail Laporan</h3>
+            <div style="overflow-x:auto; border-radius: 16px; border: 1px solid #e2e8f0;">
                 <table style="width:100%; border-collapse: collapse;">
                     <thead>
-                        <tr style="text-align:left; background:#f8fafc; font-size:0.75rem; color:#64748b;">
-                            <th style="padding:12px;">No</th>
-                            <th style="padding:12px;">Nama Siswa</th>
-                            <th style="padding:12px;">Kelas</th>
-                            <th style="padding:12px;">Waktu & Tanggal</th>
-                            <th style="padding:12px;">Status</th>
+                        <tr style="text-align:left; background:#f8fafc; font-size:0.8rem; color:#475569; border-bottom: 2px solid #e2e8f0;">
+                            <th style="padding:14px;">No</th>
+                            <th style="padding:14px;">Nama Siswa</th>
+                            <th style="padding:14px;">Kelas</th>
+                            <th style="padding:14px;">Waktu & Tanggal</th>
+                            <th style="padding:14px;">Status</th>
                         </tr>
                     </thead>
                     <tbody id="bodiModal"></tbody>
                 </table>
             </div>
-            <div style="margin-top: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="btn-pdf" id="btnPdfP" style="background: #ef4444;">📄 PDF Portrait</button>
-                <button class="btn-pdf" id="btnPdfL" style="background: #8b5cf6;">📑 PDF Landscape</button>
+            <div style="margin-top: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="btn-pdf" id="btnPdfP" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);">📄 PDF Portrait</button>
+                <button class="btn-pdf" id="btnPdfL" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);">📑 PDF Landscape</button>
             </div>
-            <button onclick="tutupModal()" style="width:100%; padding:15px; margin-top:10px; border-radius:12px; border:none; background:#f1f5f9; font-weight:800; cursor:pointer; color:#64748b;">Tutup</button>
+            <button onclick="tutupModal()" style="width:100%; padding:14px; margin-top:12px; border-radius:14px; border:none; background:#f1f5f9; font-weight:700; cursor:pointer; color:#475569; transition: background 0.2s;">Tutup</button>
         </div>
     </div>
 
@@ -164,24 +282,47 @@
             "Hasna Hani Arafa",
             "Azzahra Cecio Keyla Alexita"
         ],
-        "Kelas 9": ["-"]
+        "Kelas 9": [] // Dikosongkan karena sudah lulus
     };
+
+    function updateJamAktif() {
+        const now = new Date();
+        const opsiJam = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        document.getElementById('label-jam').innerText = now.toLocaleTimeString('id-ID', opsiJam).replace(/\./g, ':');
+    }
 
     function init() {
         document.getElementById('label-tgl').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        
+        // Menjalankan jam aktif real-time
+        updateJamAktif();
+        setInterval(updateJamAktif, 1000);
+
         const grid = document.getElementById('app-grid');
         grid.innerHTML = "";
         for (const [kls, siswa] of Object.entries(dataSiswa)) {
-            let html = `<div class="class-box"><h2>${kls}</h2><table class="input-table"><tbody>`;
-            siswa.forEach((n, i) => {
-                const id = kls.replace(/\s+/g, '') + i;
-                html += `<tr class="student-row" id="${id}" onclick="toggleAbsen('${id}')">
-                    <td style="width:30px"><span class="check-icon">✔</span></td>
-                    <td><span class="name-text">${i+1}. ${n}</span></td>
-                    <td style="text-align:right"><span class="waktu-text">-</span></td>
-                </tr>`;
-            });
-            grid.innerHTML += html + `</tbody></table></div>`;
+            let html = `<div class="class-box"><h2>${kls}</h2>`;
+            
+            if (siswa.length === 0) {
+                // Tampilan khusus jika siswa kosong (Sudah Lulus)
+                html += `<div style="padding: 40px 20px; text-align: center; color: #94a3b8; font-weight: 600; font-size: 0.95rem; font-style: italic;">Siswa Sudah Lulus 🎉</div>`;
+            } else {
+                html += `<table class="input-table"><tbody>`;
+                siswa.forEach((n, i) => {
+                    const id = kls.replace(/\s+/g, '') + i;
+                    html += `<tr class="student-row" id="${id}" onclick="toggleAbsen('${id}')">
+                        <td><span class="name-text">${i+1}. ${n}</span></td>
+                        <td style="text-align:right">
+                            <div class="status-container">
+                                <span class="waktu-text">-</span>
+                                <span class="check-icon">✔</span>
+                            </div>
+                        </td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            }
+            grid.innerHTML += html + `</div>`;
         }
         renderHistori();
     }
@@ -195,9 +336,14 @@
             const jam = now.getHours();
             const menit = now.getMinutes();
 
-            if (jam < 7 || (jam === 7 && menit <= 25)) row.classList.add('status-hijau');
-            else if (jam === 7 && menit <= 45) row.classList.add('status-kuning');
-            else row.classList.add('status-merah');
+            // Aturan penentuan status berdasarkan spesifikasi instruksi jam masuk pagi baru
+            if (jam === 7 && menit >= 0 && menit <= 20) {
+                row.classList.add('status-hijau'); // 07:00 - 07:20
+            } else if (jam === 7 && menit >= 21 && menit <= 45) {
+                row.classList.add('status-kuning'); // 07:21 - 07:45
+            } else {
+                row.classList.add('status-merah'); // Di luar itu (07:46 - 08:30 dll) dianggap Terlambat
+            }
             
             const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
             const t = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -222,11 +368,11 @@
             let isHadir = false;
 
             if(r.classList.contains('status-hijau')) {
-                color = "#16a34a"; statusText = "TEPAT WAKTU"; bgColor = "#f0fdf4"; isHadir = true;
+                color = "#16a34a"; statusText = "TEPAT WAKTU"; bgColor = "#dcfce7"; isHadir = true;
             } else if(r.classList.contains('status-kuning')) { 
-                color = "#ca8a04"; statusText = "PERINGATAN"; bgColor = "#fefce8"; isHadir = true;
+                color = "#ca8a04"; statusText = "PERINGATAN"; bgColor = "#fef9c3"; isHadir = true;
             } else if(r.classList.contains('status-merah')) { 
-                color = "#dc2626"; statusText = "TERLAMBAT"; bgColor = "#fef2f2"; isHadir = true;
+                color = "#dc2626"; statusText = "TERLAMBAT"; bgColor = "#fee2e2"; isHadir = true;
             }
 
             return {
@@ -258,14 +404,14 @@
     function renderHistori() {
         const tbody = document.getElementById('list-histori-body');
         const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-        if(db.length === 0) { tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:20px;'>Kosong.</td></tr>"; return; }
+        if(db.length === 0) { tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:25px; color:#94a3b8;'>Belum ada laporan tersimpan.</td></tr>"; return; }
         tbody.innerHTML = db.map(s => `
             <tr>
                 <td>${s.waktuSimpan}</td>
-                <td><span style="color:#16a34a">${s.totalHadir}</span> / ${s.totalSiswa} Siswa</td>
+                <td><span style="color:#16a34a; font-weight:700;">${s.totalHadir}</span> / ${s.totalSiswa} Siswa</td>
                 <td style="text-align:right">
-                    <button style="background:#3b82f6; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="bukaDetail(${s.id})">Lihat</button>
-                    <button style="background:#fee2e2; color:#ef4444; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;" onclick="hapus(${s.id})">Hapus</button>
+                    <button style="background:#e0f2fe; color:#0369a1; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; transition:all 0.2s;" onclick="bukaDetail(${s.id})">Lihat</button>
+                    <button style="background:#fee2e2; color:#ef4444; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; transition:all 0.2s; margin-left:6px;" onclick="hapus(${s.id})">Hapus</button>
                 </td>
             </tr>`).join('');
     }
@@ -281,12 +427,12 @@
         ];
 
         document.getElementById('bodiModal').innerHTML = dataTerurut.map((d, i) => `
-            <tr style="background-color:${d.bgHex}; border-bottom:1px solid #eee;">
-                <td style="padding:12px; color:#333;">${i+1}</td>
-                <td style="padding:12px; color:#333; font-weight:bold;">${d.nama}</td>
-                <td style="padding:12px; color:#333;">${d.kelas}</td>
-                <td style="padding:12px; color:#333;">${d.waktu}</td>
-                <td style="padding:12px; color:${d.hexColor}; font-weight:800;">${d.status}</td>
+            <tr style="background-color:${d.bgHex}; border-bottom:1px solid #e2e8f0;">
+                <td style="padding:14px; color:#475569; font-weight:600;">${i+1}</td>
+                <td style="padding:14px; color:var(--primary); font-weight:700;">${d.nama}</td>
+                <td style="padding:14px; color:#475569; font-weight:600;">${d.kelas}</td>
+                <td style="padding:14px; color:#64748b; font-weight:600;">${d.waktu}</td>
+                <td style="padding:14px; color:${d.hexColor}; font-weight:800; letter-spacing:0.5px;">${d.status}</td>
             </tr>`).join('');
         
         document.getElementById('btnPdfP').onclick = () => cetak(s, 'p');
@@ -295,7 +441,7 @@
     }
 
     function hapus(id) {
-        if(confirm("Hapus?")) {
+        if(confirm("Apakah Anda yakin ingin menghapus arsip laporan ini?")) {
             let db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             localStorage.setItem(DB_KEY, JSON.stringify(db.filter(x => x.id !== id)));
             renderHistori();
@@ -343,13 +489,13 @@
                     const statusSiswa = data.row.raw[4];
                     
                     if (statusSiswa === 'TEPAT WAKTU') {
-                        data.cell.styles.fillColor = [240, 253, 244]; 
+                        data.cell.styles.fillColor = [220, 252, 231]; 
                         if(data.column.index === 4) data.cell.styles.textColor = [22, 163, 74]; 
                     } else if (statusSiswa === 'PERINGATAN') {
-                        data.cell.styles.fillColor = [254, 252, 232]; 
+                        data.cell.styles.fillColor = [254, 249, 195]; 
                         if(data.column.index === 4) data.cell.styles.textColor = [202, 138, 4];  
                     } else if (statusSiswa === 'TERLAMBAT') {
-                        data.cell.styles.fillColor = [254, 242, 242]; 
+                        data.cell.styles.fillColor = [254, 226, 226]; 
                         if(data.column.index === 4) data.cell.styles.textColor = [220, 38, 38];  
                     }
                 }
