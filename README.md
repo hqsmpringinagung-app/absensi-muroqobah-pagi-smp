@@ -1,4 +1,3 @@
-# absensi-muroqobah-pagi-smp
 <!DOCTYPE html>
 <html lang="id">
 <head>
