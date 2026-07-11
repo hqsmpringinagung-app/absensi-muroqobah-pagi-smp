@@ -143,11 +143,84 @@
         .status-merah .check-icon { background-color: var(--danger); border-color: var(--danger); color: white; transform: scale(1.05); }
         .status-merah .waktu-text { color: #b91c1c !important; }
 
+        /* Modern styled buttons */
+        .btn-save {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            font-weight: 800;
+            font-size: 0.95rem;
+            padding: 16px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(15, 23, 42, 0.25);
+            filter: brightness(1.1);
+        }
+
+        .btn-pdf-now {
+            background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+            color: white;
+            font-weight: 800;
+            font-size: 0.95rem;
+            padding: 16px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(225, 29, 72, 0.15);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .btn-pdf-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(225, 29, 72, 0.25);
+            filter: brightness(1.1);
+        }
+
+        /* History Area & Table styling */
+        .history-area {
+            background: white;
+            padding: 28px;
+            border-radius: 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .history-table th {
+            text-align: left;
+            padding: 16px;
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .history-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+
         .modal { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(15, 23, 42, 0.6); display: none; 
             justify-content: center; align-items: center; z-index: 1000; 
             backdrop-filter: blur(8px); animation: fadeIn 0.3s ease; 
+        }
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 48rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -210,7 +283,7 @@
     <div class="header px-6 py-8 text-center relative">
         <div class="max-w-7xl mx-auto">
             <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider leading-tight">SMP HAMALATUL QURAN RINGINAGUNG</h1>
-            <h2 class="text-md md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO</h2>
+            <h2 class="text-md md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO + INDIVIDUAL AI</h2>
             
             <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div id="label-tgl" class="opacity-90 text-sm font-semibold bg-white/10 px-5 py-2 rounded-full border border-white/10 shadow-sm">
@@ -223,9 +296,9 @@
 
             <!-- Legend Section -->
             <div class="mt-6 flex flex-wrap justify-center gap-3">
-                <span class="text-xs font-bold px-4 py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 07:00 - 07:20 Tepat Waktu</span>
-                <span class="text-xs font-bold px-4 py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:21 - 07:45 Peringatan</span>
-                <span class="text-xs font-bold px-4 py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:46 - 08:30 Terlambat</span>
+                <span class="text-xs font-bold px-4 py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 07:00 - 07:20 Aman</span>
+                <span class="text-xs font-bold px-4 py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:21 - 07:45 Terlambat</span>
+                <span class="text-xs font-bold px-4 py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:46 - 08:30 Peringatan</span>
             </div>
         </div>
     </div>
@@ -301,7 +374,7 @@
                 </div>
             </div>
 
-            <!-- AI Assistant Panel (Periodic Recap System) -->
+            <!-- AI Assistant Panel (Periodic & Individual Recap System) -->
             <div class="lg:col-span-2 bg-gradient-to-br from-indigo-900 to-slate-900 p-6 rounded-3xl text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
                 <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/20 rounded-full blur-2xl"></div>
                 
@@ -311,11 +384,11 @@
                             <span class="p-2 bg-white/10 text-emerald-400 rounded-xl animate-pulse">
                                 <i data-lucide="sparkles"></i>
                             </span>
-                            <h3 class="font-bold text-lg">Asisten Rekapitulasi AI</h3>
+                            <h3 class="font-bold text-lg">Asisten Rekapitulasi & AI Personal</h3>
                         </div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 rounded-full">Gemini 3.1 Flash</span>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 rounded-full">Gemini 3 Flash</span>
                     </div>
-                    <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Butuh laporan berkala 1 minggu atau 1 bulan? Biarkan AI membaca histori presensi, menyusun rekapitulasi, mengevaluasi siswa terlambat, dan memberikan wawasan pedagogis instan.</p>
+                    <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Butuh analisis rekap kesiswaan berkala atau tinjauan khusus kepribadian siswa? Biarkan AI kami membaca riwayat presensi harian secara terpadu.</p>
                 </div>
 
                 <div class="mt-6 space-y-4">
@@ -327,7 +400,7 @@
                             <i class="w-4 h-4 text-cyan-400" data-lucide="calendar-days"></i> Analisis Rekap 1 Bulan
                         </button>
                         <button onclick="bukaModalAI()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold transition-all shadow-lg shadow-emerald-950/40">
-                            <i class="w-4 h-4" data-lucide="message-square"></i> Tanya AI Lebih Detail / Obrolan
+                            <i class="w-4 h-4" data-lucide="message-square"></i> Panel AI & Analisis Nama Siswa
                         </button>
                     </div>
                 </div>
@@ -342,9 +415,14 @@
             <!-- Dynamically populated via init() -->
         </div>
         
-        <!-- Large Save Action -->
-        <div class="main-actions text-center my-12">
-            <button class="btn-save" onclick="simpanData()">💾 SIMPAN DATA SEKARANG</button>
+        <!-- Large Save & PDF Actions -->
+        <div class="main-actions flex flex-col sm:flex-row justify-center items-center gap-4 my-12">
+            <button class="btn-save w-full sm:w-auto flex items-center justify-center gap-2" onclick="simpanData()">
+                <i data-lucide="save"></i> 💾 SIMPAN DATA HARI INI
+            </button>
+            <button class="btn-pdf-now w-full sm:w-auto flex items-center justify-center gap-2" onclick="cetakSesiAktif()">
+                <i data-lucide="file-down"></i> 📄 UNDUH PDF HARI INI
+            </button>
         </div>
 
         <!-- Historical Records Section -->
@@ -405,10 +483,10 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <button class="btn-pdf bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 shadow-md shadow-rose-100 flex items-center justify-center gap-2 py-3.5 rounded-2xl" id="btnPdfP">
+                <button class="bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-extrabold text-sm py-3.5 px-6 rounded-2xl shadow-md shadow-rose-100 flex items-center justify-center gap-2" id="btnPdfP">
                     <i data-lucide="file-down"></i> 📄 PDF Portrait (Harian)
                 </button>
-                <button class="btn-pdf bg-gradient-to-r from-violet-500 to-fuchsia-600 hover:from-violet-600 hover:to-fuchsia-700 shadow-md shadow-violet-100 flex items-center justify-center gap-2 py-3.5 rounded-2xl" id="btnPdfL">
+                <button class="bg-gradient-to-r from-violet-500 to-fuchsia-600 hover:from-violet-600 hover:to-fuchsia-700 text-white font-extrabold text-sm py-3.5 px-6 rounded-2xl shadow-md shadow-violet-100 flex items-center justify-center gap-2" id="btnPdfL">
                     <i data-lucide="file-down"></i> 📑 PDF Landscape (Harian)
                 </button>
             </div>
@@ -417,7 +495,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: AI Assistant Deep Intelligence modal -->
+    <!-- MODAL 2: AI Assistant Deep Intelligence modal with Student Selector -->
     <div id="modalAI" class="modal">
         <div class="modal-content mx-4 my-8 max-w-4xl flex flex-col h-[85vh]">
             <!-- AI Header -->
@@ -427,21 +505,55 @@
                         <i data-lucide="sparkles"></i>
                     </span>
                     <div>
-                        <h3 class="text-lg font-extrabold text-slate-800">Panel AI Assistant & Rekap Berkala</h3>
-                        <p class="text-xs text-slate-500">Penyusun rekapitulasi, evaluasi tren kehadiran, dan konsultan kesiswaan</p>
+                        <h3 class="text-lg font-extrabold text-slate-800">Panel AI Assistant & Analisis Rapor Siswa</h3>
+                        <p class="text-xs text-slate-500">Penyusun rekap berkala & konsultan disiplin siswa individual</p>
                     </div>
                 </div>
                 <button onclick="tutupModalAI()" class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x"></i></button>
             </div>
 
+            <!-- TAB NAVIGATOR -->
+            <div class="flex border-b border-slate-200 mb-4 gap-4 text-sm font-semibold">
+                <button id="tab-rekap-btn" onclick="switchAITab('rekap')" class="pb-2 text-indigo-600 border-b-2 border-indigo-600 px-2 transition-all">
+                    📊 Laporan Rekap Kelas
+                </button>
+                <button id="tab-siswa-btn" onclick="switchAITab('siswa')" class="pb-2 text-slate-500 border-b-2 border-transparent hover:text-slate-700 px-2 transition-all">
+                    👤 Analisis Profil Nama Siswa
+                </button>
+            </div>
+
+            <!-- Tab Content 1: Rekap Kelas (Standard options shown directly) -->
+            <div id="tab-rekap-content" class="space-y-4">
+                <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100/50 flex flex-wrap gap-2 items-center justify-between text-xs font-semibold text-indigo-950">
+                    <span>Opsi Pilihan Laporan Cepat:</span>
+                    <div class="flex gap-2">
+                        <button onclick="generateRekapAI(7)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg transition-colors">Analisis 1 Minggu</button>
+                        <button onclick="generateRekapAI(30)" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1.5 rounded-lg transition-colors">Analisis 1 Bulan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 2: Student Profiler -->
+            <div id="tab-siswa-content" class="hidden space-y-4">
+                <div class="bg-slate-100 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row gap-4 items-center">
+                    <div class="w-full sm:w-1/2">
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pilih Siswa untuk Dianalisis</label>
+                        <select id="select-ai-nama-siswa" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
+                    </div>
+                    <button onclick="generateAnalisisSiswaAI()" class="w-full sm:w-auto mt-4 sm:mt-0 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors shadow-md">
+                        ✨ Jalankan Analisis Kedisplinan AI
+                    </button>
+                </div>
+            </div>
+
             <!-- AI Interactive Content Panel -->
-            <div class="flex-1 overflow-y-auto pr-2 space-y-6" id="ai-modal-body">
+            <div class="flex-1 overflow-y-auto pr-2 space-y-6 mt-4" id="ai-modal-body">
                 <!-- AI Output Screen -->
                 <div id="ai-output-container" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm leading-relaxed text-slate-800 whitespace-pre-line relative min-h-[150px]">
                     <div id="ai-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 text-slate-400">
                         <i data-lucide="sparkle" class="w-12 h-12 mb-3 text-indigo-400 animate-spin-slow"></i>
-                        <h4 class="font-bold text-slate-700 mb-1">Mulai Rekapitulasi Cerdas Anda</h4>
-                        <p class="text-xs max-w-md">Gunakan opsi rekap mingguan/bulanan atau tanyakan analisis khusus menggunakan kolom percakapan di bawah.</p>
+                        <h4 class="font-bold text-slate-700 mb-1">Mulai Analisis Cerdas Anda</h4>
+                        <p class="text-xs max-w-md">Klik opsi rekap mingguan/bulanan atau pilih analisis nama siswa di atas untuk melihat wawasan karakter dari AI.</p>
                     </div>
                     <div id="ai-output-content" class="hidden prose max-w-none text-slate-700">
                         <!-- AI Markdown results populated here -->
@@ -464,7 +576,7 @@
 
                 <!-- Export Recaps Area -->
                 <div id="ai-actions-row" class="hidden flex flex-wrap gap-3 p-3 bg-slate-100 rounded-2xl border border-slate-200">
-                    <button onclick="cetakRekapAIPdf()" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs py-3 px-4 rounded-xl transition-all shadow-md">
+                    <button id="btn-print-ai-pdf" onclick="cetakRekapAIPdf()" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs py-3 px-4 rounded-xl transition-all shadow-md">
                         <i data-lucide="printer" class="w-4 h-4"></i> Cetak Laporan PDF Rekap Berkala + AI
                     </button>
                     <button onclick="bacakanAnalisisAI()" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs py-3 px-4 rounded-xl transition-all shadow-md">
@@ -545,6 +657,7 @@
         let temporarySelections = {}; // To preserve attendance state on roster modifications
         let lastAIResponseText = ""; // To hold prompt responses for PDF generation
         let currentlyGeneratingAI = false;
+        let selectedAISiswaInfo = null; // Storing active student profile details for targeted printing
 
         // --- CUSTOM TOAST NOTIFICATION HELPERS ---
         function showToast(message, type = 'success') {
@@ -578,7 +691,7 @@
             }, 3500);
         }
 
-        // --- CUSTOM CONFIRMATION DIALOG (Replacing Native confirm) ---
+        // --- CUSTOM CONFIRMATION DIALOG ---
         function customConfirm(title, message, onYes, onNo = null) {
             const modal = document.getElementById('confirmModal');
             document.getElementById('confirmTitle').innerText = title;
@@ -628,7 +741,7 @@
             }
         }
 
-        // Synchronize and render rosters UI
+        // Synchronize and render rosters UI with sparkles next to student names
         function init() {
             // Setup daily header date
             document.getElementById('label-tgl').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -662,11 +775,16 @@
                     siswa.forEach((n, i) => {
                         const id = kls.replace(/\s+/g, '') + i;
                         html += `<tr class="student-row" id="${id}" onclick="toggleAbsen('${id}', '${kls}', '${n}')">
-                            <td class="relative">
+                            <td class="relative flex items-center justify-between pr-4">
                                 <span class="name-text">${i+1}. ${n}</span>
-                                <button onclick="event.stopPropagation(); hapusSiswa('${kls}', ${i})" class="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 focus:opacity-100 text-slate-300 hover:text-red-500 transition-all" title="Hapus Siswa">
-                                    <i data-lucide="user-minus" class="w-3.5 h-3.5"></i>
-                                </button>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.stopPropagation(); analyzeStudentOnSpot('${n}', '${kls}')" class="text-indigo-400 hover:text-indigo-600 p-1 rounded-lg hover:bg-indigo-50 transition-all flex items-center justify-center" title="Analisis Individu AI">
+                                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); hapusSiswa('${kls}', ${i})" class="text-slate-300 hover:text-red-500 transition-all" title="Hapus Siswa">
+                                        <i data-lucide="user-minus" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
                             </td>
                             <td style="text-align:right" class="w-1/3">
                                 <div class="status-container">
@@ -681,7 +799,7 @@
                 grid.innerHTML += html + `</div>`;
             }
 
-            // Restore temporary active selections if any (e.g. on dynamic modification during attendance run)
+            // Restore temporary active selections if any
             restoreSelections();
 
             renderHistori();
@@ -720,16 +838,24 @@
             const select = document.getElementById('select-kelas-siswa');
             const selectAsal = document.getElementById('select-pindah-asal');
             const selectTujuan = document.getElementById('select-pindah-tujuan');
+            const selectAiSiswa = document.getElementById('select-ai-nama-siswa');
             
             select.innerHTML = "";
             selectAsal.innerHTML = "";
             selectTujuan.innerHTML = "";
+            selectAiSiswa.innerHTML = "";
             
             Object.keys(dataSiswa).forEach(kls => {
                 const opt = `<option value="${kls}">${kls}</option>`;
                 select.innerHTML += opt;
                 selectAsal.innerHTML += opt;
                 selectTujuan.innerHTML += opt;
+                
+                // Add structured options to AI Dropdown list grouped by class
+                dataSiswa[kls].forEach(siswa => {
+                    const optSiswa = `<option value="${siswa}|${kls}">${siswa} (${kls})</option>`;
+                    selectAiSiswa.innerHTML += optSiswa;
+                });
             });
             
             updateSiswaPindahDropdown();
@@ -778,12 +904,8 @@
                     `Apakah Anda yakin ingin memindahkan seluruh (${totalSiswa}) siswa dari ${klsAsal} ke ${klsTujuan}?`, 
                     () => {
                         saveCurrentSelections();
-                        
-                        // Move all students to the destination
                         dataSiswa[klsTujuan] = dataSiswa[klsTujuan].concat(dataSiswa[klsAsal]);
                         dataSiswa[klsTujuan].sort();
-                        
-                        // Empty the source class
                         dataSiswa[klsAsal] = [];
                         
                         localStorage.setItem(SISWA_KEY, JSON.stringify(dataSiswa));
@@ -798,11 +920,7 @@
                     `Apakah Anda yakin ingin memindahkan ${targetSiswa} dari ${klsAsal} ke ${klsTujuan}?`, 
                     () => {
                         saveCurrentSelections();
-                        
-                        // Remove from source class array
                         dataSiswa[klsAsal] = dataSiswa[klsAsal].filter(s => s !== targetSiswa);
-                        
-                        // Add to target class array
                         dataSiswa[klsTujuan].push(targetSiswa);
                         dataSiswa[klsTujuan].sort();
                         
@@ -838,9 +956,7 @@
                 return;
             }
 
-            // Preserve current state selections
             saveCurrentSelections();
-
             dataSiswa[klsBaru] = [];
             localStorage.setItem(SISWA_KEY, JSON.stringify(dataSiswa));
             
@@ -871,11 +987,8 @@
                 return;
             }
 
-            // Preserve current state selections
             saveCurrentSelections();
-
             dataSiswa[kls].push(namaSiswa);
-            // Sort student names dynamically for neat alphabetical display
             dataSiswa[kls].sort();
             localStorage.setItem(SISWA_KEY, JSON.stringify(dataSiswa));
             
@@ -908,7 +1021,7 @@
             });
         }
 
-        // Original attendance toggling logic preserved with elegant improvements
+        // Attendance toggling logic
         function toggleAbsen(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -918,13 +1031,12 @@
                 const jam = now.getHours();
                 const menit = now.getMinutes();
 
-                // Attendance status threshold check
                 if (jam === 7 && menit >= 0 && menit <= 20) {
                     row.classList.add('status-hijau'); // 07:00 - 07:20
                 } else if (jam === 7 && menit >= 21 && menit <= 45) {
                     row.classList.add('status-kuning'); // 07:21 - 07:45
                 } else {
-                    row.classList.add('status-merah'); // outside normal boundaries -> Late
+                    row.classList.add('status-merah'); // outside boundaries
                 }
                 
                 const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
@@ -939,15 +1051,10 @@
             }
         }
 
-        function simpanData() {
+        // Create Payload representation from active DOM elements
+        function dapatkanPayloadSesiAktif() {
             const allRows = document.querySelectorAll('.student-row');
-            const activeRows = document.querySelectorAll('.status-hijau, .status-kuning, .status-merah');
             
-            if(activeRows.length === 0) {
-                showToast("Pilih minimal satu siswa yang hadir sebelum menyimpan!", "error");
-                return;
-            }
-
             const dataPayload = Array.from(allRows).map(r => {
                 let color = "#64748b"; 
                 let statusText = "TANPA KETERANGAN";
@@ -955,11 +1062,11 @@
                 let isHadir = false;
 
                 if(r.classList.contains('status-hijau')) {
-                    color = "#16a34a"; statusText = "TEPAT WAKTU"; bgColor = "#dcfce7"; isHadir = true;
+                    color = "#16a34a"; statusText = "AMAN"; bgColor = "#dcfce7"; isHadir = true;
                 } else if(r.classList.contains('status-kuning')) { 
-                    color = "#ca8a04"; statusText = "PERINGATAN"; bgColor = "#fef9c3"; isHadir = true;
+                    color = "#ca8a04"; statusText = "TERLAMBAT"; bgColor = "#fef9c3"; isHadir = true;
                 } else if(r.classList.contains('status-merah')) { 
-                    color = "#dc2626"; statusText = "TERLAMBAT"; bgColor = "#fee2e2"; isHadir = true;
+                    color = "#dc2626"; statusText = "PERINGATAN"; bgColor = "#fee2e2"; isHadir = true;
                 }
 
                 return {
@@ -973,22 +1080,53 @@
                 };
             });
 
-            const sesi = {
+            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah');
+
+            return {
                 id: Date.now(),
                 waktuSimpan: new Date().toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
                 totalSiswa: allRows.length,
                 totalHadir: activeRows.length,
                 data: dataPayload
             };
+        }
+
+        function simpanData() {
+            const payload = dapatkanPayloadSesiAktif();
+            
+            if(payload.totalHadir === 0) {
+                showToast("Pilih minimal satu siswa yang hadir sebelum menyimpan!", "error");
+                return;
+            }
 
             let db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-            db.unshift(sesi);
+            db.unshift(payload);
             localStorage.setItem(DB_KEY, JSON.stringify(db));
             
             showToast("Data Berhasil Disimpan!", "success");
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
+            
+            // Soft-reset papan absensi (no reload page)
+            document.querySelectorAll('.student-row').forEach(row => {
+                row.className = "student-row";
+                const txtWaktu = row.querySelector('.waktu-text');
+                if (txtWaktu) txtWaktu.innerText = "-";
+            });
+            
+            temporarySelections = {};
+            renderHistori();
+        }
+
+        // Direct session PDF downloading feature
+        function cetakSesiAktif() {
+            const payload = dapatkanPayloadSesiAktif();
+            
+            if (payload.totalHadir === 0) {
+                showToast("Pilih minimal satu siswa yang hadir sebelum mengunduh PDF!", "warning");
+                return;
+            }
+            
+            cetak(payload, 'p');
+            showToast("Mengunduh laporan PDF sesi hari ini...", "success");
         }
 
         function renderHistori() {
@@ -1047,7 +1185,6 @@
             document.getElementById('modalDetail').style.display = 'none'; 
         }
 
-        // Opens the AI dialog panel
         function bukaModalAI() {
             document.getElementById('modalAI').style.display = 'flex';
             lucide.createIcons();
@@ -1055,17 +1192,38 @@
 
         function tutupModalAI() {
             document.getElementById('modalAI').style.display = 'none';
-            // Stop any active TTS audio reading
             const audio = document.getElementById('tts-audio');
             audio.pause();
         }
 
-        // Compile and aggregate periodic statistics from historical local storage
+        // Tab Switching for AI Assistant
+        function switchAITab(tabName) {
+            const rekapBtn = document.getElementById('tab-rekap-btn');
+            const siswaBtn = document.getElementById('tab-siswa-btn');
+            const rekapContent = document.getElementById('tab-rekap-content');
+            const siswaContent = document.getElementById('tab-siswa-content');
+            const printBtn = document.getElementById('btn-print-ai-pdf');
+
+            if (tabName === 'rekap') {
+                rekapBtn.className = "pb-2 text-indigo-600 border-b-2 border-indigo-600 px-2 transition-all";
+                siswaBtn.className = "pb-2 text-slate-500 border-b-2 border-transparent hover:text-slate-700 px-2 transition-all";
+                rekapContent.classList.remove('hidden');
+                siswaContent.classList.add('hidden');
+                printBtn.innerHTML = `<i data-lucide="printer" class="w-4 h-4"></i> Cetak Laporan PDF Rekap Berkala + AI`;
+            } else {
+                siswaBtn.className = "pb-2 text-indigo-600 border-b-2 border-indigo-600 px-2 transition-all";
+                rekapBtn.className = "pb-2 text-slate-500 border-b-2 border-transparent hover:text-slate-700 px-2 transition-all";
+                siswaContent.classList.remove('hidden');
+                rekapContent.classList.add('hidden');
+                printBtn.innerHTML = `<i data-lucide="printer" class="w-4 h-4"></i> Cetak Rapor Disiplin AI Siswa`;
+            }
+            lucide.createIcons();
+        }
+
         function kumpulkanDataHistori(hariMundur = 7) {
             const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             if (db.length === 0) return null;
 
-            // Gather elements within bounds
             const cutoffDate = Date.now() - (hariMundur * 24 * 60 * 60 * 1000);
             const sesiValid = db.filter(s => s.id >= cutoffDate);
             
@@ -1078,8 +1236,8 @@
             let peringatanTotal = 0;
             let alpaTotal = 0;
             
-            // Student-specific frequency analysis
             let frekuensiTerlambat = {};
+            let frekuensiPeringatan = {};
             let frekuensiAlpa = {};
 
             sesiValid.forEach(sesi => {
@@ -1092,6 +1250,7 @@
                         frekuensiTerlambat[siswa.nama] = (frekuensiTerlambat[siswa.nama] || 0) + 1;
                     } else if (siswa.status === "PERINGATAN") {
                         peringatanTotal++;
+                        frekuensiPeringatan[siswa.nama] = (frekuensiPeringatan[siswa.nama] || 0) + 1;
                     } else if (siswa.status === "TANPA KETERANGAN") {
                         alpaTotal++;
                         frekuensiAlpa[siswa.nama] = (frekuensiAlpa[siswa.nama] || 0) + 1;
@@ -1099,8 +1258,11 @@
                 });
             });
 
-            // Convert to arrays and sort
             const daftarTerlambatSering = Object.entries(frekuensiTerlambat)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const daftarPeringatanSering = Object.entries(frekuensiPeringatan)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 5);
 
@@ -1117,6 +1279,7 @@
                 peringatan: peringatanTotal,
                 alpa: alpaTotal,
                 siswaSeringTerlambat: daftarTerlambatSering,
+                siswaSeringPeringatan: daftarPeringatanSering,
                 siswaSeringAlpa: daftarAlpaSering,
                 arsipRaw: sesiValid.map(s => ({
                     tanggal: s.waktuSimpan.split(',')[0] || s.waktuSimpan,
@@ -1124,6 +1287,144 @@
                     total: s.totalSiswa
                 }))
             };
+        }
+
+        // Compiles personal statistics of a single student over all history
+        function dapatkanProfilDisiplinSiswa(namaSiswa) {
+            const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            let totalSesi = db.length;
+            let aman = 0;
+            let terlambat = 0;
+            let peringatan = 0;
+            let alpa = 0;
+            let detailWaktu = [];
+
+            db.forEach(sesi => {
+                const record = sesi.data.find(x => x.nama === namaSiswa);
+                if (record) {
+                    if (record.status === "AMAN") {
+                        aman++;
+                        detailWaktu.push({ tanggal: sesi.waktuSimpan.split(',')[0], status: "AMAN", waktu: record.waktu });
+                    } else if (record.status === "TERLAMBAT") {
+                        terlambat++;
+                        detailWaktu.push({ tanggal: sesi.waktuSimpan.split(',')[0], status: "TERLAMBAT", waktu: record.waktu });
+                    } else if (record.status === "PERINGATAN") {
+                        peringatan++;
+                        detailWaktu.push({ tanggal: sesi.waktuSimpan.split(',')[0], status: "PERINGATAN", waktu: record.waktu });
+                    } else {
+                        alpa++;
+                        detailWaktu.push({ tanggal: sesi.waktuSimpan.split(',')[0], status: "ALPA", waktu: "-" });
+                    }
+                } else {
+                    alpa++;
+                    detailWaktu.push({ tanggal: sesi.waktuSimpan.split(',')[0], status: "ALPA", waktu: "-" });
+                }
+            });
+
+            return {
+                nama: namaSiswa,
+                totalSesi: totalSesi,
+                aman: aman,
+                terlambat: terlambat,
+                peringatan: peringatan,
+                alpa: alpa,
+                persentaseKehadiran: totalSesi > 0 ? (((aman + terlambat + peringatan) / totalSesi) * 100).toFixed(1) : 0,
+                riwayatKasus: detailWaktu.slice(0, 10) // last 10 records
+            };
+        }
+
+        // Trigger AI analysis directly from the student spot on list
+        function analyzeStudentOnSpot(namaSiswa, kelas) {
+            // Find in AI selection option
+            const selectAiSiswa = document.getElementById('select-ai-nama-siswa');
+            selectAiSiswa.value = `${namaSiswa}|${kelas}`;
+            
+            // Switch view
+            bukaModalAI();
+            switchAITab('siswa');
+            generateAnalisisSiswaAI();
+        }
+
+        // Contact Gemini AI to generate personal behavior and pedagogical report card for one student
+        async function generateAnalisisSiswaAI() {
+            if (currentlyGeneratingAI) return;
+
+            const selectVal = document.getElementById('select-ai-nama-siswa').value;
+            if (!selectVal) {
+                showToast("Silakan pilih siswa terlebih dahulu!", "warning");
+                return;
+            }
+
+            const [namaSiswa, kelas] = selectVal.split('|');
+            const stats = dapatkanProfilDisiplinSiswa(namaSiswa);
+
+            if (stats.totalSesi === 0) {
+                showToast("Belum ada histori presensi tersimpan untuk mendeteksi profil disiplin siswa ini.", "warning");
+                return;
+            }
+
+            currentlyGeneratingAI = true;
+            selectedAISiswaInfo = stats; // Set active context for PDF printout
+            selectedAISiswaInfo.kelas = kelas;
+
+            const outputContent = document.getElementById('ai-output-content');
+            const placeholder = document.getElementById('ai-placeholder');
+            const actionRow = document.getElementById('ai-actions-row');
+            
+            placeholder.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
+                    <p class="font-bold text-indigo-950 text-sm">Membaca Rapor Disiplin ${namaSiswa}...</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Menggunakan AI Gemini Pintar</p>
+                </div>
+            `;
+            placeholder.classList.remove('hidden');
+            outputContent.classList.add('hidden');
+            actionRow.classList.add('hidden');
+
+            const prompt = `
+            Act as an experienced child psychologist and kesiswaan consultant for SMP Hamalatul Quran Ringinagung.
+            Analyze the following personal discipline and attendance statistics of student "${namaSiswa}" (Class: ${kelas}):
+            - Average Attendance Rate: ${stats.persentaseKehadiran}%
+            - Total Academic Sessions Tracked: ${stats.totalSesi} days
+            - Aman (On Time - Green): ${stats.aman} days
+            - Terlambat (Late - Yellow): ${stats.terlambat} days
+            - Peringatan (Warning - Red): ${stats.peringatan} days
+            - Alpa (Absent - Gray): ${stats.alpa} days
+            - Chronological Log (Last 10 days): ${JSON.stringify(stats.riwayatKasus)}
+
+            Provide a formal, polite, supportive, and pedagogical evaluation in Bahasa Indonesia structured as follows:
+            1. **Tinjauan Perilaku & Kedisplinan**: Ulas karakter kedisiplinan umum siswa berdasarkan perbandingan rasio "Aman", "Terlambat", dan "Alpa".
+            2. **Analisis Pola/Tren Kehadiran**: Berikan hipotesis dari riwayat kronologis (apakah sering terlambat di hari tertentu, atau pola alpa tidak wajar).
+            3. **Saran Pedagogis untuk Guru**: Tindakan suportif yang bisa dilakukan oleh wali kelas/bimbingan konseling di sekolah.
+            4. **Rekomendasi Kolaborasi Orang Tua**: Pesan taktis yang dapat dikomunikasikan secara santun ke orang tua untuk perbaikan ritme tidur atau keberangkatan pagi siswa.
+
+            Keep it professional, encouraging, constructive, and avoid overly harsh words. Use clean markdown formatting.
+            `;
+
+            try {
+                const response = await callGeminiAPI(prompt, "Anda adalah Bimbingan Konseling (BK) Pintar SMP Hamalatul Quran.");
+                lastAIResponseText = response;
+                renderMarkdownToHTML(response);
+
+                placeholder.classList.add('hidden');
+                outputContent.classList.remove('hidden');
+                actionRow.classList.remove('hidden');
+                showToast(`Analisis individual ${namaSiswa} siap!`, "success");
+            } catch (err) {
+                console.error(err);
+                showToast("Gagal memanggil Asisten AI.", "error");
+                placeholder.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-6 text-center text-rose-500">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mb-2 text-rose-500 animate-pulse"></i>
+                        <h4 class="font-bold mb-1">Gagal Menghubungi Server AI</h4>
+                        <p class="text-xs max-w-md text-slate-500 leading-relaxed">Koneksi API dibatasi oleh lingkungan browser atau kuota habis. Silakan coba sesaat lagi.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            } finally {
+                currentlyGeneratingAI = false;
+            }
         }
 
         // Contact Gemini API to run deep pedagogical assessment on compiled stats
@@ -1137,9 +1438,10 @@
             }
 
             currentlyGeneratingAI = true;
+            selectedAISiswaInfo = null; // Clear individual student context for general periodic rekap
             bukaModalAI();
+            switchAITab('rekap');
 
-            // Setup loading state view
             const outputContent = document.getElementById('ai-output-content');
             const placeholder = document.getElementById('ai-placeholder');
             const actionRow = document.getElementById('ai-actions-row');
@@ -1147,8 +1449,8 @@
             placeholder.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-8">
                     <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
-                    <p class="font-bold text-indigo-950 text-sm">Menganalisis Laporan Kehadiran Periodik...</p>
-                    <p class="text-[10px] text-slate-500 mt-1">Menggunakan LLM Gemini 3.1 Flash</p>
+                    <p class="font-bold text-indigo-950 text-sm">Menganalisis Laporan Kehadiran Periodik Kelas...</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Menggunakan AI Gemini Pintar</p>
                 </div>
             `;
             placeholder.classList.remove('hidden');
@@ -1162,24 +1464,25 @@
             - Average Attendance Rate: ${metadata.kehadiranRerata}%
             - Total Days Monitored: ${metadata.totalSesi} days
             - Total Registered Records: ${metadata.totalSiswa} rows
-            - Cases of Extreme Tardiness (>45 mins late): ${metadata.terlambat} cases
-            - Cases of Warning Tardiness (21-45 mins late): ${metadata.peringatan} cases
+            - Cases of Warning (Peringatan - Red): ${metadata.peringatan} cases
+            - Cases of Normal Tardiness (Terlambat - Yellow): ${metadata.terlambat} cases
             - Cases of Absence/Alpa: ${metadata.alpa} cases
-            - Top Students with Tardiness: ${JSON.stringify(metadata.siswaSeringTerlambat)}
+            - Top Students with Tardiness (Yellow): ${JSON.stringify(metadata.siswaSeringTerlambat)}
+            - Top Students with Warnings (Red): ${JSON.stringify(metadata.siswaSeringPeringatan)}
             - Top Students with Absence: ${JSON.stringify(metadata.siswaSeringAlpa)}
             - Raw Daily Logs Summary: ${JSON.stringify(metadata.arsipRaw)}
 
             Format your response in a structured Bahasa Indonesia report:
             1. **Ringkasan Eksekutif**: Tulis paragraf menarik, motivatif, dan ringkas mengenai tingkat kedisplinan umum siswa.
             2. **Analisis Tren Kehadiran**: Analisis tren naik/turun kehadiran berdasarkan data harian.
-            3. **Evaluasi Kasus Terlambat & Alpa**: Soroti siswa yang paling sering terlambat atau alpa, berikan interpretasi pedagogis.
+            3. **Evaluasi Kasus Terlambat (Kuning) & Peringatan (Merah)**: Soroti siswa yang paling sering masuk kategori ini, berikan interpretasi pedagogis.
             4. **Rekomendasi Tindakan Administrasi**: Langkah taktis yang harus diambil guru/sekolah untuk mengatasi keterlambatan ini.
 
             Keep it extremely clean, highly professional, educational, and motivational. Use clean Markdown elements.
             `;
 
             try {
-                const response = await callGeminiAPI(prompt);
+                const response = await callGeminiAPI(prompt, "Anda adalah Asisten AI Administrator untuk SMP Hamalatul Quran.");
                 
                 lastAIResponseText = response; // Save to global state
                 renderMarkdownToHTML(response);
@@ -1191,8 +1494,15 @@
                 showToast("Analisis AI Berhasil Dibuat!", "success");
             } catch (err) {
                 console.error(err);
-                showToast("Gagal memanggil Asisten AI. Coba beberapa saat lagi.", "error");
-                tutupModalAI();
+                showToast("Gagal memanggil Asisten AI.", "error");
+                placeholder.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-6 text-center text-rose-500">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mb-2 text-rose-500 animate-pulse"></i>
+                        <h4 class="font-bold mb-1">Gagal Menghubungi Server AI</h4>
+                        <p class="text-xs max-w-md text-slate-500 leading-relaxed">Koneksi API dibatasi oleh lingkungan browser atau kuota habis. Silakan coba sesaat lagi.</p>
+                    </div>
+                `;
+                lucide.createIcons();
             } finally {
                 currentlyGeneratingAI = false;
             }
@@ -1222,7 +1532,7 @@
             placeholder.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-8">
                     <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
-                    <p class="font-bold text-indigo-950 text-sm">Berpikir...</p>
+                    <p class="font-bold text-indigo-950 text-sm">Sedang Berpikir & Menganalisis...</p>
                 </div>
             `;
             placeholder.classList.remove('hidden');
@@ -1249,12 +1559,78 @@
                 input.value = "";
             } catch (e) {
                 showToast("Koneksi bermasalah. Coba lagi.", "error");
+                placeholder.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-6 text-center text-rose-500">
+                        <i data-lucide="alert-circle" class="w-12 h-12 mb-2 text-rose-500"></i>
+                        <h4 class="font-bold mb-1">Gagal Menghubungi Server AI</h4>
+                        <p class="text-xs max-w-md text-slate-500">Silakan hubungkan jaringan internet Anda atau coba kembali.</p>
+                    </div>
+                `;
+                lucide.createIcons();
             } finally {
                 currentlyGeneratingAI = false;
             }
         }
 
-        // Core Gemini Fetcher with exponential backoff capability
+        // Core Gemini Fetcher with bulletproof model fallbacks
+        async function callGeminiAPI(prompt, systemInstruction = "") {
+            const apiKey = ""; // Canvas injects this automatically at runtime
+            const models = [
+                'gemini-3-flash-preview',
+                'gemini-2.5-flash',
+                'gemini-1.5-flash'
+            ];
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+            };
+
+            if (systemInstruction) {
+                payload.systemInstruction = {
+                    parts: [{ text: systemInstruction }]
+                };
+            }
+
+            for (const model of models) {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) {
+                            return text;
+                        }
+                    } else {
+                        const errText = await response.text();
+                        console.warn(`Model ${model} failed with status ${response.status}: ${errText}`);
+                    }
+                } catch (e) {
+                    console.error(`Fetch error with model ${model}:`, e);
+                }
+            }
+            throw new Error("All Gemini models failed to respond.");
+        }
+
+        // Convert simplistic markdown elements to visual html representation
+        function renderMarkdownToHTML(text) {
+            let html = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/### (.*?)\n/g, '<h4 class="text-md font-extrabold text-indigo-950 mt-4 mb-2">$1</h4>')
+                .replace(/## (.*?)\n/g, '<h3 class="text-lg font-extrabold text-indigo-900 mt-6 mb-3 border-b border-slate-200 pb-1">$1</h3>')
+                .replace(/# (.*?)\n/g, '<h2 class="text-xl font-extrabold text-indigo-900 mt-8 mb-4">$1</h2>')
+                .replace(/^- (.*?)\n/gm, '<li class="ml-4 list-disc text-slate-700">$1</li>');
+
+            document.getElementById('ai-output-content').innerHTML = html;
+        }
+
+        // Core Gemini Fetcher with static endpoint interception guardrail
         async function callGeminiAPI(prompt, systemInstruction = "") {
             const apiKey = ""; // Canvas injects this automatically at runtime
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
@@ -1282,28 +1658,18 @@
 
                     if (response.ok) {
                         const result = await response.json();
-                        return result.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, respon AI kosong.";
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) {
+                            return text;
+                        }
                     }
                 } catch (e) {
-                    // Exponential backoff logic (suppressed logging to match criteria)
-                    await new Promise(res => setTimeout(res, delay));
+                    // Exponential backoff delay
+                    await new Promise(resolve => setTimeout(resolve, delay));
                     delay *= 2;
                 }
             }
-            throw new Error("API call failed after retries.");
-        }
-
-        // Convert simplistic markdown elements to visual html representation
-        function renderMarkdownToHTML(text) {
-            let html = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/### (.*?)\n/g, '<h4 class="text-md font-extrabold text-slate-900 mt-4 mb-2">$1</h4>')
-                .replace(/## (.*?)\n/g, '<h3 class="text-lg font-extrabold text-slate-900 mt-6 mb-3 border-b border-slate-200 pb-1">$1</h3>')
-                .replace(/# (.*?)\n/g, '<h2 class="text-xl font-extrabold text-indigo-900 mt-8 mb-4">$1</h2>')
-                .replace(/^- (.*?)\n/gm, '<li class="ml-4 list-disc text-slate-700">$1</li>');
-
-            document.getElementById('ai-output-content').innerHTML = html;
+            throw new Error("Gagal memanggil API Gemini. Periksa koneksi atau coba sesaat lagi.");
         }
 
         // TTS Integration utilizing gemini-2.5-flash-preview-tts model
@@ -1318,7 +1684,7 @@
             // Clean the raw text from complex MD syntax before sending
             const cleanText = lastAIResponseText
                 .replace(/[*#]/g, '')
-                .substring(0, 350) + "... Laporan lengkap tersedia di cetakan PDF.";
+                .substring(0, 350) + "... Analisis lengkap tersedia di cetakan PDF.";
 
             const payload = {
                 contents: [{
@@ -1370,55 +1736,6 @@
             }
         }
 
-        // Helper conversion blocks for PCM Audio
-        function base64ToArrayBuffer(base64) {
-            const binaryString = atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
-        }
-
-        function pcmToWav(pcm16Array, sampleRate) {
-            const buffer = new ArrayBuffer(44 + pcm16Array.length * 2);
-            const view = new DataView(buffer);
-
-            // RIFF identifier
-            writeString(view, 0, 'RIFF');
-            view.setUint32(4, 36 + pcm16Array.length * 2, true);
-            writeString(view, 8, 'WAVE');
-
-            // Format chunk
-            writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true); // Linear PCM
-            view.setUint16(22, 1, true); // Mono channel
-            view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * 2, true); // Byte rate
-            view.setUint16(32, 2, true); // Block align
-            view.setUint16(34, 16, true); // Bits per sample
-
-            // Data chunk
-            writeString(view, 36, 'data');
-            view.setUint32(40, pcm16Array.length * 2, true);
-
-            // Write PCM audio data
-            let offset = 44;
-            for (let i = 0; i < pcm16Array.length; i++, offset += 2) {
-                view.setInt16(offset, pcm16Array[i], true);
-            }
-
-            return new Blob([buffer], { type: 'audio/wav' });
-        }
-
-        function writeString(view, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                view.setUint8(offset + i, string.charCodeAt(i));
-            }
-        }
-
         // Main function to print Daily Records (Portrait / Landscape)
         function cetak(sesi, orientasi) {
             const { jsPDF } = window.jspdf;
@@ -1458,13 +1775,13 @@
                     if (data.section === 'body') {
                         const statusSiswa = data.row.raw[4];
                         
-                        if (statusSiswa === 'TEPAT WAKTU') {
+                        if (statusSiswa === 'AMAN') {
                             data.cell.styles.fillColor = [220, 252, 231]; 
                             if(data.column.index === 4) data.cell.styles.textColor = [22, 163, 74]; 
-                        } else if (statusSiswa === 'PERINGATAN') {
+                        } else if (statusSiswa === 'TERLAMBAT') {
                             data.cell.styles.fillColor = [254, 249, 195]; 
                             if(data.column.index === 4) data.cell.styles.textColor = [202, 138, 4];  
-                        } else if (statusSiswa === 'TERLAMBAT') {
+                        } else if (statusSiswa === 'PERINGATAN') {
                             data.cell.styles.fillColor = [254, 226, 226]; 
                             if(data.column.index === 4) data.cell.styles.textColor = [220, 38, 38];  
                         }
@@ -1515,49 +1832,81 @@
             doc.setFontSize(11);
             doc.setFont("Helvetica", "bold");
             doc.setTextColor(79, 70, 229);
-            doc.text("LAPORAN REKAPITULASI BERKALA & ANALISIS AI", pageWidth / 2, 20, { align: 'center' });
+
+            // Handle custom title based on individual or general context
+            if (selectedAISiswaInfo) {
+                doc.text(`RAPOR BIMBINGAN KONSELING & DISIPLIN AI SISWA`, pageWidth / 2, 20, { align: 'center' });
+            } else {
+                doc.text("LAPORAN REKAPITULASI BERKALA & ANALISIS AI", pageWidth / 2, 20, { align: 'center' });
+            }
             
             doc.setFontSize(8);
             doc.setFont("Helvetica", "normal");
             doc.setTextColor(148, 163, 184);
             doc.text("Dihasilkan secara cerdas menggunakan Model AI Gemini", pageWidth / 2, 24, { align: 'center' });
 
-            // Fetch last stats
-            const meta = kumpulkanDataHistori(7); // default back to last 7 days representation
-            if (!meta) return;
+            if (selectedAISiswaInfo) {
+                // Render personal student metrics sheet
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(30, 41, 59);
+                doc.text("I. METRIK KEDISPLINAN INDIVIDUAL SISWA", 14, 34);
 
-            // Summary Info table block
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(30, 41, 59);
-            doc.text("I. METRIK KEDISPLINAN SISWA", 14, 34);
+                doc.autoTable({
+                    startY: 37,
+                    head: [['Detail Profil Siswa', 'Keterangan Nilai']],
+                    body: [
+                        ['Nama Lengkap Siswa', selectedAISiswaInfo.nama],
+                        ['Kelas', selectedAISiswaInfo.kelas],
+                        ['Rasio Persentase Kehadiran', `${selectedAISiswaInfo.persentaseKehadiran}%`],
+                        ['Hari Hadir Aman (Hijau)', `${selectedAISiswaInfo.aman} Sesi`],
+                        ['Hari Terlambat (Kuning)', `${selectedAISiswaInfo.terlambat} Sesi`],
+                        ['Hari Peringatan (Merah)', `${selectedAISiswaInfo.peringatan} Sesi`],
+                        ['Hari Alpa / Tanpa Keterangan', `${selectedAISiswaInfo.alpa} Sesi`]
+                    ],
+                    headStyles: { fillColor: [79, 70, 229] },
+                    styles: { fontSize: 9 }
+                });
+            } else {
+                // Render general class metrics sheet
+                const meta = kumpulkanDataHistori(7);
+                if (!meta) return;
 
-            doc.autoTable({
-                startY: 37,
-                head: [['Indikator Laporan', 'Nilai / Jumlah']],
-                body: [
-                    ['Kehadiran Rata-rata', `${meta.kehadiranRerata}%`],
-                    ['Jumlah Presensi Tersimpan', `${meta.totalSesi} Sesi harian`],
-                    ['Kasus Terlambat (>45 mnt)', `${meta.terlambat} Kali`],
-                    ['Kasus Peringatan (21-45 mnt)', `${meta.peringatan} Kali`],
-                    ['Siswa Tanpa Keterangan (Alpa)', `${meta.alpa} Kali`]
-                ],
-                headStyles: { fillColor: [79, 70, 229] },
-                styles: { fontSize: 9 }
-            });
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(30, 41, 59);
+                doc.text("I. METRIK KEDISPLINAN UMUM KELAS", 14, 34);
 
-            // Write AI analysis block dynamically
+                doc.autoTable({
+                    startY: 37,
+                    head: [['Indikator Laporan', 'Nilai / Jumlah']],
+                    body: [
+                        ['Kehadiran Rata-rata', `${meta.kehadiranRerata}%`],
+                        ['Jumlah Presensi Tersimpan', `${meta.totalSesi} Sesi harian`],
+                        ['Kasus Terlambat (Kuning)', `${meta.terlambat} Kali`],
+                        ['Kasus Peringatan (Merah)', `${meta.peringatan} Kali`],
+                        ['Siswa Tanpa Keterangan (Alpa)', `${meta.alpa} Kali`]
+                    ],
+                    headStyles: { fillColor: [79, 70, 229] },
+                    styles: { fontSize: 9 }
+                });
+            }
+
             let nextY = doc.lastAutoTable.finalY + 12;
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
             doc.setTextColor(30, 41, 59);
-            doc.text("II. EVALUASI DAN REKOMENDASI ASISTEN AI", 14, nextY);
+            
+            if (selectedAISiswaInfo) {
+                doc.text("II. REKOMENDASI PEDAGOGIS & BK (ASISTEN AI)", 14, nextY);
+            } else {
+                doc.text("II. EVALUASI DAN REKOMENDASI ASISTEN AI", 14, nextY);
+            }
 
             doc.setFont("Helvetica", "normal");
             doc.setFontSize(8.5);
             doc.setTextColor(51, 65, 85);
 
-            // Sanitize text formatting rules before writing to PDF representation
             const cleanParagraphs = lastAIResponseText
                 .replace(/[*#]/g, '')
                 .split('\n')
@@ -1567,7 +1916,6 @@
             cleanParagraphs.forEach(p => {
                 const textLines = doc.splitTextToSize(p, pageWidth - 28);
                 
-                // Keep cursor checks
                 if (cursorY + (textLines.length * 4) > doc.internal.pageSize.getHeight() - 15) {
                     doc.addPage();
                     cursorY = 15;
@@ -1577,7 +1925,6 @@
                 cursorY += (textLines.length * 4.5) + 3;
             });
 
-            // Signature block at the very end
             if (cursorY + 30 > doc.internal.pageSize.getHeight() - 15) {
                 doc.addPage();
                 cursorY = 15;
@@ -1592,8 +1939,12 @@
             doc.setDrawColor(203, 213, 225);
             doc.line(14, cursorY + 32, 60, cursorY + 32);
 
-            doc.save("Rekap_Absensi_Berkala_AI_SMP_HQ.pdf");
-            showToast("Laporan Rekapitulasi AI berhasil diunduh!", "success");
+            if (selectedAISiswaInfo) {
+                doc.save(`Rapor_Disiplin_AI_${selectedAISiswaInfo.nama.replace(/\s+/g, '_')}.pdf`);
+            } else {
+                doc.save("Rekap_Absensi_Berkala_AI_SMP_HQ.pdf");
+            }
+            showToast("Laporan PDF berhasil diunduh!", "success");
         }
 
         window.onload = init;
