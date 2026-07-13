@@ -307,14 +307,14 @@
     <!-- Header Section -->
     <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
         <div class="max-w-7xl mx-auto">
-            <!-- Lencana Status Sinkronisasi Supabase (HTTP Polling) -->
+            <!-- Lencana Status Sinkronisasi Realtime -->
             <div class="flex justify-center mb-4">
                 <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" id="sync-dot"></span>
                     </span>
-                    <span id="sync-text">Menghubungkan Supabase...</span>
+                    <span id="sync-text">Menghubungkan Database Supabase...</span>
                 </div>
             </div>
 
@@ -408,6 +408,50 @@
                         </div>
                         <button onclick="pindahkanSiswaKelas()" class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors">Pindahkan Sekarang</button>
                     </div>
+
+                    <!-- tombol expander form database Supabase manual -->
+                    <button onclick="toggleForm('form-config-db')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 font-semibold text-sm transition-colors text-amber-900">
+                        <span class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-amber-600"></i> Pengaturan Database Supabase</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-amber-500"></i>
+                    </button>
+                    <!-- Form Pengaturan Supabase Cloud -->
+                    <div id="form-config-db" class="hidden bg-amber-50/50 p-4 rounded-xl border border-dashed border-amber-200 space-y-3 text-left">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase URL (API URL)</label>
+                            <input type="text" id="input-supabase-url" placeholder="https://xxxxxx.supabase.co" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase Anon Key (Public Key)</label>
+                            <input type="text" id="input-supabase-key" placeholder="eyJhbGciOi..." class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                        </div>
+                        <button onclick="simpanConfigDatabase()" class="w-full py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-colors">Aktifkan Database Supabase</button>
+                        <button onclick="hapusConfigDatabase()" class="w-full py-2.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">Gunakan Penyimpanan Lokal</button>
+                        
+                        <!-- Petunjuk Pembuatan Tabel Supabase -->
+                        <div class="mt-2 p-2 bg-white rounded-lg border border-amber-200 text-[10px] text-slate-600">
+                            <span class="font-bold text-amber-800">💡 SQL Editor Schema:</span>
+                            <p class="mt-1">Jalankan instruksi ini di SQL Editor Supabase Anda agar database siap digunakan dan tidak terblokir sistem keamanan:</p>
+                            <pre class="mt-1 bg-slate-900 text-slate-100 p-2 rounded text-[9px] overflow-x-auto font-mono">
+-- 1. Buat Tabel Data
+CREATE TABLE IF NOT EXISTS presensi_data (
+  key TEXT PRIMARY KEY,
+  value JSONB
+);
+
+-- 2. Buat Tabel Riwayat
+CREATE TABLE IF NOT EXISTS presensi_records (
+  id BIGINT PRIMARY KEY,
+  waktu_simpan TEXT,
+  total_siswa INT,
+  total_hadir INT,
+  data JSONB
+);
+
+-- 3. MATIKAN ROW LEVEL SECURITY (Penting!)
+ALTER TABLE presensi_data DISABLE ROW LEVEL SECURITY;
+ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -423,7 +467,7 @@
                             </span>
                             <h3 class="font-bold text-lg">Dashboard Rekapitulasi & Disiplin Berkala</h3>
                         </div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-indigo-500/30 border border-indigo-500/50 text-indigo-300 rounded-full">Sistem Otomatis</span>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-indigo-50/10 border border-indigo-500/30 text-indigo-300 rounded-full">Sistem Otomatis</span>
                     </div>
                     <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Menganalisis tingkat keterlambatan, ketepatan waktu (ontime), sakit, izin, serta ketidakhadiran siswa secara kumulatif langsung dari arsip secara real-time.</p>
                 </div>
@@ -639,18 +683,21 @@
         </div>
     </div>
 
-    <!-- Integrasi Logika Sinkronisasi Supabase Real-time dengan Polling HTTP Berkala -->
+    <!-- Integrasi Logika Sinkronisasi Supabase Real-time -->
     <script>
-        const DB_KEY = 'db_presensi_supabase_v9';
-        const SISWA_KEY = 'db_siswa_supabase_v9';
+        // Kunci penyimpanan lokal
+        const DB_KEY = 'db_presensi_supabase_v10';
+        const SISWA_KEY = 'db_siswa_supabase_v10';
 
-        // Supabase API Credentials - Ditanamkan secara aman menggunakan kredensial aktif Anda
-        const supabaseUrl = 'https://ogbvyeypznbwurmsmwld.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo';
-        
-        let supabaseClient = null;
+        // Nilai Default Kredensial Database Supabase (Hardcoded)
+        const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
+        const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
+
+        // Ganti nama variabel global supabase agar tidak bentrok dengan modul eksternal Supabase JS
+        let supabaseClient = null; 
         let isCloudActive = false;
         let isBroadcasting = false;
+        let pollingInterval = null; // Ganti real-time channel WebSocket dengan interval polling HTTP
 
         // Daftar default nama siswa awal untuk Kelas 7, 8, dan 9
         const defaultDataSiswa = {
@@ -683,172 +730,264 @@
         let temporarySelections = {};
         let dataRekapAktif = null;
 
-        // Inisialisasi Koneksi ke Supabase Client
-        async function setupSupabase() {
+        // --- MANAJEMEN STATUS UI SINKRONISASI ---
+        function setSyncStatus(status, text) {
             const syncBadge = document.getElementById('sync-badge');
             const syncText = document.getElementById('sync-text');
             const syncDot = document.getElementById('sync-dot');
             const dbLabel = document.getElementById('db-type-label');
-
-            try {
-                // Inisialisasi Supabase Client menggunakan window.supabase
-                supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                isCloudActive = true;
-                
-                // Perbarui indikator status sinkronisasi di UI
+            
+            if (!syncBadge || !syncText || !syncDot) return;
+            
+            if (status === 'connecting') {
+                syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-amber-500 animate-pulse";
+                syncText.innerText = text || "Menghubungkan Database Cloud...";
+                syncBadge.className = "flex items-center gap-2 bg-amber-950/40 border border-amber-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-amber-300";
+            } else if (status === 'online') {
                 syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
-                syncText.innerText = "Monitoring Aktif (Auto-Sync HTTP)";
+                syncText.innerText = text || "Terhubung Real-time ke Supabase";
                 syncBadge.className = "flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300";
-                dbLabel.innerText = "Cloud Sync & Live Monitor";
-
-                // Tarik data pertama kali secara sinkron dari Supabase melalui HTTP GET biasa
-                await syncSiswaFromSupabase();
-                await syncPresensiFromSupabase();
-                await syncActiveSessionFromSupabase();
-
-                // Polling sesi presensi aktif secara cepat (setiap 4 detik) untuk menggantikan sistem WebSocket wss:// yang diblokir oleh iframe Canvas
-                setInterval(async () => {
-                    if (isCloudActive && supabaseClient && !isBroadcasting) {
-                        try {
-                            await syncActiveSessionFromSupabase();
-                        } catch (err) {
-                            console.warn("Koneksi monitoring berkala terinterupsi:", err);
-                        }
-                    }
-                }, 4000);
-
-                // Polling daftar nama siswa & data histori presensi berkala (setiap 15 detik) untuk memperbarui roster jika ada penambahan
-                setInterval(async () => {
-                    if (isCloudActive && supabaseClient && !isBroadcasting) {
-                        try {
-                            await syncSiswaFromSupabase();
-                            await syncPresensiFromSupabase();
-                        } catch (err) {
-                            console.warn("Sinkronisasi latar belakang terinterupsi:", err);
-                        }
-                    }
-                }, 15000);
-
-            } catch (e) {
-                console.warn("Supabase gagal diinisialisasi, beralih ke penyimpanan lokal:", e);
-                useOfflineFallback();
+                if (dbLabel) dbLabel.innerText = "Supabase Cloud Sync";
+            } else if (status === 'error') {
+                syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-rose-500 animate-pulse";
+                syncText.innerText = text;
+                syncBadge.className = "flex items-center gap-2 bg-rose-950/40 border border-rose-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-rose-300";
+                if (dbLabel) dbLabel.innerText = "Koneksi Offline (Lokal)";
+            } else if (status === 'offline') {
+                syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-sky-500";
+                syncText.innerText = text || "Mode Mandiri (Penyimpanan Lokal)";
+                syncBadge.className = "flex items-center gap-2 bg-sky-950/40 border border-sky-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-sky-300";
+                if (dbLabel) dbLabel.innerText = "Penyimpanan Enkripsi Lokal";
             }
         }
 
+        // Mode cadangan jika kegagalan koneksi terdeteksi
         function useOfflineFallback() {
-            const syncBadge = document.getElementById('sync-badge');
-            const syncText = document.getElementById('sync-text');
-            const syncDot = document.getElementById('sync-dot');
-            const dbLabel = document.getElementById('db-type-label');
-
             isCloudActive = false;
-            syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-sky-500";
-            syncText.innerText = "Mode Mandiri (Penyimpanan Lokal)";
-            syncBadge.className = "flex items-center gap-2 bg-sky-950/40 border border-sky-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-sky-300";
-            dbLabel.innerText = "Penyimpanan Enkripsi Lokal";
-            
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
             loadStudentDatabase();
             init();
         }
 
-        // Sinkronisasi data daftar nama siswa dari Supabase (id: 1)
-        async function syncSiswaFromSupabase() {
-            const { data, error } = await supabaseClient
-                .from('smp_siswa_data')
-                .select('*')
-                .eq('id', 1)
-                .single();
+        // --- INISIALISASI KONEKSI DATABASE CLOUD SUPABASE ---
+        async function setupSupabase() {
+            setSyncStatus('connecting');
 
-            if (error || !data) {
-                dataSiswa = {...defaultDataSiswa};
-                await supabaseClient.from('smp_siswa_data').upsert({ id: 1, classes: dataSiswa });
-            } else {
-                saveCurrentSelections();
-                dataSiswa = data.classes || {};
+            // Gunakan nilai localStorage jika ada, jika tidak, otomatis gunakan nilai default bawaan yang ditanam
+            const supabaseUrl = localStorage.getItem('supabase_url') || DEFAULT_SUPABASE_URL;
+            const supabaseKey = localStorage.getItem('supabase_anon_key') || DEFAULT_SUPABASE_KEY;
+
+            if (!supabaseUrl || !supabaseKey) {
+                console.warn("Kredensial database Supabase tidak terdeteksi. Silakan isi di form.");
+                useOfflineFallback();
+                return;
             }
-            init();
-        }
 
-        // Sinkronisasi data riwayat presensi yang tersimpan dari Supabase
-        async function syncPresensiFromSupabase() {
-            const { data, error } = await supabaseClient
-                .from('smp_presensi_records')
-                .select('*')
-                .order('id', { ascending: false });
+            try {
+                // Gunakan instansi lokal supabaseClient dan memanggil window.supabase untuk inisialisasi
+                supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+                
+                // Uji koneksi dengan mengambil baris pengaturan/dataSiswa
+                const { data, error } = await supabaseClient
+                    .from('presensi_data')
+                    .select('value')
+                    .eq('key', 'classes')
+                    .single();
 
-            if (!error && data) {
-                const mappedData = data.map(item => ({
-                    id: item.id,
-                    waktuSimpan: item.waktu_simpan,
-                    totalSiswa: item.total_siswa,
-                    totalHadir: item.total_hadir,
-                    data: item.data
-                }));
-                localStorage.setItem(DB_KEY, JSON.stringify(mappedData));
-                renderHistori();
-            }
-        }
-
-        // Sinkronisasi data sesi pemantauan aktif hari ini dari Supabase (id: 2)
-        async function syncActiveSessionFromSupabase() {
-            if (!isCloudActive || !supabaseClient) return;
-            const { data, error } = await supabaseClient
-                .from('smp_siswa_data')
-                .select('*')
-                .eq('id', 2)
-                .single();
-
-            if (!error && data) {
-                const sessionData = data.classes || {};
-                // Jika data yang terekam adalah untuk hari ini, muat status klik aktifnya
-                if (sessionData.date === new Date().toDateString()) {
-                    temporarySelections = sessionData.selections || {};
-                    restoreSelections();
-                } else {
-                    // Jika hari berganti, lakukan pembersihan layar otomatis (auto-reset harian)
-                    temporarySelections = {};
-                    restoreSelections();
+                if (error && error.code !== 'PGRST116') {
+                    console.error("Kesalahan membaca Supabase:", error);
+                    // RLS Aktif biasanya memicu error 401 Unauthorized / 403 Forbidden
+                    if (error.status === 401 || error.status === 403 || error.message.includes('policy')) {
+                        setSyncStatus('error', 'Supabase Terkunci (RLS Aktif)');
+                        showToast(`Sambungan gagal: Silakan matikan RLS pada tabel Supabase Anda! (Error: ${error.message})`, "error");
+                    } else {
+                        setSyncStatus('error', error.message);
+                        showToast(`Gagal memuat tabel Supabase: ${error.message}. Pastikan skema tabel sudah dibuat.`, "warning");
+                    }
+                    useOfflineFallback();
+                    return;
                 }
+
+                isCloudActive = true;
+                setSyncStatus('online', 'Supabase Cloud Aktif');
+
+                if (data && data.value) {
+                    dataSiswa = data.value;
+                } else {
+                    // Jika data classes belum ada di supabase, upsert default
+                    dataSiswa = {...defaultDataSiswa};
+                    const { error: insertErr } = await supabaseClient.from('presensi_data').upsert({ key: 'classes', value: dataSiswa });
+                    if (insertErr) {
+                        console.error("Gagal melakukan inisialisasi awal ke Supabase:", insertErr);
+                        showToast(`Kesalahan tulis awal: ${insertErr.message}. Harap matikan RLS tabel.`, "error");
+                    }
+                }
+
+                init();
+
+                // Setup metode polling HTTP pengganti WebSocket untuk singkronisasi live monitoring
+                setupPollingSync();
+                
+                // Muat laporan-laporan terdahulu dari database Supabase
+                muatLaporanDariSupabase();
+
+            } catch (e) {
+                console.error("Supabase Gagal Terhubung:", e);
+                setSyncStatus('error', 'Gagal hubung: ' + e.message);
+                useOfflineFallback();
             }
         }
 
-        // Menyiarkan status pemantauan aktif harian ke database Supabase (id: 2) agar perangkat lain segera tersinkronisasi
-        async function broadcastActiveSelections() {
+        // --- SISTEM SINKRONISASI MUTUAL LIVE SEMENTARA VIA POLLING HTTP (BEBAS WEBSOCKET) ---
+        function setupPollingSync() {
             if (!isCloudActive || !supabaseClient) return;
-            isBroadcasting = true;
-            saveCurrentSelections();
+
+            // Bersihkan polling lama jika ada
+            if (pollingInterval) clearInterval(pollingInterval);
+
+            // Melakukan request pemuatan berkala status klik santri harian dari DB Supabase setiap 3.5 detik
+            pollingInterval = setInterval(async () => {
+                if (isBroadcasting) return; // Jangan lakukan polling saat perangkat ini sedang mengirim data
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('presensi_data')
+                        .select('value')
+                        .eq('key', 'current_session')
+                        .single();
+
+                    if (!error && data && data.value) {
+                        const sessionData = data.value;
+                        if (sessionData.date === new Date().toDateString()) {
+                            temporarySelections = sessionData.selections || {};
+                            restoreSelections();
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Polling Sync Gagal:", e);
+                }
+            }, 3500);
+
+            console.log("Sistem Mutual Live Monitoring via HTTP polling aktif.");
+        }
+
+        // Memuat arsip laporan tersimpan dari Supabase
+        async function muatLaporanDariSupabase() {
+            if (!isCloudActive || !supabaseClient) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presensi_records')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                if (data) {
+                    const results = data.map(item => ({
+                        id: item.id,
+                        waktuSimpan: item.waktu_simpan,
+                        totalSiswa: item.total_siswa,
+                        totalHadir: item.total_hadir,
+                        data: item.data
+                    }));
+                    localStorage.setItem(DB_KEY, JSON.stringify(results));
+                    renderHistori();
+                }
+            } catch (e) {
+                console.warn("Gagal memuat arsip records dari cloud:", e);
+            }
+        }
+
+        // Menyimpan & Mengaktifkan Kredensial Supabase Manual Pengguna
+        window.simpanConfigDatabase = function() {
+            const url = document.getElementById('input-supabase-url').value.trim();
+            const key = document.getElementById('input-supabase-key').value.trim();
+
+            if (!url || !key) {
+                showToast("Harap lengkapi isi Supabase URL dan Anon Key!", "error");
+                return;
+            }
+
+            localStorage.setItem('supabase_url', url);
+            localStorage.setItem('supabase_anon_key', key);
+            showToast("Konfigurasi database disimpan! Memulai ulang sistem...", "success");
             
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        };
+
+        // Menghapus Konfigurasi Kustom & Kembali ke Penyimpanan Lokal
+        window.hapusConfigDatabase = function() {
+            localStorage.removeItem('supabase_url');
+            localStorage.removeItem('supabase_anon_key');
+            showToast("Konfigurasi dihapus. Beralih kembali ke mode penyimpanan lokal...", "warning");
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        };
+
+        // Menyiarkan status ketukan layar aktif hari ini ke database agar pemantau lain tersinkronisasi
+        async function broadcastActiveSelections() {
+            saveCurrentSelections();
+            if (!isCloudActive || !supabaseClient) return;
+
+            isBroadcasting = true;
             const syncDot = document.getElementById('sync-dot');
             const syncText = document.getElementById('sync-text');
             
-            // Memberikan umpan balik visual singkat saat pemantauan disiarkan
             if (syncDot && syncText) {
                 syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-yellow-400";
                 syncText.innerText = "Menyiarkan pemantauan...";
             }
 
             try {
+                // Gunakan upsert HTTP biasa ke tabel presensi_data untuk membagikan status klik
                 const payload = {
                     date: new Date().toDateString(),
                     selections: temporarySelections
                 };
+                
                 await supabaseClient
-                    .from('smp_siswa_data')
-                    .upsert({ id: 2, classes: payload });
+                    .from('presensi_data')
+                    .upsert({ key: 'current_session', value: payload });
+
             } catch(e) {
-                console.warn("Gagal menyiarkan status pemantauan aktif:", e);
+                console.warn("Gagal menyiarkan status pemantauan:", e);
             } finally {
                 isBroadcasting = false;
                 setTimeout(() => {
                     if (syncDot && syncText) {
                         syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
-                        syncText.innerText = "Monitoring Tangguh (Auto-Sync HTTP)";
+                        syncText.innerText = "Monitoring Aktif (Real-time)";
                     }
                 }, 800);
             }
         }
 
-        // Cadangan Penyimpanan Lokal Database Siswa
+        // Memperbarui struktur roster siswa ke Cloud Supabase
+        async function updateSiswaDatabase() {
+            if (isCloudActive && supabaseClient) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('presensi_data')
+                        .upsert({ key: 'classes', value: dataSiswa });
+                    if (error) throw error;
+                } catch (e) {
+                    console.error("Gagal menyimpan struktur siswa ke cloud:", e);
+                    showToast("Gagal menyinkronkan daftar siswa ke Cloud: " + (e.message || ""), "error");
+                }
+            } else {
+                localStorage.setItem(SISWA_KEY, JSON.stringify(dataSiswa));
+            }
+        }
+
+        // --- SISTEM PENGEMBALIAN PENYIMPANAN LOKAL ---
         function loadStudentDatabase() {
             const saved = localStorage.getItem(SISWA_KEY);
             if (saved) {
@@ -859,7 +998,7 @@
             }
         }
 
-        // Memilah dan mengurutkan kunci kelas berdasarkan tingkat angka (Kelas 7, Kelas 8, Kelas 9)
+        // Memilah dan mengurutkan kunci kelas berdasarkan tingkat angka
         function getSortedClassKeys() {
             return Object.keys(dataSiswa).sort((a, b) => {
                 const numA = parseInt(a.replace(/\D/g, ''), 10);
@@ -974,7 +1113,7 @@
             }
         }
 
-        // Render Lembar Absensi Utama (Semua Kelas 7, 8, dan 9 berurutan secara numerik)
+        // Render Lembar Absensi Utama
         function init() {
             const labelTgl = document.getElementById('label-tgl');
             if (labelTgl) {
@@ -999,7 +1138,7 @@
                 });
             }
 
-            // Membuat Kartu Kelas yang diisi oleh Nama Siswa dan Opsi Kehadiran (Sakit, Izin, Batal X, serta Sentuh Baris Hadir)
+            // Membuat Kartu Kelas
             sortedClasses.forEach(kls => {
                 const siswa = dataSiswa[kls];
                 let html = `<div class="class-box" id="card-${kls.replace(/\s+/g, '')}">
@@ -1200,15 +1339,6 @@
             }
         };
 
-        // Unggah perubahan struktur kelas/siswa ke database Supabase atau LocalStorage harian
-        async function updateSiswaDatabase() {
-            if (isCloudActive && supabaseClient) {
-                await supabaseClient.from('smp_siswa_data').upsert({ id: 1, classes: dataSiswa });
-            } else {
-                localStorage.setItem(SISWA_KEY, JSON.stringify(dataSiswa));
-            }
-        }
-
         // Tambah kustom kelas baru harian
         window.tambahKelasBaru = async function() {
             const input = document.getElementById('input-nama-kelas');
@@ -1304,7 +1434,6 @@
             const jam = now.getHours();
             const fontMenit = now.getMinutes();
 
-            // S / I bypass if already present, we reset or cycle
             if (row.classList.contains('status-sakit') || row.classList.contains('status-izin')) {
                 resetAbsen(id, kls, nama);
                 return;
@@ -1313,10 +1442,6 @@
             chk.innerText = '✔';
 
             if (!row.classList.contains('status-hijau') && !row.classList.contains('status-kuning') && !row.classList.contains('status-merah')) {
-                // Rentang Waktu Kedisiplinan:
-                // 1. Hijau (Aman): 07.00 - 07.15
-                // 2. Kuning (Terlambat): 07.16 - 07.40
-                // 3. Merah (Peringatan): 07.41 - 08.20
                 if (jam === 7 && fontMenit >= 0 && fontMenit <= 15) {
                     row.classList.add('status-hijau');
                     showToast(`${nama} AMAN 🟢`, "success");
@@ -1450,13 +1575,14 @@
                 return;
             }
 
-            let db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-            db.unshift(payload);
+            let localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            localDb.unshift(payload);
 
             if (isCloudActive && supabaseClient) {
                 try {
+                    // Menyimpan rekam data harian baru ke Supabase
                     const { error } = await supabaseClient
-                        .from('smp_presensi_records')
+                        .from('presensi_records')
                         .insert({
                             id: payload.id,
                             waktu_simpan: payload.waktuSimpan,
@@ -1464,33 +1590,59 @@
                             total_hadir: payload.totalHadir,
                             data: payload.data
                         });
-                    
-                    if (error) throw error;
-                    
-                    // Mengosongkan pemantauan aktif harian (id: 2) setelah sukses simpan final
-                    await supabaseClient
-                        .from('smp_siswa_data')
-                        .upsert({ id: 2, classes: { date: new Date().toDateString(), selections: {} } });
 
-                    showToast("Presensi berhasil disimpan secara real-time ke Cloud!", "success");
+                    if (error) {
+                        // Lempar error agar ditangkap blok catch untuk diagnosa toast
+                        throw error;
+                    }
+                    
+                    showToast("Presensi berhasil disimpan secara real-time ke Supabase Cloud!", "success");
+                    
+                    // Reset status visual baris presensi harian setelah disetujui tersimpan
+                    document.querySelectorAll('.student-row').forEach(row => {
+                        row.className = "student-row";
+                        row.querySelector('.waktu-text').innerText = "-";
+                        row.querySelector('.check-icon').innerText = "✔";
+                    });
+                    temporarySelections = {};
+                    
+                    // Bersihkan status sesi penanda aktif di database setelah berhasil disimpan
+                    const emptyPayload = {
+                        date: new Date().toDateString(),
+                        selections: {}
+                    };
+                    await supabaseClient
+                        .from('presensi_data')
+                        .upsert({ key: 'current_session', value: emptyPayload });
+
+                    broadcastActiveSelections();
+                    
+                    // Muat ulang data terbaru
+                    await muatLaporanDariSupabase();
+
                 } catch (e) {
-                    console.error("Supabase Error:", e);
-                    showToast("Gagal menyimpan ke Cloud, disimpan di memori lokal.", "warning");
-                    localStorage.setItem(DB_KEY, JSON.stringify(db));
+                    console.error("Gagal menyimpan ke Cloud:", e);
+                    // Menampilkan pesan kesalahan Postgres/RLS spesifik dari Supabase ke pengguna
+                    const detailedError = e.message || e.details || JSON.stringify(e);
+                    showToast(`Gagal menyimpan ke Cloud: ${detailedError}. Data dicadangkan di lokal.`, "error");
+                    
+                    // Cadangkan ke penyimpanan lokal
+                    localStorage.setItem(DB_KEY, JSON.stringify(localDb));
+                    renderHistori();
                 }
             } else {
-                localStorage.setItem(DB_KEY, JSON.stringify(db));
+                localStorage.setItem(DB_KEY, JSON.stringify(localDb));
                 showToast("Data Berhasil Disimpan secara Lokal!", "success");
+                
+                // Reset status visual baris presensi harian
+                document.querySelectorAll('.student-row').forEach(row => {
+                    row.className = "student-row";
+                    row.querySelector('.waktu-text').innerText = "-";
+                    row.querySelector('.check-icon').innerText = "✔";
+                });
+                temporarySelections = {};
+                renderHistori();
             }
-            
-            // Reset status visual baris presensi harian
-            document.querySelectorAll('.student-row').forEach(row => {
-                row.className = "student-row";
-                row.querySelector('.waktu-text').innerText = "-";
-                row.querySelector('.check-icon').innerText = "✔";
-            });
-            temporarySelections = {};
-            renderHistori();
         };
 
         // Unduh laporan presensi harian ke bentuk dokumen PDF
@@ -1509,12 +1661,12 @@
             const tbody = document.getElementById('list-histori-body');
             if (!tbody) return;
 
-            const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-            if(db.length === 0) { 
+            const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            if(localDb.length === 0) { 
                 tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding:25px; color:#94a3b8;'>Belum ada laporan tersimpan.</td></tr>"; 
                 return; 
             }
-            tbody.innerHTML = db.map(s => `
+            tbody.innerHTML = localDb.map(s => `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="font-bold text-slate-700">${s.waktuSimpan}</td>
                     <td><span class="text-emerald-600 font-extrabold">${s.totalHadir}</span> / ${s.totalSiswa} Siswa</td>
@@ -1528,8 +1680,8 @@
 
         // Membuka modal detail laporan riwayat harian
         window.bukaDetail = function(id) {
-            const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-            const s = db.find(x => x.id === id);
+            const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            const s = localDb.find(x => x.id === id);
             document.getElementById('judulModal').innerText = "Arsip: " + s.waktuSimpan;
             
             const dataTerurut = [
@@ -1554,27 +1706,33 @@
         // Menghapus berkas laporan riwayat dari database Supabase
         window.hapusLaporan = function(id) {
             customConfirm("Hapus Laporan", "Apakah Anda yakin ingin menghapus arsip laporan ini?", async () => {
-                let db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-                db = db.filter(x => x.id !== id);
+                let localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+                localDb = localDb.filter(x => x.id !== id);
 
                 if (isCloudActive && supabaseClient) {
                     try {
                         const { error } = await supabaseClient
-                            .from('smp_presensi_records')
+                            .from('presensi_records')
                             .delete()
                             .eq('id', id);
-                        
+
                         if (error) throw error;
                         showToast("Laporan berhasil dihapus dari Cloud.", "success");
                     } catch (e) {
-                        console.error(e);
-                        localStorage.setItem(DB_KEY, JSON.stringify(db));
+                        console.error("Gagal hapus data cloud:", e);
+                        showToast(`Gagal hapus dari Cloud: ${e.message}`, "error");
+                        localStorage.setItem(DB_KEY, JSON.stringify(localDb));
                     }
                 } else {
-                    localStorage.setItem(DB_KEY, JSON.stringify(db));
+                    localStorage.setItem(DB_KEY, JSON.stringify(localDb));
                     showToast("Laporan lokal berhasil dihapus.", "success");
                 }
-                renderHistori();
+                
+                if (isCloudActive) {
+                    await muatLaporanDariSupabase();
+                } else {
+                    renderHistori();
+                }
             });
         };
 
@@ -1584,11 +1742,11 @@
 
         // Melakukan kalkulasi statistik kedisiplinan (Hadir, Sakit, Izin, Alpa) berkala harian
         function hitungStatistikDisiplin(hariMundur = 7) {
-            const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
-            if (db.length === 0) return null;
+            const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            if (localDb.length === 0) return null;
 
             const cutoffDate = Date.now() - (hariMundur * 24 * 60 * 60 * 1000);
-            const sesiValid = db.filter(s => s.id >= cutoffDate);
+            const sesiValid = localDb.filter(s => s.id >= cutoffDate);
             
             if (sesiValid.length === 0) return null;
 
@@ -1926,7 +2084,7 @@
             doc.setDrawColor(203, 213, 225);
             doc.line(14, footerY + 32, 60, footerY + 32);
 
-            doc.save(`Rekapitulasi_Disiplin_HQ_Hari_${dataRekapAktif.periodeHari}.pdf`);
+            doc.save("Rekapitulasi_Disiplin_HQ_Hari_" + dataRekapAktif.periodeHari + ".pdf");
             showToast("Laporan PDF Rekapitulasi Berhasil Diunduh!", "success");
         };
 
@@ -2019,14 +2177,49 @@
             });
             
             const namaFileBersih = sesi.waktuSimpan.replace(/[\/\\*?:|<>]/g, '-').replace(/\s+/g, '_').split(',_')[0];
-            doc.save(`Presensi_SMP_HQ_${namaFileBersih}.pdf`);
+            doc.save("Presensi_SMP_HQ_" + namaFileBersih + ".pdf");
         }
+
+        // Binding seluruh fungsi interaktif ke lingkup window (Aturan ESM)
+        window.filterTampilanKelas = filterTampilanKelas;
+        window.updateSiswaPindahDropdown = updateSiswaPindahDropdown;
+        window.pindahkanSiswaKelas = pindahkanSiswaKelas;
+        window.toggleForm = toggleForm;
+        window.tambahKelasBaru = tambahKelasBaru;
+        window.tambahSiswaBaru = tambahSiswaBaru;
+        window.hapusKelas = html => hapusKelas(html);
+        window.hapusSiswa = (kls, i) => html => hapusSiswa(kls, i);
+        window.toggleAbsen = toggleAbsen;
+        window.setSakit = setSakit;
+        window.setIzin = setIzin;
+        window.resetAbsen = resetAbsen;
+        window.simpanData = simpanData;
+        window.cetakSesiAktif = cetakSesiAktif;
+        window.renderHistori = renderHistori;
+        window.bukaDetail = bukaDetail;
+        window.hapusLaporan = hapusLaporan;
+        window.tutupModal = tutupModal;
+        window.bukaDashboardRekap = bukaDashboardRekap;
+        window.renderTabelRekap = renderTabelRekap;
+        window.filterTabelRekap = filterTabelRekap;
+        window.tutupDashboardRekap = tutupDashboardRekap;
+        window.cetakLaporanRekapBerkala = cetakLaporanRekapBerkala;
 
         // Jalankan koneksi saat halaman dimuat sepenuhnya
         window.addEventListener('DOMContentLoaded', () => {
             setupSupabase();
             updateJamAktif();
             setInterval(updateJamAktif, 1000);
+
+            // Tampilkan kembali input config jika tersimpan di localStorage
+            const savedUrl = localStorage.getItem('supabase_url');
+            const savedKey = localStorage.getItem('supabase_anon_key');
+            if (savedUrl && document.getElementById('input-supabase-url')) {
+                document.getElementById('input-supabase-url').value = savedUrl;
+            }
+            if (savedKey && document.getElementById('input-supabase-key')) {
+                document.getElementById('input-supabase-key').value = savedKey;
+            }
         });
     </script>
 </body>
