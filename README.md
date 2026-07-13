@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    <!-- Tailwind CSS for high performance adaptive grid system -->
+    <!-- Tailwind CSS untuk sistem grid adaptif berkinerja tinggi -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons for responsive and crisp vector styling -->
+    <!-- Lucide Icons untuk gaya vektor yang responsif dan tajam -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Supabase JS Client library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -35,7 +35,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Premium rounded scrolls */
+        /* Scrollbar premium yang membulat */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -48,7 +48,7 @@
             border-radius: 10px;
         }
 
-        /* Glassmorphism Header */
+        /* Header Glassmorphism */
         .header { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
             color: white; 
@@ -85,7 +85,7 @@
             }
         }
         
-        /* Modern Cards */
+        /* Kartu Modern */
         .class-box { 
             background: var(--card-bg); 
             border-radius: 24px; 
@@ -136,7 +136,7 @@
             font-weight: 800;
         }
 
-        /* Color Badges for attendance statuses */
+        /* Lencana warna untuk status kehadiran */
         .status-hijau { background-color: #dcfce7 !important; }
         .status-hijau:hover { background-color: #bbf7d0 !important; }
         .status-hijau .name-text { color: #14532d; }
@@ -167,7 +167,7 @@
         .status-izin .check-icon { background-color: var(--izin); border-color: var(--izin); color: white; transform: scale(1.05); }
         .status-izin .waktu-text { color: #6d28d9 !important; }
 
-        /* Custom buttons styling */
+        /* Desain tombol kustom */
         .btn-save {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
@@ -202,7 +202,7 @@
             filter: brightness(1.1);
         }
 
-        /* History Area & Table */
+        /* Area & Tabel Histori */
         .history-area {
             background: white;
             padding: 28px;
@@ -250,7 +250,6 @@
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Custom gorgeous Toast notifications */
         #toast-container {
             position: fixed;
             bottom: 24px;
@@ -308,23 +307,23 @@
     <!-- Header Section -->
     <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
         <div class="max-w-7xl mx-auto">
-            <!-- Sync Status Indicator Badge (Supabase) -->
+            <!-- Lencana Status Sinkronisasi Supabase (HTTP Polling) -->
             <div class="flex justify-center mb-4">
-                <div id="sync-badge" class="flex items-center gap-2 bg-rose-950/40 border border-rose-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-rose-300">
+                <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
                     <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500" id="sync-dot"></span>
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" id="sync-dot"></span>
                     </span>
                     <span id="sync-text">Menghubungkan Supabase...</span>
                 </div>
             </div>
 
             <h1 class="text-xl md:text-3xl font-extrabold tracking-wider leading-tight">SMP HAMALATUL QURAN RINGINAGUNG</h1>
-            <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (REAL-TIME MULTI-DEVICE)</h2>
+            <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
             
             <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div id="label-tgl" class="opacity-90 text-xs md:text-sm font-semibold bg-white/10 px-5 py-2 rounded-full border border-white/10 shadow-sm">
-                    Sabtu, 11 Juli 2026
+                    Memuat Tanggal...
                 </div>
                 <div id="label-jam" class="text-md md:text-lg font-extrabold bg-white/20 px-6 py-2 rounded-full border border-white/20 shadow-md min-w-[120px] tabular-nums tracking-wider">
                     00:00:00
@@ -345,7 +344,7 @@
     <div class="max-w-7xl mx-auto px-4 mt-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Dynamic Administrative Control Panel -->
+            <!-- Panel Kontrol Administratif -->
             <div class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center gap-2 mb-4">
@@ -358,12 +357,12 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <!-- Dynamic form expanders -->
+                    <!-- Tombol expander form dinamis -->
                     <button onclick="toggleForm('form-kelas')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
                         <span class="flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-indigo-500"></i> Buat Kelas Baru</span>
                         <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
                     </button>
-                    <!-- Create Class Form -->
+                    <!-- Form Tambah Kelas -->
                     <div id="form-kelas" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide">Nama Kelas Baru</label>
                         <input type="text" id="input-nama-kelas" placeholder="Contoh: Kelas 7A, Kelas 8B" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
@@ -374,7 +373,7 @@
                         <span class="flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-sky-500"></i> Daftarkan Siswa Baru</span>
                         <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
                     </button>
-                    <!-- Register Student Form -->
+                    <!-- Form Tambah Siswa -->
                     <div id="form-siswa" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Pilih Kelas Tujuan</label>
@@ -391,7 +390,7 @@
                         <span class="flex items-center gap-2"><i data-lucide="arrow-left-right" class="w-4 h-4 text-emerald-500"></i> Pindahkan / Naik Kelas</span>
                         <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
                     </button>
-                    <!-- Migration Form -->
+                    <!-- Form Migrasi / Kenaikan Kelas -->
                     <div id="form-pindah" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Dari Kelas (Asal)</label>
@@ -412,7 +411,7 @@
                 </div>
             </div>
 
-            <!-- Discipline Analysis Dashboard Panel -->
+            <!-- Dashboard Analisis Disiplin Berkala -->
             <div class="lg:col-span-2 bg-gradient-to-br from-indigo-950 to-slate-900 p-5 md:p-6 rounded-3xl text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
                 <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/20 rounded-full blur-2xl"></div>
                 
@@ -444,7 +443,7 @@
         </div>
     </div>
 
-    <!-- Mobile-First Class Quick Filter Tabs -->
+    <!-- Tombol Filter Cepat Kelas di Perangkat Mobile -->
     <div class="max-w-7xl mx-auto px-4 mt-8 md:mt-10">
         <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap gap-1" id="class-nav-tabs">
             <button onclick="filterTampilanKelas('ALL')" id="tab-all" class="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all bg-slate-900 text-white">
@@ -453,13 +452,13 @@
         </div>
     </div>
 
-    <!-- Main Live Presensi Grid -->
+    <!-- Kotak Grid Presensi Utama -->
     <div class="max-w-7xl mx-auto px-4 mt-6">
         <div id="app-grid" class="grid-container">
-            <!-- Dynamically populated via init() showing all classes in order -->
+            <!-- Diisi secara dinamis melalui init() yang menampilkan semua kelas -->
         </div>
         
-        <!-- Large Save & PDF Actions -->
+        <!-- Tombol Aksi Simpan & Unduh PDF -->
         <div class="main-actions flex flex-col sm:flex-row justify-center items-center gap-4 my-10 md:my-12">
             <button class="btn-save w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="simpanData()">
                 <i data-lucide="save"></i> 💾 SIMPAN DATA HARI INI
@@ -469,7 +468,7 @@
             </button>
         </div>
 
-        <!-- Historical Records Section -->
+        <!-- Area Histori dan Riwayat Laporan -->
         <div class="history-area mb-12">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div class="flex items-center gap-2">
@@ -493,14 +492,14 @@
                         </tr>
                     </thead>
                     <tbody id="list-histori-body">
-                        <!-- populated via renderHistori() -->
+                        <!-- Diisi secara dinamis melalui renderHistori() -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 1: Detail Daily Report -->
+    <!-- MODAL 1: Detail Laporan Harian -->
     <div id="modalDetail" class="modal">
         <div class="modal-content mx-4 my-8">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
@@ -539,7 +538,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Discipline Analytics Dashboard Modal -->
+    <!-- MODAL 2: Dasbor Analisis Statistik Kedisiplinan -->
     <div id="modalRekap" class="modal">
         <div class="modal-content mx-4 my-8 max-w-5xl flex flex-col">
             <!-- Header -->
@@ -556,10 +555,23 @@
                 <button onclick="tutupDashboardRekap()" class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x"></i></button>
             </div>
 
-            <!-- Main Content Area -->
+            <!-- Area Konten Utama -->
             <div class="space-y-6">
-                <!-- Statistic Summary Badges -->
-                <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+                <!-- Filter & Pencarian Laporan Berkala -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex-1 relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="rekap-search" oninput="filterTabelRekap()" placeholder="Cari nama santri..." class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <select id="rekap-filter-kelas" onchange="filterTabelRekap()" class="sm:w-48 px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="ALL">Semua Kelas</option>
+                    </select>
+                </div>
+
+                <!-- Lencana Rangkuman Statistik -->
+                <div class="grid grid-cols-2 md:grid-cols-7 gap-3">
                     <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl text-center shadow-sm">
                         <div class="text-[10px] font-bold text-indigo-500 uppercase tracking-wide">Rerata Hadir</div>
                         <div class="text-xl md:text-2xl font-extrabold text-indigo-900 mt-1" id="stat-rerata">0%</div>
@@ -584,9 +596,13 @@
                         <div class="text-[10px] font-bold text-violet-600 uppercase tracking-wide">Izin</div>
                         <div class="text-xl md:text-2xl font-extrabold text-violet-900 mt-1" id="stat-izin">0</div>
                     </div>
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center shadow-sm">
+                        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Alpa</div>
+                        <div class="text-xl md:text-2xl font-extrabold text-slate-900 mt-1" id="stat-alpa">0</div>
+                    </div>
                 </div>
 
-                <!-- Complete Student Attendance Table -->
+                <!-- Tabel Detail Kehadiran Siswa Lengkap -->
                 <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-inner bg-white">
                     <div class="overflow-x-auto max-h-[35vh]">
                         <table class="w-full text-left border-collapse min-w-[700px]" id="table-rekap-data">
@@ -604,14 +620,14 @@
                                 </tr>
                             </thead>
                             <tbody class="text-xs text-slate-700 divide-y divide-slate-100" id="table-rekap-body">
-                                <!-- Populated dynamically by JS -->
+                                <!-- Diisi secara dinamis melalui JavaScript -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer & Actions -->
+            <!-- Tombol Aksi Bawah Modal Rekap -->
             <div class="border-t border-slate-100 pt-4 mt-4 flex flex-col sm:flex-row gap-3">
                 <button onclick="cetakLaporanRekapBerkala()" class="flex-1 flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs py-3.5 px-4 rounded-xl transition-all shadow-md">
                     <i data-lucide="file-text" class="w-4 h-4"></i> Cetak Laporan PDF Rekapitulasi Berkala
@@ -623,86 +639,51 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Logic & Supabase Real-time Sync Integration -->
+    <!-- Integrasi Logika Sinkronisasi Supabase Real-time dengan Polling HTTP Berkala -->
     <script>
         const DB_KEY = 'db_presensi_supabase_v9';
         const SISWA_KEY = 'db_siswa_supabase_v9';
 
-        // Supabase API Credentials
+        // Supabase API Credentials - Ditanamkan secara aman menggunakan kredensial aktif Anda
         const supabaseUrl = 'https://ogbvyeypznbwurmsmwld.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo';
         
-        // Mengubah nama variabel lokal dari 'supabase' menjadi 'supabaseClient' untuk menghindari konflik tabrakan dengan CDN global
         let supabaseClient = null;
         let isCloudActive = false;
+        let isBroadcasting = false;
 
-        // Default list of students
+        // Daftar default nama siswa awal untuk Kelas 7, 8, dan 9
         const defaultDataSiswa = {
             "Kelas 7": [
-                "Aisyah Mughny",
-                "Amirotun Nabilatur",
-                "Aqila Adzka",
-                "Arbaatul Mafahimul",
-                "Hamda Zakiya",
-                "Izza dewi",
-                "Maryam Qonita",
-                "Natarina Deandra",
-                "Olivia Zahra",
-                "Silvia Maghfiroh",
-                "Rahma Shafa",
-                "putri Royhana"
+                "Aisyah Mughny", "Amirotun Nabilatur", "Aqila Adzka", "Arbaatul Mafahimul",
+                "Hamda Zakiya", "Izza dewi", "Maryam Qonita", "Natarina Deandra",
+                "Olivia Zahra", "Silvia Maghfiroh", "Rahma Shafa", "putri Royhana"
             ],
             "Kelas 8": [
-                "Asma",
-                "Farizka Ammalia",
-                "Fathimatuz Zahro",
-                "Fatiya Nahdloh Nafiqoh",
-                "Fazlina Nurun Nadia",
-                "Filza Kamalia Afkarin",
-                "Hasna Aisyah Fatin",
-                "Iffah Miftahurrohmah",
-                "Iren Anggraini",
-                "Khasifa Azkayra Sariza Putri",
-                "Khansa Shafana Berlina",
-                "Khoirunnisa Qonita Ahnaffia",
-                "Li'izzah Diana Al-Faizah",
-                "Maulidya Farah Medina Mecca",
-                "Naifa Al-Faizah",
-                "Nayla Deeba Husna Nasyida",
-                "Nura Aulia Zahidah",
-                "Nurhafidza Mumtazul Hasanah",
-                "Rahma Zakiatun Nufus",
-                "Rofina Nuha Labibah",
-                "Shofi Nailatul Hasanah",
-                "Shohwatul Khoirus Salwa",
-                "Victoria Nahrul Hayat Az Zahra",
-                "Zulfa Nur Laili",
-                "Ahmad Fahrizzabid",
-                "Emilda Burhani Jamilah",
-                "Hafidatussilma Wassyafiq",
-                "Hasna Hani Arafa",
+                "Asma", "Farizka Ammalia", "Fathimatuz Zahro", "Fatiya Nahdloh Nafiqoh",
+                "Fazlina Nurun Nadia", "Filza Kamalia Afkarin", "Hasna Aisyah Fatin",
+                "Iffah Miftahurrohmah", "Iren Anggraini", "Khasifa Azkayra Sariza Putri",
+                "Khansa Shafana Berlina", "Khoirunnisa Qonita Ahnaffia", "Li'izzah Diana Al-Faizah",
+                "Maulidya Farah Medina Mecca", "Naifa Al-Faizah", "Nayla Deeba Husna Nasyida",
+                "Nura Aulia Zahidah", "Nurhafidza Mumtazul Hasanah", "Rahma Zakiatun Nufus",
+                "Rofina Nuha Labibah", "Shofi Nailatul Hasanah", "Shohwatul Khoirus Salwa",
+                "Victoria Nahrul Hayat Az Zahra", "Zulfa Nur Laili", "Ahmad Fahrizzabid",
+                "Emilda Burhani Jamilah", "Hafidatussilma Wassyafiq", "Hasna Hani Arafa",
                 "Azzahra Cecio Keyla Alexita"
             ],
             "Kelas 9": [
-                "Ahmad Syarifuddin",
-                "Bima Sakti Pratama",
-                "Candra Wijaya",
-                "Dwi Setyawan",
-                "Fajar Ramadhan",
-                "Guntur Wibowo",
-                "Hendra Lesmana",
-                "Indra Wijaya",
-                "Joko Susilo",
-                "Kurniawan Dwi"
+                "Ahmad Syarifuddin", "Bima Sakti Pratama", "Candra Wijaya", "Dwi Setyawan",
+                "Fajar Ramadhan", "Guntur Wibowo", "Hendra Lesmana", "Indra Wijaya",
+                "Joko Susilo", "Kurniawan Dwi"
             ]
         };
 
-        // Global State variables
+        // State global aplikasi
         let dataSiswa = {};
         let temporarySelections = {};
         let dataRekapAktif = null;
 
-        // Initialize Supabase Client Connection
+        // Inisialisasi Koneksi ke Supabase Client
         async function setupSupabase() {
             const syncBadge = document.getElementById('sync-badge');
             const syncText = document.getElementById('sync-text');
@@ -710,22 +691,46 @@
             const dbLabel = document.getElementById('db-type-label');
 
             try {
-                // Menggunakan window.supabase (global CDN) untuk inisialisasi ke dalam supabaseClient lokal
+                // Inisialisasi Supabase Client menggunakan window.supabase
                 supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
                 isCloudActive = true;
                 
-                // Update UI indicators
+                // Perbarui indikator status sinkronisasi di UI
                 syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
-                syncText.innerText = "Terhubung Realtime (Supabase)";
+                syncText.innerText = "Monitoring Aktif (Auto-Sync HTTP)";
                 syncBadge.className = "flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300";
-                dbLabel.innerText = "Cloud Sync Online";
+                dbLabel.innerText = "Cloud Sync & Live Monitor";
 
-                // Pull and Listen Real-time
+                // Tarik data pertama kali secara sinkron dari Supabase melalui HTTP GET biasa
                 await syncSiswaFromSupabase();
                 await syncPresensiFromSupabase();
-                startRealtimeSubscription();
+                await syncActiveSessionFromSupabase();
+
+                // Polling sesi presensi aktif secara cepat (setiap 4 detik) untuk menggantikan sistem WebSocket wss:// yang diblokir oleh iframe Canvas
+                setInterval(async () => {
+                    if (isCloudActive && supabaseClient && !isBroadcasting) {
+                        try {
+                            await syncActiveSessionFromSupabase();
+                        } catch (err) {
+                            console.warn("Koneksi monitoring berkala terinterupsi:", err);
+                        }
+                    }
+                }, 4000);
+
+                // Polling daftar nama siswa & data histori presensi berkala (setiap 15 detik) untuk memperbarui roster jika ada penambahan
+                setInterval(async () => {
+                    if (isCloudActive && supabaseClient && !isBroadcasting) {
+                        try {
+                            await syncSiswaFromSupabase();
+                            await syncPresensiFromSupabase();
+                        } catch (err) {
+                            console.warn("Sinkronisasi latar belakang terinterupsi:", err);
+                        }
+                    }
+                }, 15000);
+
             } catch (e) {
-                console.warn("Supabase gagal inisialisasi, beralih ke lari offline lokal:", e);
+                console.warn("Supabase gagal diinisialisasi, beralih ke penyimpanan lokal:", e);
                 useOfflineFallback();
             }
         }
@@ -746,7 +751,7 @@
             init();
         }
 
-        // Fetch students lists from Supabase
+        // Sinkronisasi data daftar nama siswa dari Supabase (id: 1)
         async function syncSiswaFromSupabase() {
             const { data, error } = await supabaseClient
                 .from('smp_siswa_data')
@@ -755,16 +760,16 @@
                 .single();
 
             if (error || !data) {
-                // Seeding default data to database if empty
                 dataSiswa = {...defaultDataSiswa};
                 await supabaseClient.from('smp_siswa_data').upsert({ id: 1, classes: dataSiswa });
             } else {
+                saveCurrentSelections();
                 dataSiswa = data.classes || {};
             }
             init();
         }
 
-        // Fetch history reports from Supabase
+        // Sinkronisasi data riwayat presensi yang tersimpan dari Supabase
         async function syncPresensiFromSupabase() {
             const { data, error } = await supabaseClient
                 .from('smp_presensi_records')
@@ -784,23 +789,66 @@
             }
         }
 
-        // Listen for Realtime events on Supabase Table
-        function startRealtimeSubscription() {
-            supabaseClient
-                .channel('realtime_changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'smp_siswa_data' }, payload => {
-                    if (payload.new && payload.new.classes) {
-                        dataSiswa = payload.new.classes;
-                        init();
-                    }
-                })
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'smp_presensi_records' }, () => {
-                    syncPresensiFromSupabase();
-                })
-                .subscribe();
+        // Sinkronisasi data sesi pemantauan aktif hari ini dari Supabase (id: 2)
+        async function syncActiveSessionFromSupabase() {
+            if (!isCloudActive || !supabaseClient) return;
+            const { data, error } = await supabaseClient
+                .from('smp_siswa_data')
+                .select('*')
+                .eq('id', 2)
+                .single();
+
+            if (!error && data) {
+                const sessionData = data.classes || {};
+                // Jika data yang terekam adalah untuk hari ini, muat status klik aktifnya
+                if (sessionData.date === new Date().toDateString()) {
+                    temporarySelections = sessionData.selections || {};
+                    restoreSelections();
+                } else {
+                    // Jika hari berganti, lakukan pembersihan layar otomatis (auto-reset harian)
+                    temporarySelections = {};
+                    restoreSelections();
+                }
+            }
         }
 
-        // Local Storage Student Data Fallback
+        // Menyiarkan status pemantauan aktif harian ke database Supabase (id: 2) agar perangkat lain segera tersinkronisasi
+        async function broadcastActiveSelections() {
+            if (!isCloudActive || !supabaseClient) return;
+            isBroadcasting = true;
+            saveCurrentSelections();
+            
+            const syncDot = document.getElementById('sync-dot');
+            const syncText = document.getElementById('sync-text');
+            
+            // Memberikan umpan balik visual singkat saat pemantauan disiarkan
+            if (syncDot && syncText) {
+                syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-yellow-400";
+                syncText.innerText = "Menyiarkan pemantauan...";
+            }
+
+            try {
+                const payload = {
+                    date: new Date().toDateString(),
+                    selections: temporarySelections
+                };
+                await supabaseClient
+                    .from('smp_siswa_data')
+                    .upsert({ id: 2, classes: payload });
+            } catch(e) {
+                console.warn("Gagal menyiarkan status pemantauan aktif:", e);
+            } finally {
+                isBroadcasting = false;
+                setTimeout(() => {
+                    if (syncDot && syncText) {
+                        syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
+                        syncText.innerText = "Monitoring Tangguh (Auto-Sync HTTP)";
+                    }
+                }, 800);
+            }
+        }
+
+        // Cadangan Penyimpanan Lokal Database Siswa
         function loadStudentDatabase() {
             const saved = localStorage.getItem(SISWA_KEY);
             if (saved) {
@@ -811,7 +859,7 @@
             }
         }
 
-        // Helper to cleanly extract and sort classes chronologically
+        // Memilah dan mengurutkan kunci kelas berdasarkan tingkat angka (Kelas 7, Kelas 8, Kelas 9)
         function getSortedClassKeys() {
             return Object.keys(dataSiswa).sort((a, b) => {
                 const numA = parseInt(a.replace(/\D/g, ''), 10);
@@ -828,7 +876,7 @@
             });
         }
 
-        // Filter visual display for selected class
+        // Menyembunyikan kelas yang tidak dipilih pada tab navigasi cepat mobile
         window.filterTampilanKelas = function(selectedKls) {
             const classBoxes = document.querySelectorAll('.class-box');
             const tabs = document.querySelectorAll('#class-nav-tabs button');
@@ -859,7 +907,7 @@
             });
         };
 
-        // --- TOAST NOTIFICATIONS ---
+        // --- NOTIFIKASI TOAST ---
         window.showToast = function(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const card = document.createElement('div');
@@ -889,7 +937,7 @@
             }, 3500);
         };
 
-        // --- CONFIRMATION DIALOG ---
+        // --- DIALOG KONFIRMASI KUSTOM ---
         window.customConfirm = function(title, message, onYes, onNo = null) {
             const modal = document.getElementById('confirmModal');
             document.getElementById('confirmTitle').innerText = title;
@@ -926,7 +974,7 @@
             }
         }
 
-        // Render main rosters (All Kelas 7, 8, 9 chronologically)
+        // Render Lembar Absensi Utama (Semua Kelas 7, 8, dan 9 berurutan secara numerik)
         function init() {
             const labelTgl = document.getElementById('label-tgl');
             if (labelTgl) {
@@ -941,7 +989,7 @@
             
             const sortedClasses = getSortedClassKeys();
             
-            // Build Quick Navigation Tabs Dynamically
+            // Membuat Tab Navigasi Kelas Cepat secara dinamis
             const tabContainer = document.getElementById('class-nav-tabs');
             if (tabContainer) {
                 tabContainer.innerHTML = `<button onclick="filterTampilanKelas('ALL')" id="tab-all" class="flex-1 text-center py-2 px-3 rounded-xl text-xs font-extrabold transition-all bg-slate-900 text-white min-w-[100px]">Semua Kelas</button>`;
@@ -951,7 +999,7 @@
                 });
             }
 
-            // Populate Main Grid Class Boxes (Direct Sakit, Izin, Batal buttons and Touch-row Hadir)
+            // Membuat Kartu Kelas yang diisi oleh Nama Siswa dan Opsi Kehadiran (Sakit, Izin, Batal X, serta Sentuh Baris Hadir)
             sortedClasses.forEach(kls => {
                 const siswa = dataSiswa[kls];
                 let html = `<div class="class-box" id="card-${kls.replace(/\s+/g, '')}">
@@ -971,12 +1019,11 @@
                     html += `<table class="input-table"><tbody>`;
                     siswa.forEach((n, i) => {
                         const id = kls.replace(/\s+/g, '') + i;
-                        // Baris siswa dapat disentuh di area mana saja untuk menandai kehadiran harian
                         html += `<tr class="student-row" id="${id}" onclick="toggleAbsen('${id}', '${kls}', '${n}')">
                             <td class="relative flex flex-col gap-3 pr-4">
                                 <span class="name-text">${i+1}. ${n}</span>
                                 
-                                <!-- Opsi Sakit, Izin, Batal X di bawah nama siswa -->
+                                <!-- Tombol aksi langsung Sakit, Izin, Batal di bawah nama siswa -->
                                 <div class="flex items-center gap-1.5 mt-1">
                                     <button onclick="event.stopPropagation(); setSakit('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🔵 Sakit
@@ -1010,7 +1057,7 @@
             lucide.createIcons();
         }
 
-        // Save current selections temporarily
+        // Menyimpan status kehadiran aktif sementara ke memori lokal
         function saveCurrentSelections() {
             temporarySelections = {};
             const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin');
@@ -1028,12 +1075,18 @@
             });
         }
 
-        // Restore temporary active selections
+        // Memulihkan data penanda kehadiran aktif ke tampilan layar
         function restoreSelections() {
+            document.querySelectorAll('.student-row').forEach(row => {
+                row.className = "student-row";
+                row.querySelector('.waktu-text').innerText = "-";
+                row.querySelector('.check-icon').innerText = "✔";
+            });
+
             for (const [id, value] of Object.entries(temporarySelections)) {
                 const row = document.getElementById(id);
                 if (row) {
-                    row.classList.add(value.statusClass);
+                    row.className = `student-row ${value.statusClass}`;
                     row.querySelector('.waktu-text').innerText = value.timeText;
                     const chk = row.querySelector('.check-icon');
                     if (value.statusClass === 'status-sakit') chk.innerText = 'S';
@@ -1043,7 +1096,7 @@
             }
         }
 
-        // Populate administrative drop-down select options
+        // Memasukkan daftar kelas ke menu drop-down pilihan di panel kontrol
         function populateSelectOptions() {
             const select = document.getElementById('select-kelas-siswa');
             const selectAsal = document.getElementById('select-pindah-asal');
@@ -1066,7 +1119,7 @@
             updateSiswaPindahDropdown();
         }
 
-        // Update the student dropdown dynamically inside promotion menu
+        // Memperbarui pilihan drop-down siswa pada formulir perpindahan kelas
         window.updateSiswaPindahDropdown = function() {
             const selectAsal = document.getElementById('select-pindah-asal');
             const selectSiswa = document.getElementById('select-pindah-siswa');
@@ -1082,7 +1135,7 @@
             }
         };
 
-        // Execute class promotion / student migration
+        // Eksekusi mutasi atau pemindahan kenaikan kelas siswa
         window.pindahkanSiswaKelas = function() {
             const klsAsal = document.getElementById('select-pindah-asal').value;
             const klsTujuan = document.getElementById('select-pindah-tujuan').value;
@@ -1147,7 +1200,7 @@
             }
         };
 
-        // Write/update student database to Supabase or LocalStorage
+        // Unggah perubahan struktur kelas/siswa ke database Supabase atau LocalStorage harian
         async function updateSiswaDatabase() {
             if (isCloudActive && supabaseClient) {
                 await supabaseClient.from('smp_siswa_data').upsert({ id: 1, classes: dataSiswa });
@@ -1156,7 +1209,7 @@
             }
         }
 
-        // Dynamically append new school class to Database
+        // Tambah kustom kelas baru harian
         window.tambahKelasBaru = async function() {
             const input = document.getElementById('input-nama-kelas');
             const klsBaru = input.value.trim();
@@ -1179,7 +1232,7 @@
             init();
         };
 
-        // Dynamically append new Student Name to a Class
+        // Daftarkan nama siswa baru secara instan
         window.tambahSiswaBaru = async function() {
             const selectKls = document.getElementById('select-kelas-siswa');
             const inputSiswa = document.getElementById('input-nama-siswa');
@@ -1211,7 +1264,7 @@
             init();
         };
 
-        // Remove a class
+        // Hapus kelas secara permanen
         window.hapusKelas = function(kls) {
             customConfirm("Hapus Kelas", `Apakah Anda yakin ingin menghapus ${kls} beserta seluruh siswanya secara permanen?`, async () => {
                 saveCurrentSelections();
@@ -1222,7 +1275,7 @@
             });
         };
 
-        // Remove a student
+        // Hapus nama siswa terpilih
         window.hapusSiswa = function(kls, index) {
             const nama = dataSiswa[kls][index];
             customConfirm("Hapus Siswa", `Apakah Anda yakin ingin menghapus siswa ${nama} dari ${kls}?`, async () => {
@@ -1234,9 +1287,9 @@
             });
         };
 
-        // --- ATTENDANCE INPUT & TOGGLES ---
+        // --- AKSI KETUKAN DAN TOMBOL PRESENSI ---
 
-        // Touch anywhere on row to register presence
+        // Sentuh area baris nama siswa mana saja untuk mendaftarkan kehadiran
         window.toggleAbsen = function(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -1279,23 +1332,23 @@
                 }
                 txtWaktu.innerText = formattedTime;
             } else if (row.classList.contains('status-hijau')) {
-                row.classList.remove('status-hijau');
-                row.classList.add('status-kuning');
+                row.className = "student-row status-kuning";
                 txtWaktu.innerText = formattedTime;
                 showToast(`${nama} ditandai TERLAMBAT 🟡`, "warning");
             } else if (row.classList.contains('status-kuning')) {
-                row.classList.remove('status-kuning');
-                row.classList.add('status-merah');
+                row.className = "student-row status-merah";
                 txtWaktu.innerText = formattedTime;
                 showToast(`${nama} ditandai PERINGATAN 🔴`, "error");
             } else {
-                row.classList.remove('status-merah');
+                row.className = "student-row";
                 txtWaktu.innerText = "-";
                 showToast(`Status presensi ${nama} dibatalkan`, "warning");
             }
+
+            broadcastActiveSelections();
         };
 
-        // Directly set Sakit
+        // Mengatur status Sakit (S) secara langsung
         window.setSakit = function(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -1311,9 +1364,10 @@
             chk.innerText = 'S';
             
             showToast(`${nama} ditandai SAKIT 🔵`, "success");
+            broadcastActiveSelections();
         };
 
-        // Directly set Izin
+        // Mengatur status Izin (I) secara langsung
         window.setIzin = function(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -1329,9 +1383,10 @@
             chk.innerText = 'I';
             
             showToast(`${nama} ditandai IZIN 🟣`, "success");
+            broadcastActiveSelections();
         };
 
-        // Reset status for a row
+        // Mengembalikan baris santri ke status Tanpa Keterangan (Reset)
         window.resetAbsen = function(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -1342,9 +1397,10 @@
             chk.innerText = "✔";
             
             showToast(`Status ${nama} di-reset`, "warning");
+            broadcastActiveSelections();
         };
 
-        // Create Payload representation
+        // Mengambil susunan payload data presensi santri aktif di layar
         function dapatkanPayloadSesiAktif() {
             const allRows = document.querySelectorAll('.student-row');
             const dataPayload = Array.from(allRows).map(r => {
@@ -1386,7 +1442,7 @@
             };
         }
 
-        // Save current attendance data to Supabase
+        // Menyimpan data absensi final ke server database Supabase
         window.simpanData = async function() {
             const payload = dapatkanPayloadSesiAktif();
             if(payload.totalHadir === 0) {
@@ -1410,6 +1466,12 @@
                         });
                     
                     if (error) throw error;
+                    
+                    // Mengosongkan pemantauan aktif harian (id: 2) setelah sukses simpan final
+                    await supabaseClient
+                        .from('smp_siswa_data')
+                        .upsert({ id: 2, classes: { date: new Date().toDateString(), selections: {} } });
+
                     showToast("Presensi berhasil disimpan secara real-time ke Cloud!", "success");
                 } catch (e) {
                     console.error("Supabase Error:", e);
@@ -1421,7 +1483,7 @@
                 showToast("Data Berhasil Disimpan secara Lokal!", "success");
             }
             
-            // Reset UI selections
+            // Reset status visual baris presensi harian
             document.querySelectorAll('.student-row').forEach(row => {
                 row.className = "student-row";
                 row.querySelector('.waktu-text').innerText = "-";
@@ -1431,7 +1493,7 @@
             renderHistori();
         };
 
-        // Download daily report PDF
+        // Unduh laporan presensi harian ke bentuk dokumen PDF
         window.cetakSesiAktif = function() {
             const payload = dapatkanPayloadSesiAktif();
             if (payload.totalHadir === 0) {
@@ -1442,7 +1504,7 @@
             showToast("Mengunduh laporan PDF...", "success");
         };
 
-        // Render history list
+        // Render riwayat daftar laporan tersimpan
         window.renderHistori = function() {
             const tbody = document.getElementById('list-histori-body');
             if (!tbody) return;
@@ -1464,7 +1526,7 @@
             lucide.createIcons();
         };
 
-        // Open details modal Dialog
+        // Membuka modal detail laporan riwayat harian
         window.bukaDetail = function(id) {
             const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             const s = db.find(x => x.id === id);
@@ -1489,7 +1551,7 @@
             document.getElementById('modalDetail').style.display = 'flex';
         };
 
-        // Delete history report
+        // Menghapus berkas laporan riwayat dari database Supabase
         window.hapusLaporan = function(id) {
             customConfirm("Hapus Laporan", "Apakah Anda yakin ingin menghapus arsip laporan ini?", async () => {
                 let db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
@@ -1520,7 +1582,7 @@
             document.getElementById('modalDetail').style.display = 'none'; 
         };
 
-        // Calculate statistics including Sakit and Izin
+        // Melakukan kalkulasi statistik kedisiplinan (Hadir, Sakit, Izin, Alpa) berkala harian
         function hitungStatistikDisiplin(hariMundur = 7) {
             const db = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             if (db.length === 0) return null;
@@ -1542,7 +1604,7 @@
 
             let studentMap = {};
 
-            // Initialize all current students
+            // Inisialisasi awal seluruh roster siswa untuk meminimalisir status kosong
             Object.entries(dataSiswa).forEach(([kelas, listSiswa]) => {
                 listSiswa.forEach(nama => {
                     studentMap[nama] = {
@@ -1631,7 +1693,7 @@
             };
         }
 
-        // Open Statistics and Analytics dashboard
+        // Membuka jendela dasbor rekapitulasi analisis berkala
         window.bukaDashboardRekap = function(hariMundur = 7) {
             const rekap = hitungStatistikDisiplin(hariMundur);
             if (!rekap) {
@@ -1653,7 +1715,7 @@
             document.getElementById('stat-izin').innerText = rekap.totalIzin;
             document.getElementById('stat-alpa').innerText = rekap.totalAlpa;
 
-            // Populate Class Filter Options
+            // Membuat pilihan opsi filter kelas di dalam modal analisis
             const filterKelas = document.getElementById('rekap-filter-kelas');
             filterKelas.innerHTML = `<option value="ALL">Semua Kelas</option>`;
             
@@ -1669,7 +1731,7 @@
             lucide.createIcons();
         };
 
-        // Render tabular rows inside statistical modal
+        // Render tabel data kumulatif santri dalam dasbor modal
         window.renderTabelRekap = function(listSiswa) {
             const tbody = document.getElementById('table-rekap-body');
             if (!tbody) return;
@@ -1710,7 +1772,7 @@
             }).join('');
         };
 
-        // Filter and Search dynamically inside statistical modal
+        // Menyaring data santri dalam dasbor secara dinamis saat melakukan input pencarian
         window.filterTabelRekap = function() {
             if (!dataRekapAktif) return;
 
@@ -1730,7 +1792,7 @@
             document.getElementById('modalRekap').style.display = 'none';
         };
 
-        // jsPDF generator to print Discipline and Attendance statistical report
+        // Pembuatan dokumen cetak laporan analisis berkala menggunakan jspdf
         window.cetakLaporanRekapBerkala = function() {
             if (!dataRekapAktif) return;
 
@@ -1868,7 +1930,7 @@
             showToast("Laporan PDF Rekapitulasi Berhasil Diunduh!", "success");
         };
 
-        // Custom PDF Daily Reports Generator (Portrait/Landscape)
+        // Pembuatan lembar dokumen PDF Harian
         function cetak(sesi, orientasi) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: orientasi });
@@ -1924,28 +1986,28 @@
                 }
             });
 
-            // --- 2. TABEL SISWA TIDAK HADIR ---
+            // --- TABEL DAFTAR SISWA ALPA ---
             let nextY = doc.lastAutoTable.finalY + 12;
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
-            doc.setTextColor(220, 38, 38);
-            doc.text(`B. DAFTAR SISWA TIDAK HADIR / ALPA (${siswaAbsen.length} Siswa)`, 14, nextY);
+            doc.setTextColor(220, 38, 38); 
+            doc.text(`B. DAFTAR SISWA TIDAK HADIR / SAKIT / IZIN / ALPA (${siswaAbsen.length} Siswa)`, 14, nextY);
 
             doc.autoTable({ 
                 startY: nextY + 3, 
                 head: [['No', 'Nama', 'Kelas', 'Keterangan']], 
                 body: siswaAbsen.map((x, i) => [i+1, x.nama, x.kelas, x.status]),
-                headStyles: { fillColor: [220, 38, 38], fontStyle: 'bold' },
+                headStyles: { fillColor: [15, 23, 42], fontStyle: 'bold' },
                 styles: { font: "Helvetica", fontSize: 9 },
                 didParseCell: function (data) {
                     if (data.section === 'body') {
                         const statusSiswa = data.row.raw[3];
                         if (statusSiswa === 'SAKIT') {
-                            data.cell.styles.fillColor = [224, 242, 254]; // soft blue
+                            data.cell.styles.fillColor = [224, 242, 254]; 
                             data.cell.styles.textColor = [3, 105, 161];
                             data.cell.styles.fontStyle = 'bold';
                         } else if (statusSiswa === 'IZIN') {
-                            data.cell.styles.fillColor = [243, 232, 255]; // soft purple
+                            data.cell.styles.fillColor = [243, 232, 255]; 
                             data.cell.styles.textColor = [109, 40, 217];
                             data.cell.styles.fontStyle = 'bold';
                         } else {
@@ -1960,7 +2022,7 @@
             doc.save(`Presensi_SMP_HQ_${namaFileBersih}.pdf`);
         }
 
-        // Initialize connection
+        // Jalankan koneksi saat halaman dimuat sepenuhnya
         window.addEventListener('DOMContentLoaded', () => {
             setupSupabase();
             updateJamAktif();
