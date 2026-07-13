@@ -903,7 +903,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         }
 
         // Menyimpan & Mengaktifkan Kredensial Supabase Manual Pengguna
-        window.simpanConfigDatabase = function() {
+        function simpanConfigDatabase() {
             const url = document.getElementById('input-supabase-url').value.trim();
             const key = document.getElementById('input-supabase-key').value.trim();
 
@@ -919,10 +919,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
-        };
+        }
 
         // Menghapus Konfigurasi Kustom & Kembali ke Penyimpanan Lokal
-        window.hapusConfigDatabase = function() {
+        function hapusConfigDatabase() {
             localStorage.removeItem('supabase_url');
             localStorage.removeItem('supabase_anon_key');
             showToast("Konfigurasi dihapus. Beralih kembali ke mode penyimpanan lokal...", "warning");
@@ -930,7 +930,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
-        };
+        }
 
         // Menyiarkan status ketukan layar aktif hari ini ke database agar pemantau lain tersinkronisasi
         async function broadcastActiveSelections() {
@@ -1016,7 +1016,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         }
 
         // Menyembunyikan kelas yang tidak dipilih pada tab navigasi cepat mobile
-        window.filterTampilanKelas = function(selectedKls) {
+        function filterTampilanKelas(selectedKls) {
             const classBoxes = document.querySelectorAll('.class-box');
             const tabs = document.querySelectorAll('#class-nav-tabs button');
             
@@ -1044,10 +1044,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     }
                 }
             });
-        };
+        }
 
         // --- NOTIFIKASI TOAST ---
-        window.showToast = function(message, type = 'success') {
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const card = document.createElement('div');
             card.className = 'toast-card';
@@ -1074,10 +1074,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 card.classList.remove('show');
                 setTimeout(() => card.remove(), 300);
             }, 3500);
-        };
+        }
 
         // --- DIALOG KONFIRMASI KUSTOM ---
-        window.customConfirm = function(title, message, onYes, onNo = null) {
+        function customConfirm(title, message, onYes, onNo = null) {
             const modal = document.getElementById('confirmModal');
             document.getElementById('confirmTitle').innerText = title;
             document.getElementById('confirmMessage').innerText = message;
@@ -1102,7 +1102,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 modal.style.display = 'none';
                 if(onNo) onNo();
             });
-        };
+        }
 
         function updateJamAktif() {
             const now = new Date();
@@ -1259,7 +1259,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         }
 
         // Memperbarui pilihan drop-down siswa pada formulir perpindahan kelas
-        window.updateSiswaPindahDropdown = function() {
+        function updateSiswaPindahDropdown() {
             const selectAsal = document.getElementById('select-pindah-asal');
             const selectSiswa = document.getElementById('select-pindah-siswa');
             if (!selectAsal || !selectSiswa) return;
@@ -1272,10 +1272,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     selectSiswa.innerHTML += `<option value="${siswa}">${siswa}</option>`;
                 });
             }
-        };
+        }
 
         // Eksekusi mutasi atau pemindahan kenaikan kelas siswa
-        window.pindahkanSiswaKelas = function() {
+        function pindahkanSiswaKelas() {
             const klsAsal = document.getElementById('select-pindah-asal').value;
             const klsTujuan = document.getElementById('select-pindah-tujuan').value;
             const targetSiswa = document.getElementById('select-pindah-siswa').value;
@@ -1328,19 +1328,19 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     }
                 );
             }
-        };
+        }
 
-        window.toggleForm = function(id) {
+        function toggleForm(id) {
             const el = document.getElementById(id);
             if (el.classList.contains('hidden')) {
                 el.classList.remove('hidden');
             } else {
                 el.classList.add('hidden');
             }
-        };
+        }
 
         // Tambah kustom kelas baru harian
-        window.tambahKelasBaru = async function() {
+        async function tambahKelasBaru() {
             const input = document.getElementById('input-nama-kelas');
             const klsBaru = input.value.trim();
             if (!klsBaru) {
@@ -1360,10 +1360,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             input.value = "";
             toggleForm('form-kelas');
             init();
-        };
+        }
 
         // Daftarkan nama siswa baru secara instan
-        window.tambahSiswaBaru = async function() {
+        async function tambahSiswaBaru() {
             const selectKls = document.getElementById('select-kelas-siswa');
             const inputSiswa = document.getElementById('input-nama-siswa');
             
@@ -1392,10 +1392,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             inputSiswa.value = "";
             toggleForm('form-siswa');
             init();
-        };
+        }
 
         // Hapus kelas secara permanen
-        window.hapusKelas = function(kls) {
+        function hapusKelas(kls) {
             customConfirm("Hapus Kelas", `Apakah Anda yakin ingin menghapus ${kls} beserta seluruh siswanya secara permanen?`, async () => {
                 saveCurrentSelections();
                 delete dataSiswa[kls];
@@ -1403,10 +1403,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 showToast(`Kelas ${kls} berhasil dihapus!`, "success");
                 init();
             });
-        };
+        }
 
         // Hapus nama siswa terpilih
-        window.hapusSiswa = function(kls, index) {
+        function hapusSiswa(kls, index) {
             const nama = dataSiswa[kls][index];
             customConfirm("Hapus Siswa", `Apakah Anda yakin ingin menghapus siswa ${nama} dari ${kls}?`, async () => {
                 saveCurrentSelections();
@@ -1415,12 +1415,12 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 showToast(`Siswa ${nama} berhasil dihapus!`, "success");
                 init();
             });
-        };
+        }
 
         // --- AKSI KETUKAN DAN TOMBOL PRESENSI ---
 
         // Sentuh area baris nama siswa mana saja untuk mendaftarkan kehadiran
-        window.toggleAbsen = function(id, kls, nama) {
+        function toggleAbsen(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1471,10 +1471,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             }
 
             broadcastActiveSelections();
-        };
+        }
 
         // Mengatur status Sakit (S) secara langsung
-        window.setSakit = function(id, kls, nama) {
+        function setSakit(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1490,10 +1490,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             
             showToast(`${nama} ditandai SAKIT 🔵`, "success");
             broadcastActiveSelections();
-        };
+        }
 
         // Mengatur status Izin (I) secara langsung
-        window.setIzin = function(id, kls, nama) {
+        function setIzin(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1509,10 +1509,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             
             showToast(`${nama} ditandai IZIN 🟣`, "success");
             broadcastActiveSelections();
-        };
+        }
 
         // Mengembalikan baris santri ke status Tanpa Keterangan (Reset)
-        window.resetAbsen = function(id, kls, nama) {
+        function resetAbsen(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1523,7 +1523,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             
             showToast(`Status ${nama} di-reset`, "warning");
             broadcastActiveSelections();
-        };
+        }
 
         // Mengambil susunan payload data presensi santri aktif di layar
         function dapatkanPayloadSesiAktif() {
@@ -1568,7 +1568,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         }
 
         // Menyimpan data absensi final ke server database Supabase
-        window.simpanData = async function() {
+        async function simpanData() {
             const payload = dapatkanPayloadSesiAktif();
             if(payload.totalHadir === 0) {
                 showToast("Pilih minimal satu siswa terlebih dahulu!", "error");
@@ -1643,10 +1643,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 temporarySelections = {};
                 renderHistori();
             }
-        };
+        }
 
         // Unduh laporan presensi harian ke bentuk dokumen PDF
-        window.cetakSesiAktif = function() {
+        function cetakSesiAktif() {
             const payload = dapatkanPayloadSesiAktif();
             if (payload.totalHadir === 0) {
                 showToast("Isi presensi minimal satu siswa sebelum mengunduh PDF!", "warning");
@@ -1654,10 +1654,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             }
             cetak(payload, 'p');
             showToast("Mengunduh laporan PDF...", "success");
-        };
+        }
 
         // Render riwayat daftar laporan tersimpan
-        window.renderHistori = function() {
+        function renderHistori() {
             const tbody = document.getElementById('list-histori-body');
             if (!tbody) return;
 
@@ -1676,10 +1676,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     </td>
                 </tr>`).join('');
             lucide.createIcons();
-        };
+        }
 
         // Membuka modal detail laporan riwayat harian
-        window.bukaDetail = function(id) {
+        function bukaDetail(id) {
             const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             const s = localDb.find(x => x.id === id);
             document.getElementById('judulModal').innerText = "Arsip: " + s.waktuSimpan;
@@ -1701,10 +1701,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             document.getElementById('btnPdfP').onclick = () => cetak(s, 'p');
             document.getElementById('btnPdfL').onclick = () => cetak(s, 'l');
             document.getElementById('modalDetail').style.display = 'flex';
-        };
+        }
 
         // Menghapus berkas laporan riwayat dari database Supabase
-        window.hapusLaporan = function(id) {
+        function hapusLaporan(id) {
             customConfirm("Hapus Laporan", "Apakah Anda yakin ingin menghapus arsip laporan ini?", async () => {
                 let localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
                 localDb = localDb.filter(x => x.id !== id);
@@ -1734,11 +1734,11 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     renderHistori();
                 }
             });
-        };
+        }
 
-        window.tutupModal = function() { 
+        function tutupModal() { 
             document.getElementById('modalDetail').style.display = 'none'; 
-        };
+        }
 
         // Melakukan kalkulasi statistik kedisiplinan (Hadir, Sakit, Izin, Alpa) berkala harian
         function hitungStatistikDisiplin(hariMundur = 7) {
@@ -1852,7 +1852,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         }
 
         // Membuka jendela dasbor rekapitulasi analisis berkala
-        window.bukaDashboardRekap = function(hariMundur = 7) {
+        function bukaDashboardRekap(hariMundur = 7) {
             const rekap = hitungStatistikDisiplin(hariMundur);
             if (!rekap) {
                 showToast("Histori presensi kosong! Harap lakukan presensi minimal 1 kali terlebih dahulu.", "warning");
@@ -1887,10 +1887,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
 
             document.getElementById('modalRekap').style.display = 'flex';
             lucide.createIcons();
-        };
+        }
 
         // Render tabel data kumulatif santri dalam dasbor modal
-        window.renderTabelRekap = function(listSiswa) {
+        function renderTabelRekap(listSiswa) {
             const tbody = document.getElementById('table-rekap-body');
             if (!tbody) return;
             
@@ -1928,10 +1928,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     </tr>
                 `;
             }).join('');
-        };
+        }
 
         // Menyaring data santri dalam dasbor secara dinamis saat melakukan input pencarian
-        window.filterTabelRekap = function() {
+        function filterTabelRekap() {
             if (!dataRekapAktif) return;
 
             const searchVal = document.getElementById('rekap-search').value.toLowerCase().trim();
@@ -1944,14 +1944,14 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             });
 
             renderTabelRekap(filtered);
-        };
+        }
 
-        window.tutupDashboardRekap = function() {
+        function tutupDashboardRekap() {
             document.getElementById('modalRekap').style.display = 'none';
-        };
+        }
 
         // Pembuatan dokumen cetak laporan analisis berkala menggunakan jspdf
-        window.cetakLaporanRekapBerkala = function() {
+        function cetakLaporanRekapBerkala() {
             if (!dataRekapAktif) return;
 
             const { jsPDF } = window.jspdf;
@@ -2086,7 +2086,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
 
             doc.save("Rekapitulasi_Disiplin_HQ_Hari_" + dataRekapAktif.periodeHari + ".pdf");
             showToast("Laporan PDF Rekapitulasi Berhasil Diunduh!", "success");
-        };
+        }
 
         // Pembuatan lembar dokumen PDF Harian
         function cetak(sesi, orientasi) {
@@ -2105,7 +2105,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             
             doc.setFontSize(9);
             doc.setTextColor(100, 116, 139);
-            doc.text(`Waktu Arsip: ${sesi.waktuSimpan}`, pageWidth / 2, 25, { align: 'center' });
+            doc.text("Waktu Arsip: " + sesi.waktuSimpan, pageWidth / 2, 25, { align: 'center' });
             
             const siswaHadir = sesi.data.filter(x => x.hadir);
             const siswaAbsen = sesi.data.filter(x => !x.hadir);
@@ -2113,7 +2113,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
             doc.setTextColor(22, 163, 74);
-            doc.text(`A. DAFTAR SISWA MASUK / SAKIT / IZIN (${siswaHadir.length} Siswa)`, 14, 33);
+            doc.text("A. DAFTAR SISWA MASUK / SAKIT / IZIN (" + siswaHadir.length + " Siswa)", 14, 33);
 
             doc.autoTable({ 
                 startY: 36, 
@@ -2149,7 +2149,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(10);
             doc.setTextColor(220, 38, 38); 
-            doc.text(`B. DAFTAR SISWA TIDAK HADIR / SAKIT / IZIN / ALPA (${siswaAbsen.length} Siswa)`, 14, nextY);
+            doc.text("B. DAFTAR SISWA TIDAK HADIR / SAKIT / IZIN / ALPA (" + siswaAbsen.length + " Siswa)", 14, nextY);
 
             doc.autoTable({ 
                 startY: nextY + 3, 
@@ -2187,8 +2187,8 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         window.toggleForm = toggleForm;
         window.tambahKelasBaru = tambahKelasBaru;
         window.tambahSiswaBaru = tambahSiswaBaru;
-        window.hapusKelas = html => hapusKelas(html);
-        window.hapusSiswa = (kls, i) => html => hapusSiswa(kls, i);
+        window.hapusKelas = hapusKelas;
+        window.hapusSiswa = hapusSiswa;
         window.toggleAbsen = toggleAbsen;
         window.setSakit = setSakit;
         window.setIzin = setIzin;
@@ -2204,6 +2204,8 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         window.filterTabelRekap = filterTabelRekap;
         window.tutupDashboardRekap = tutupDashboardRekap;
         window.cetakLaporanRekapBerkala = cetakLaporanRekapBerkala;
+        window.simpanConfigDatabase = simpanConfigDatabase;
+        window.hapusConfigDatabase = hapusConfigDatabase;
 
         // Jalankan koneksi saat halaman dimuat sepenuhnya
         window.addEventListener('DOMContentLoaded', () => {
