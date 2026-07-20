@@ -115,7 +115,7 @@
         .student-row { cursor: pointer; transition: all 0.2s ease; }
         .student-row:hover { background-color: #f8fafc; }
         
-        /* Baris nama dibesarkan sesuai instruksi */
+        /* Baris nama dibesarkan */
         .name-text { 
             font-weight: 700; 
             font-size: 1.05rem; 
@@ -307,17 +307,6 @@
     <!-- Header Section -->
     <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
         <div class="max-w-7xl mx-auto">
-            <!-- Lencana Status Sinkronisasi Realtime -->
-            <div class="flex justify-center mb-4">
-                <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" id="sync-dot"></span>
-                    </span>
-                    <span id="sync-text">Menghubungkan Database Supabase...</span>
-                </div>
-            </div>
-
             <h1 class="text-xl md:text-3xl font-extrabold tracking-wider leading-tight">SMP HAMALATUL QURAN RINGINAGUNG</h1>
             <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
             
@@ -330,11 +319,11 @@
                 </div>
             </div>
 
-            <!-- Legend Section with Time Slots -->
+            <!-- Legend Section with Updated Time Slots -->
             <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 07:00 - 07:15 Aman</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:16 - 07:40 Terlambat</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:41 - 08:20 Peringatan</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:01 - 07:10 Terlambat</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600 text-white shadow-md">🔵 Sakit</span>
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600 text-white shadow-md">🟣 Izin</span>
             </div>
@@ -932,7 +921,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             }, 1000);
         }
 
-        // Menyiarkan status ketukan layar aktif hari ini ke database agar pemantau lain tersinkronisasi
+        // Menyiar status ketukan layar aktif hari ini ke database agar pemantau lain tersinkronisasi
         async function broadcastActiveSelections() {
             saveCurrentSelections();
             if (!isCloudActive || !supabaseClient) return;
@@ -964,7 +953,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 setTimeout(() => {
                     if (syncDot && syncText) {
                         syncDot.className = "relative inline-flex rounded-full h-2 w-2 bg-emerald-500";
-                        syncText.innerText = "Monitoring Aktif (Real-time)";
+                        syncText.innerText = "Monitoring Tangguh (Real-time)";
                     }
                 }, 800);
             }
@@ -987,6 +976,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             }
         }
 
+        // --- STREAMING_CHUNK: Menyediakan fungsi backup lokal dan manipulasi list siswa... ---
         // --- SISTEM PENGEMBALIAN PENYIMPANAN LOKAL ---
         function loadStudentDatabase() {
             const saved = localStorage.getItem(SISWA_KEY);
@@ -1417,9 +1407,10 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             });
         }
 
+        // --- STREAMING_CHUNK: Menerapkan aturan logika waktu presensi terbaru SMP Hamalatul Quran... ---
         // --- AKSI KETUKAN DAN TOMBOL PRESENSI ---
 
-        // Sentuh area baris nama siswa mana saja untuk mendaftarkan kehadiran
+        // Sentuh area baris nama siswa mana saja untuk mendaftarkan kehadiran berdasarkan waktu sistem saat ini
         function toggleAbsen(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -1441,17 +1432,27 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
 
             chk.innerText = '✔';
 
+            // Menghitung jumlah menit sejak tengah malam agar pengelompokan waktu presensi berjalan dengan akurat
+            const totalMenit = (jam * 60) + fontMenit;
+
             if (!row.classList.contains('status-hijau') && !row.classList.contains('status-kuning') && !row.classList.contains('status-merah')) {
-                if (jam === 7 && fontMenit >= 0 && fontMenit <= 15) {
+                // Aturan 1: Hijau (Aman) -> 06:30 s.d 07:00 (Total Menit: 390 s.d 420)
+                if (totalMenit >= 390 && totalMenit <= 420) {
                     row.classList.add('status-hijau');
                     showToast(`${nama} AMAN 🟢`, "success");
-                } else if (jam === 7 && fontMenit >= 16 && fontMenit <= 40) {
+                } 
+                // Aturan 2: Kuning (Terlambat) -> 07:01 s.d 07:10 (Total Menit: 421 s.d 430)
+                else if (totalMenit >= 421 && totalMenit <= 430) {
                     row.classList.add('status-kuning');
                     showToast(`${nama} TERLAMBAT 🟡`, "warning");
-                } else if ((jam === 7 && fontMenit >= 41) || (jam === 8 && fontMenit <= 20)) {
+                } 
+                // Aturan 3: Merah (Peringatan) -> 07:11 s.d 08:20 (Total Menit: 431 s.d 500)
+                else if (totalMenit >= 431 && totalMenit <= 500) {
                     row.classList.add('status-merah');
                     showToast(`${nama} PERINGATAN 🔴`, "error");
-                } else {
+                } 
+                // Di luar jam presensi resmi, default masuk kategori peringatan merah
+                else {
                     row.classList.add('status-merah');
                     showToast(`${nama} PERINGATAN 🔴 (Luar Jam Presensi)`, "error");
                 }
@@ -1592,7 +1593,6 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                         });
 
                     if (error) {
-                        // Lempar error agar ditangkap blok catch untuk diagnosa toast
                         throw error;
                     }
                     
@@ -1622,7 +1622,6 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
 
                 } catch (e) {
                     console.error("Gagal menyimpan ke Cloud:", e);
-                    // Menampilkan pesan kesalahan Postgres/RLS spesifik dari Supabase ke pengguna
                     const detailedError = e.message || e.details || JSON.stringify(e);
                     showToast(`Gagal menyimpan ke Cloud: ${detailedError}. Data dicadangkan di lokal.`, "error");
                     
@@ -1645,6 +1644,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             }
         }
 
+        // --- STREAMING_CHUNK: Memproses fungsi ekspor dan dokumen PDF harian/berkala... ---
         // Unduh laporan presensi harian ke bentuk dokumen PDF
         function cetakSesiAktif() {
             const payload = dapatkanPayloadSesiAktif();
