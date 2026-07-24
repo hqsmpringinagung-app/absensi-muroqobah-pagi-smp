@@ -289,6 +289,7 @@
             pointer-events: none !important;
             user-select: none !important;
             cursor: not-allowed !important;
+            filter: opacity(0.85);
         }
         .app-disabled-mode * {
             pointer-events: none !important;
@@ -296,7 +297,7 @@
         }
 
         /* Area Khusus Pemicu Rahasia & Modal Saklar Tetap Aktif agar dapat di-unlock kapan saja */
-        .secret-allowed, #secretModal, #secretModal * {
+        .secret-allowed, #secretModal, #secretModal *, #global-shutdown-banner, #global-shutdown-banner * {
             pointer-events: auto !important;
             cursor: pointer !important;
         }
@@ -307,15 +308,15 @@
     <div id="toast-container"></div>
 
     <!-- Titik Rahasia Tersembunyi di Pojok Kanan Bawah untuk Akses Cepat Tombol Rahasia -->
-    <div id="secret-dot-trigger" onclick="bukaModalRahasia()" class="secret-allowed fixed bottom-2 right-2 w-3 h-3 bg-slate-300/20 hover:bg-slate-400/50 rounded-full z-50 transition-all cursor-pointer opacity-30 hover:opacity-100" title="Control Zone"></div>
+    <div id="secret-dot-trigger" onclick="bukaModalRahasia()" class="secret-allowed fixed bottom-2 right-2 w-4 h-4 bg-slate-400/30 hover:bg-indigo-600 rounded-full z-[9995] transition-all cursor-pointer opacity-40 hover:opacity-100 flex items-center justify-center text-[8px] text-white font-bold" title="Control Zone">⚙</div>
 
-    <!-- MODAL RAHASIA MASTER SWITCH (ON / OFF SAKLAR CONTROL) -->
+    <!-- MODAL RAHASIA MASTER SWITCH (ON / OFF SAKLAR CONTROL SINKRON CLOUD) -->
     <div id="secretModal" class="modal secret-allowed" style="z-index: 10000;">
         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
             <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-indigo-600"></div>
-                    <h3 class="text-base font-extrabold text-slate-800">Panel Kontrol Operasional</h3>
+                    <div class="w-3.5 h-3.5 rounded-full bg-indigo-600 animate-ping"></div>
+                    <h3 class="text-base font-extrabold text-slate-800">Panel Saklar Utama (Global Sync)</h3>
                 </div>
                 <button onclick="tutupModalRahasia()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -323,13 +324,13 @@
             </div>
 
             <p class="text-xs text-slate-500 mb-6 text-left leading-relaxed">
-                Saklar kontrol utama untuk mengaktifkan atau menonaktifkan interaksi seluruh aplikasi secara total.
+                Saklar kontrol utama untuk mengaktifkan atau menonaktifkan interaksi seluruh aplikasi. <strong class="text-slate-700">Jika 1 orang mematikan saklar ini, SELURUH perangkat pengguna yang membuka link akan MATI seketika secara real-time!</strong>
             </p>
 
             <!-- SAKLAR / TOGGLE SWITCH UI -->
             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center justify-between mb-6">
                 <div class="text-left">
-                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Fitur</span>
+                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Saklar Global</span>
                     <span id="secret-switch-status-text" class="text-sm font-extrabold text-emerald-600">APLIKASI BERJALAN (ON)</span>
                 </div>
 
@@ -339,8 +340,8 @@
                 </label>
             </div>
 
-            <div class="text-[11px] text-slate-400 italic mb-6 text-left bg-slate-100/70 p-3 rounded-xl border border-slate-200">
-                💡 Status ini akan disimpan. Jika diset Non-Aktif, warna aplikasi tetap asli namun tombol, form, dan menu tidak bisa diklik.
+            <div class="text-[11px] text-slate-500 italic mb-6 text-left bg-indigo-50/70 p-3 rounded-xl border border-indigo-100">
+                🌐 status ini disinkronkan langsung via Cloud Supabase. Semua HP / Laptop yang membuka link ini akan otomatis mengikuti posisi saklar ini.
             </div>
 
             <button onclick="tutupModalRahasia()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition-all shadow-md">
@@ -370,7 +371,7 @@
         <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
             <div class="max-w-7xl mx-auto">
                 <!-- Judul Utama (Klik 3x Cepat / Triple Click untuk membuka tombol rahasia) -->
-                <h1 id="app-secret-title" onclick="tanganiKlikJudul()" class="secret-allowed text-xl md:text-3xl font-extrabold tracking-wider leading-tight cursor-pointer select-none transition-opacity active:opacity-75" title="Klik 3x untuk tombol rahasia">
+                <h1 id="app-secret-title" onclick="tanganiKlikJudul()" class="secret-allowed text-xl md:text-3xl font-extrabold tracking-wider leading-tight cursor-pointer select-none transition-opacity active:opacity-75" title="Klik 3x untuk tombol rahasia saklar">
                     SMP HAMALATUL QURAN RINGINAGUNG
                 </h1>
                 <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
@@ -744,7 +745,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
         const SISWA_KEY = 'db_siswa_supabase_v10';
         const APP_DISABLED_KEY = 'app_disabled_master_state';
 
-        // Nilai Default Kredensial Database Supabase (TETAP MENJAGA ANON DAN API YANG SAMA)
+        // Nilai Default Kredensial Database Supabase
         const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
         const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
 
@@ -793,39 +794,78 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             terapkanStatusAplikasi(isAppDisabled);
         }
 
-        function terapkanStatusAplikasi(disabled) {
+        /* TERAPKAN STATUS MATI / AKTIF SAKLAR DI PERANGKAT */
+        function terapkanStatusAplikasi(disabled, triggerToast = false) {
+            const stateChanged = (isAppDisabled !== disabled);
             isAppDisabled = disabled;
+            
             const wrapper = document.getElementById('main-app-wrapper');
             const switchInput = document.getElementById('master-app-switch');
             const statusText = document.getElementById('secret-switch-status-text');
+            const shutdownBanner = document.getElementById('global-shutdown-banner');
 
             if (switchInput) switchInput.checked = !disabled;
 
             if (disabled) {
                 if (wrapper) wrapper.classList.add('app-disabled-mode');
+                if (shutdownBanner) shutdownBanner.classList.remove('hidden');
                 if (statusText) {
-                    statusText.innerText = "APLIKASI TERKUNCI (OFF)";
+                    statusText.innerText = "SISTEM GLOBAL NON-AKTIF (OFF)";
                     statusText.className = "text-sm font-extrabold text-rose-600";
+                }
+                if (triggerToast && stateChanged) {
+                    showToast("⚠️ SAKLAR DILOCK/DIMATIKAN! Seluruh perangkat pengguna kini NON-AKTIF.", "error");
                 }
             } else {
                 if (wrapper) wrapper.classList.remove('app-disabled-mode');
+                if (shutdownBanner) shutdownBanner.classList.add('hidden');
                 if (statusText) {
                     statusText.innerText = "APLIKASI BERJALAN (ON)";
                     statusText.className = "text-sm font-extrabold text-emerald-600";
                 }
+                if (triggerToast && stateChanged) {
+                    showToast("🟢 SAKLAR DIAKTIFKAN! Aplikasi di seluruh perangkat dapat digunakan kembali.", "success");
+                }
             }
         }
 
-        function prosesPerubahanSaklar(isChecked) {
+        /* PROSES PERUBAHAN SAKLAR OLEH USER DAN SINKRONKAN KE SELURUH DEVICE VIA SUPABASE */
+        async function prosesPerubahanSaklar(isChecked) {
             const disabled = !isChecked;
             localStorage.setItem(APP_DISABLED_KEY, disabled ? 'true' : 'false');
-            terapkanStatusAplikasi(disabled);
+            terapkanStatusAplikasi(disabled, true);
 
-            if (disabled) {
-                showToast("Aplikasi TERKUNCI! Warna tetap asli namun tidak bisa diklik.", "warning");
-            } else {
-                showToast("Aplikasi telah DIAKTIFKAN kembali!", "success");
+            // Broadcast ke Cloud Supabase agar seluruh HP / Device lain terpengaruh seketika
+            if (isCloudActive && supabaseClient) {
+                try {
+                    await supabaseClient.from('presensi_data').upsert({
+                        key: 'app_master_switch',
+                        value: { disabled: disabled, updatedAt: Date.now() }
+                    });
+                } catch(e) {
+                    console.error("Gagal broadcast status saklar:", e);
+                }
             }
+        }
+
+        /* PERIKSA DAN SINKRONKAN STATUS SAKLAR DARI CLOUD UTAMA */
+        async function periksaStatusSaklarCloud() {
+            if (!isCloudActive || !supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presensi_data')
+                    .select('value')
+                    .eq('key', 'app_master_switch')
+                    .single();
+
+                if (!error && data && data.value) {
+                    const remoteDisabled = !!data.value.disabled;
+                    if (remoteDisabled !== isAppDisabled) {
+                        localStorage.setItem(APP_DISABLED_KEY, remoteDisabled ? 'true' : 'false');
+                        terapkanStatusAplikasi(remoteDisabled, true);
+                    }
+                }
+            } catch (e) {}
         }
 
         function bukaModalRahasia() {
@@ -893,6 +933,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             try {
                 supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
                 
+                // Load master classes
                 const { data, error } = await supabaseClient
                     .from('presensi_data')
                     .select('value')
@@ -917,17 +958,22 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 init();
                 setupPollingSync();
                 muatLaporanDariSupabase();
+                periksaStatusSaklarCloud();
 
             } catch (e) {
                 useOfflineFallback();
             }
         }
 
+        /* LOOP SINKRONISASI MUTUAL REALTIME (PRESENSI & SAKLAR UTAMA) */
         function setupPollingSync() {
             if (!isCloudActive || !supabaseClient) return;
             if (pollingInterval) clearInterval(pollingInterval);
 
             pollingInterval = setInterval(async () => {
+                // Selalu periksa saklar dari cloud tanpa memandang posisi lokal
+                await periksaStatusSaklarCloud();
+
                 if (isBroadcasting || isAppDisabled) return;
 
                 try {
@@ -945,7 +991,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                         }
                     }
                 } catch (e) {}
-            }, 3500);
+            }, 2000); // Check setiap 2 detik agar saklar off langsung responsif di HP lain
         }
 
         async function muatLaporanDariSupabase() {
@@ -1171,7 +1217,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                         </button>
                     </div>`;
                 
-                if (siswa.length === 0) {
+                if (!siswa || siswa.length === 0) {
                     html += `<div class="py-12 px-6 text-center text-slate-400 font-semibold text-xs italic flex flex-col items-center justify-center gap-2">
                         <i data-lucide="users-round" class="w-8 h-8 text-slate-300"></i>
                         Belum ada siswa di kelas ini.<br>Mulai tambahkan siswa baru!
@@ -1773,98 +1819,78 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 return { ...profile, totalSesiSiswa, rasioHadir: parseFloat(rasioHadir) };
             });
 
-            const rerataSesi = totalTerdaftarGlobal > 0 ? ((totalHadirGlobal / totalTerdaftarGlobal) * 100).toFixed(1) : "0.0";
+            const rerataRasio = totalTerdaftarGlobal > 0 ? ((totalHadirGlobal / totalTerdaftarGlobal) * 100).toFixed(1) : "0.0";
 
             return {
-                periodeHari: hariMundur, totalSesi, kehadiranRerata: rerataSesi,
-                totalAman: akumulasiAman, totalTerlambat: akumulasiTerlambat, totalPeringatan: akumulasiPeringatan,
-                totalSakit: akumulasiSakit, totalIzin: akumulasiIzin, totalAlpa: akumulasiAlpa,
+                periodeHari: hariMundur,
+                totalSesi,
+                rerataRasio,
+                akumulasiAman,
+                akumulasiTerlambat,
+                akumulasiPeringatan,
+                akumulasiSakit,
+                akumulasiIzin,
+                akumulasiAlpa,
                 daftarSiswa
             };
         }
 
-        function bukaDashboardRekap(hariMundur = 7) {
+        function bukaDashboardRekap(hari) {
             if (isAppDisabled) return;
-            const rekap = hitungStatistikDisiplin(hariMundur);
+            const rekap = hitungStatistikDisiplin(hari);
             if (!rekap) {
-                showToast("Histori presensi kosong!", "warning");
+                showToast("Belum ada data laporan tersimpan dalam rentang hari ini!", "warning");
                 return;
             }
 
             dataRekapAktif = rekap;
-            const labelPeriode = hariMundur === 7 ? "1 Minggu Terakhir" : "1 Bulan Terakhir";
-            document.getElementById('rekap-modal-title').innerText = `Rekapitulasi Disiplin (${labelPeriode})`;
+            document.getElementById('rekap-modal-title').innerText = `Rekapitulasi Kedisiplinan (${hari} Hari Terakhir)`;
+            document.getElementById('rekap-modal-subtitle').innerText = `Total Sesi Presensi Tersimpan: ${rekap.totalSesi} Sesi`;
 
-            document.getElementById('stat-rerata').innerText = `${rekap.kehadiranRerata}%`;
-            document.getElementById('stat-aman').innerText = rekap.totalAman;
-            document.getElementById('stat-terlambat').innerText = rekap.totalTerlambat;
-            document.getElementById('stat-peringatan').innerText = rekap.totalPeringatan;
-            document.getElementById('stat-sakit').innerText = rekap.totalSakit;
-            document.getElementById('stat-izin').innerText = rekap.totalIzin;
-            document.getElementById('stat-alpa').innerText = rekap.totalAlpa;
+            document.getElementById('stat-rerata').innerText = rekap.rerataRasio + "%";
+            document.getElementById('stat-aman').innerText = rekap.akumulasiAman;
+            document.getElementById('stat-terlambat').innerText = rekap.akumulasiTerlambat;
+            document.getElementById('stat-peringatan').innerText = rekap.akumulasiPeringatan;
+            document.getElementById('stat-sakit').innerText = rekap.akumulasiSakit;
+            document.getElementById('stat-izin').innerText = rekap.akumulasiIzin;
+            document.getElementById('stat-alpa').innerText = rekap.akumulasiAlpa;
 
-            const filterKelas = document.getElementById('rekap-filter-kelas');
-            filterKelas.innerHTML = `<option value="ALL">Semua Kelas</option>`;
+            const selectFilter = document.getElementById('rekap-filter-kelas');
+            selectFilter.innerHTML = '<option value="ALL">Semua Kelas</option>';
             getSortedClassKeys().forEach(kls => {
-                filterKelas.innerHTML += `<option value="${kls}">${kls}</option>`;
+                selectFilter.innerHTML += `<option value="${kls}">${kls}</option>`;
             });
 
-            document.getElementById('rekap-search').value = "";
-            renderTabelRekap(rekap.daftarSiswa);
+            filterTabelRekap();
             document.getElementById('modalRekap').style.display = 'flex';
             lucide.createIcons();
         }
 
         function filterTabelRekap() {
             if (!dataRekapAktif) return;
-            const search = document.getElementById('rekap-search').value.toLowerCase();
-            const kelas = document.getElementById('rekap-filter-kelas').value;
+            const keyword = document.getElementById('rekap-search').value.toLowerCase().trim();
+            const filterKelas = document.getElementById('rekap-filter-kelas').value;
 
-            const filtered = dataRekapAktif.daftarSiswa.filter(s => {
-                const matchSearch = s.nama.toLowerCase().includes(search);
-                const matchKelas = (kelas === "ALL" || s.kelas === kelas);
-                return matchSearch && matchKelas;
+            const filteredList = dataRekapAktif.daftarSiswa.filter(s => {
+                const matchName = s.nama.toLowerCase().includes(keyword);
+                const matchClass = filterKelas === 'ALL' || s.kelas === filterKelas;
+                return matchName && matchClass;
             });
 
-            renderTabelRekap(filtered);
-        }
-
-        function renderTabelRekap(listSiswa) {
             const tbody = document.getElementById('table-rekap-body');
-            if (!tbody) return;
-            
-            if (listSiswa.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center text-slate-400 italic">Tidak ada nama siswa yang cocok</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = listSiswa.map(s => {
-                let badgeColor = "bg-slate-100 text-slate-700";
-                if (s.rasioHadir >= 90) badgeColor = "bg-emerald-100 text-emerald-800 font-bold";
-                else if (s.rasioHadir >= 75) badgeColor = "bg-yellow-100 text-yellow-800";
-                else badgeColor = "bg-rose-100 text-rose-800 font-bold";
-
-                const cellAman = s.aman > 0 ? `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.aman}</span>` : `<span class="text-slate-300">-</span>`;
-                const cellTerlambat = s.terlambat > 0 ? `<span class="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.terlambat}</span>` : `<span class="text-slate-300">-</span>`;
-                const cellPeringatan = s.peringatan > 0 ? `<span class="bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.peringatan}</span>` : `<span class="text-slate-300">-</span>`;
-                const cellSakit = s.sakit > 0 ? `<span class="bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.sakit}</span>` : `<span class="text-slate-300">-</span>`;
-                const cellIzin = s.izin > 0 ? `<span class="bg-violet-50 text-violet-700 border border-violet-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.izin}</span>` : `<span class="text-slate-300">-</span>`;
-                const cellAlpa = s.alpa > 0 ? `<span class="bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.alpa}</span>` : `<span class="text-slate-300">-</span>`;
-
-                return `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="p-3 font-bold text-slate-800">${s.nama}</td>
-                        <td class="p-3 text-slate-600">${s.kelas}</td>
-                        <td class="p-3 text-center">${cellAman}</td>
-                        <td class="p-3 text-center">${cellTerlambat}</td>
-                        <td class="p-3 text-center">${cellPeringatan}</td>
-                        <td class="p-3 text-center">${cellSakit}</td>
-                        <td class="p-3 text-center">${cellIzin}</td>
-                        <td class="p-3 text-center">${cellAlpa}</td>
-                        <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-xs ${badgeColor}">${s.rasioHadir}%</span></td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = filteredList.map(s => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="p-3 font-bold text-slate-800">${s.nama}</td>
+                    <td class="p-3 font-semibold text-slate-500">${s.kelas}</td>
+                    <td class="p-3 text-center font-extrabold text-emerald-600 bg-emerald-50/50">${s.aman}</td>
+                    <td class="p-3 text-center font-extrabold text-yellow-600 bg-yellow-50/50">${s.terlambat}</td>
+                    <td class="p-3 text-center font-extrabold text-rose-600 bg-rose-50/50">${s.peringatan}</td>
+                    <td class="p-3 text-center font-extrabold text-sky-600 bg-sky-50/50">${s.sakit}</td>
+                    <td class="p-3 text-center font-extrabold text-violet-600 bg-violet-50/50">${s.izin}</td>
+                    <td class="p-3 text-center font-bold text-slate-400 bg-slate-50">${s.alpa}</td>
+                    <td class="p-3 text-center font-extrabold ${s.rasioHadir >= 80 ? 'text-emerald-600' : 'text-rose-600'}">${s.rasioHadir}%</td>
+                </tr>
+            `).join('');
         }
 
         function tutupDashboardRekap() {
@@ -1873,47 +1899,42 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
 
         function cetakLaporanRekapBerkala() {
             if (isAppDisabled) return;
-            if (!dataRekapAktif) {
-                showToast("Tidak ada data rekapitulasi untuk dicetak!", "warning");
-                return;
-            }
+            if (!dataRekapAktif) return;
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF('l', 'pt', 'a4');
-                const rekap = dataRekapAktif;
-                
+
                 doc.setFontSize(16);
                 doc.text("SMP HAMALATUL QURAN RINGINAGUNG", doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
                 doc.setFontSize(11);
-                doc.text(`REKAPITULASI DISIPLIN & PRESENSI (${rekap.periodeHari} HARI TERAKHIR)`, doc.internal.pageSize.getWidth() / 2, 58, { align: 'center' });
+                doc.text(`LAPORAN REKAPITULASI KEDISIPLINAN SANTRI (${dataRekapAktif.periodeHari} HARI TERAKHIR)`, doc.internal.pageSize.getWidth() / 2, 58, { align: 'center' });
                 doc.setFontSize(9);
-                doc.text(`Rerata Kehadiran: ${rekap.kehadiranRerata}% | Aman: ${rekap.totalAman} | Lambat: ${rekap.totalTerlambat} | Peringatan: ${rekap.totalPeringatan}`, doc.internal.pageSize.getWidth() / 2, 74, { align: 'center' });
+                doc.text(`Total Sesi Presensi: ${dataRekapAktif.totalSesi} Sesi | Rerata Tingkat Kehadiran: ${dataRekapAktif.rerataRasio}%`, doc.internal.pageSize.getWidth() / 2, 74, { align: 'center' });
 
-                const tableColumn = ["Nama Santri", "Kelas", "Aman", "Terlambat", "Peringatan", "Sakit", "Izin", "Alpa", "Rasio Kehadiran"];
-                const tableRows = [];
-
-                rekap.daftarSiswa.forEach(s => {
-                    tableRows.push([s.nama, s.kelas, s.aman, s.terlambat, s.peringatan, s.sakit, s.izin, s.alpa, `${s.rasioHadir}%`]);
-                });
+                const headers = [["No", "Nama Santri", "Kelas", "Aman (🟢)", "Lambat (🟡)", "Peringatan (🔴)", "Sakit (🔵)", "Izin (🟣)", "Alpa (⚪)", "Rasio Kehadiran"]];
+                const rows = dataRekapAktif.daftarSiswa.map((s, idx) => [
+                    idx + 1, s.nama, s.kelas, s.aman, s.terlambat, s.peringatan, s.sakit, s.izin, s.alpa, `${s.rasioHadir}%`
+                ]);
 
                 doc.autoTable({
-                    head: [tableColumn],
-                    body: tableRows,
+                    head: headers,
+                    body: rows,
                     startY: 90,
-                    theme: 'striped',
-                    headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontStyle: 'bold' }
+                    theme: 'grid',
+                    headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' },
+                    alternateRowStyles: { fillColor: [248, 250, 252] }
                 });
 
-                doc.save(`Rekapitulasi_Presensi_${rekap.periodeHari}_Hari.pdf`);
-                showToast("PDF Rekapitulasi berhasil diunduh!", "success");
+                doc.save(`Rekapitulasi_Disiplin_${dataRekapAktif.periodeHari}Hari.pdf`);
+                showToast("Berhasil mencetak PDF Rekapitulasi!", "success");
             } catch(e) {
-                showToast("Gagal mencetak PDF rekap: " + e.message, "error");
+                showToast("Gagal mencetak Rekapitulasi PDF: " + e.message, "error");
             }
         }
 
-        // Jalankan inisialisasi awal saat window dimuat
-        window.onload = function () {
-            setInterval(updateJamAktif, 1000);
+        setInterval(updateJamAktif, 1000);
+
+        window.onload = function() {
             updateJamAktif();
             inisialisasiStatusSaklarRahasia();
             setupSupabase();
