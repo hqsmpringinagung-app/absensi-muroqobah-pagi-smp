@@ -243,7 +243,7 @@
             padding: 24px;
             border-radius: 28px;
             width: 95%;
-            max-width: 48rem;
+            max-width: 52rem;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -365,12 +365,12 @@
         </div>
     </div>
 
-    <!-- KONTAINER UTAMA APLIKASI (AKAN DIBEKUKAN JIKA SAKLAR OFF TAPI WARNA TETAP UTUH) -->
+    <!-- KONTAINER UTAMA APLIKASI -->
     <div id="main-app-wrapper">
         <!-- Header Section -->
         <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
             <div class="max-w-7xl mx-auto">
-                <!-- Judul Utama (Klik 3x Cepat / Triple Click untuk membuka tombol rahasia) -->
+                <!-- Judul Utama (Klik 3x Cepat untuk membuka tombol rahasia) -->
                 <h1 id="app-secret-title" onclick="tanganiKlikJudul()" class="secret-allowed text-xl md:text-3xl font-extrabold tracking-wider leading-tight cursor-pointer select-none transition-opacity active:opacity-75" title="Klik 3x untuk tombol rahasia saklar">
                     SMP HAMALATUL QURAN RINGINAGUNG
                 </h1>
@@ -485,7 +485,7 @@
                             <!-- Petunjuk Pembuatan Tabel Supabase -->
                             <div class="mt-2 p-2 bg-white rounded-lg border border-amber-200 text-[10px] text-slate-600">
                                 <span class="font-bold text-amber-800">💡 SQL Editor Schema:</span>
-                                <p class="mt-1">Jalankan instruksi ini di SQL Editor Supabase Anda agar database siap digunakan dan tidak terblokir sistem keamanan:</p>
+                                <p class="mt-1">Jalankan instruksi ini di SQL Editor Supabase Anda agar database siap digunakan:</p>
                                 <pre class="mt-1 bg-slate-900 text-slate-100 p-2 rounded text-[9px] overflow-x-auto font-mono">
 -- 1. Buat Tabel Data
 CREATE TABLE IF NOT EXISTS presensi_data (
@@ -611,7 +611,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             </div>
             
             <div class="overflow-x-auto rounded-2xl border border-slate-200 mb-6 shadow-inner">
-                <table class="w-full border-collapse min-w-[500px]">
+                <table class="w-full border-collapse min-w-[600px]">
                     <thead class="bg-slate-50 border-b border-slate-200">
                         <tr class="text-left text-[10px] md:text-xs font-bold uppercase text-slate-600">
                             <th class="p-4">No</th>
@@ -619,6 +619,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                             <th class="p-4">Kelas</th>
                             <th class="p-4">Waktu & Tanggal</th>
                             <th class="p-4">Status</th>
+                            <th class="p-4">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody id="bodiModal"></tbody>
@@ -802,13 +803,11 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             const wrapper = document.getElementById('main-app-wrapper');
             const switchInput = document.getElementById('master-app-switch');
             const statusText = document.getElementById('secret-switch-status-text');
-            const shutdownBanner = document.getElementById('global-shutdown-banner');
 
             if (switchInput) switchInput.checked = !disabled;
 
             if (disabled) {
                 if (wrapper) wrapper.classList.add('app-disabled-mode');
-                if (shutdownBanner) shutdownBanner.classList.remove('hidden');
                 if (statusText) {
                     statusText.innerText = "SISTEM GLOBAL NON-AKTIF (OFF)";
                     statusText.className = "text-sm font-extrabold text-rose-600";
@@ -818,7 +817,6 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 }
             } else {
                 if (wrapper) wrapper.classList.remove('app-disabled-mode');
-                if (shutdownBanner) shutdownBanner.classList.add('hidden');
                 if (statusText) {
                     statusText.innerText = "APLIKASI BERJALAN (ON)";
                     statusText.className = "text-sm font-extrabold text-emerald-600";
@@ -835,7 +833,6 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             localStorage.setItem(APP_DISABLED_KEY, disabled ? 'true' : 'false');
             terapkanStatusAplikasi(disabled, true);
 
-            // Broadcast ke Cloud Supabase agar seluruh HP / Device lain terpengaruh seketika
             if (isCloudActive && supabaseClient) {
                 try {
                     await supabaseClient.from('presensi_data').upsert({
@@ -933,7 +930,6 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             try {
                 supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
                 
-                // Load master classes
                 const { data, error } = await supabaseClient
                     .from('presensi_data')
                     .select('value')
@@ -971,7 +967,6 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             if (pollingInterval) clearInterval(pollingInterval);
 
             pollingInterval = setInterval(async () => {
-                // Selalu periksa saklar dari cloud tanpa memandang posisi lokal
                 await periksaStatusSaklarCloud();
 
                 if (isBroadcasting || isAppDisabled) return;
@@ -991,7 +986,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                         }
                     }
                 } catch (e) {}
-            }, 2000); // Check setiap 2 detik agar saklar off langsung responsif di HP lain
+            }, 2000);
         }
 
         async function muatLaporanDariSupabase() {
@@ -1227,13 +1222,13 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     siswa.forEach((n, i) => {
                         const id = kls.replace(/\s+/g, '') + i;
                         html += `<tr class="student-row" id="${id}" onclick="toggleAbsen('${id}', '${kls}', '${n}')">
-                            <td class="relative flex flex-col gap-3 pr-4">
+                            <td class="relative flex flex-col gap-2 pr-2">
                                 <span class="name-text">${i+1}. ${n}</span>
-                                <div class="flex items-center gap-1.5 mt-1">
-                                    <button onclick="event.stopPropagation(); setSakit('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button onclick="event.stopPropagation(); setSakit('${id}', '${kls}', '${n}')" class="px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🔵 Sakit
                                     </button>
-                                    <button onclick="event.stopPropagation(); setIzin('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
+                                    <button onclick="event.stopPropagation(); setIzin('${id}', '${kls}', '${n}')" class="px-3 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🟣 Izin
                                     </button>
                                     <button onclick="event.stopPropagation(); resetAbsen('${id}', '${kls}', '${n}')" class="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-200 border border-slate-200 text-slate-500 font-extrabold text-[10px] transition-all shadow-sm flex items-center justify-center" title="Batal">
@@ -1243,8 +1238,15 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                                         <i data-lucide="user-minus" class="w-3.5 h-3.5"></i>
                                     </button>
                                 </div>
+                                <!-- Kolom Input Keterangan Siswa -->
+                                <div class="mt-1" onclick="event.stopPropagation()">
+                                    <input type="text" id="ket-${id}" placeholder="Keterangan (misal: Demam, Flu, Izin Dll)" 
+                                        oninput="broadcastActiveSelections()" 
+                                        onclick="event.stopPropagation()"
+                                        class="w-full text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400/50 text-slate-700 placeholder:text-slate-400 font-medium transition-all shadow-none">
+                                </div>
                             </td>
-                            <td style="text-align:right" class="w-1/3">
+                            <td style="text-align:right" class="w-1/3 align-top pt-5">
                                 <div class="status-container">
                                     <span class="waktu-text">-</span>
                                     <span class="check-icon">✔</span>
@@ -1265,10 +1267,13 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
 
         function saveCurrentSelections() {
             temporarySelections = {};
-            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin');
-            activeRows.forEach(row => {
+            const allRows = document.querySelectorAll('.student-row');
+            allRows.forEach(row => {
                 const id = row.getAttribute('id');
                 const timeText = row.querySelector('.waktu-text').innerText;
+                const ketInput = row.querySelector(`#ket-${id}`);
+                const keterangan = ketInput ? ketInput.value : '';
+                
                 let statusClass = '';
                 if (row.classList.contains('status-hijau')) statusClass = 'status-hijau';
                 else if (row.classList.contains('status-kuning')) statusClass = 'status-kuning';
@@ -1276,7 +1281,9 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 else if (row.classList.contains('status-sakit')) statusClass = 'status-sakit';
                 else if (row.classList.contains('status-izin')) statusClass = 'status-izin';
                 
-                temporarySelections[id] = { statusClass, timeText };
+                if (statusClass || keterangan) {
+                    temporarySelections[id] = { statusClass, timeText, keterangan };
+                }
             });
         }
 
@@ -1290,12 +1297,18 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             for (const [id, value] of Object.entries(temporarySelections)) {
                 const row = document.getElementById(id);
                 if (row) {
-                    row.className = `student-row ${value.statusClass}`;
-                    row.querySelector('.waktu-text').innerText = value.timeText;
-                    const chk = row.querySelector('.check-icon');
-                    if (value.statusClass === 'status-sakit') chk.innerText = 'S';
-                    else if (value.statusClass === 'status-izin') chk.innerText = 'I';
-                    else chk.innerText = '✔';
+                    if (value.statusClass) {
+                        row.className = `student-row ${value.statusClass}`;
+                        row.querySelector('.waktu-text').innerText = value.timeText;
+                        const chk = row.querySelector('.check-icon');
+                        if (value.statusClass === 'status-sakit') chk.innerText = 'S';
+                        else if (value.statusClass === 'status-izin') chk.innerText = 'I';
+                        else chk.innerText = '✔';
+                    }
+                    const ketInput = row.querySelector(`#ket-${id}`);
+                    if (ketInput && value.keterangan !== undefined) {
+                        ketInput.value = value.keterangan;
+                    }
                 }
             }
         }
@@ -1549,10 +1562,12 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
+            const ketInput = row.querySelector(`#ket-${id}`);
             
             row.className = "student-row";
             txtWaktu.innerText = "-";
             chk.innerText = "✔";
+            if (ketInput) ketInput.value = "";
             
             showToast(`Status ${nama} di-reset`, "warning");
             broadcastActiveSelections();
@@ -1578,11 +1593,16 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     color = "#7c3aed"; statusText = "IZIN"; bgColor = "#f3e8ff"; isHadir = true;
                 }
 
+                const rowId = r.getAttribute('id');
+                const ketInput = r.querySelector(`#ket-${rowId}`);
+                const ketValue = ketInput ? ketInput.value.trim() : '';
+
                 return {
                     nama: r.querySelector('.name-text').innerText.replace(/^\d+\.\s*/, ''), 
                     kelas: r.closest('.class-box').querySelector('h2').innerText,
                     waktu: r.querySelector('.waktu-text').innerText,
                     status: statusText,
+                    keterangan: ketValue,
                     hexColor: color,
                     bgHex: bgColor,
                     hadir: isHadir
@@ -1626,6 +1646,9 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                         row.className = "student-row";
                         row.querySelector('.waktu-text').innerText = "-";
                         row.querySelector('.check-icon').innerText = "✔";
+                        const id = row.getAttribute('id');
+                        const ketInput = row.querySelector(`#ket-${id}`);
+                        if (ketInput) ketInput.value = "";
                     });
                     temporarySelections = {};
 
@@ -1648,6 +1671,9 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     row.className = "student-row";
                     row.querySelector('.waktu-text').innerText = "-";
                     row.querySelector('.check-icon').innerText = "✔";
+                    const id = row.getAttribute('id');
+                    const ketInput = row.querySelector(`#ket-${id}`);
+                    if (ketInput) ketInput.value = "";
                 });
                 temporarySelections = {};
                 renderHistori();
@@ -1677,11 +1703,18 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                 doc.setFontSize(9);
                 doc.text(`Waktu Simpan: ${payload.waktuSimpan} | Total Hadir: ${payload.totalHadir}/${payload.totalSiswa}`, doc.internal.pageSize.getWidth() / 2, 74, { align: 'center' });
 
-                const tableColumn = ["No", "Nama Siswa", "Kelas", "Waktu Presensi", "Status Kehadiran"];
+                const tableColumn = ["No", "Nama Siswa", "Kelas", "Waktu Presensi", "Status Kehadiran", "Keterangan"];
                 const tableRows = [];
 
                 payload.data.forEach((row, index) => {
-                    tableRows.push([index + 1, row.nama, row.kelas, row.waktu, row.status]);
+                    tableRows.push([
+                        index + 1, 
+                        row.nama, 
+                        row.kelas, 
+                        row.waktu, 
+                        row.status, 
+                        row.keterangan || "-"
+                    ]);
                 });
 
                 doc.autoTable({
@@ -1741,6 +1774,7 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     <td style="padding:14px; color:#475569; font-weight:600;">${d.kelas}</td>
                     <td style="padding:14px; color:#64748b; font-weight:600;">${d.waktu}</td>
                     <td style="padding:14px; color:${d.hexColor}; font-weight:800; letter-spacing:0.5px;">${d.status}</td>
+                    <td style="padding:14px; color:#334155; font-weight:600;">${d.keterangan || '-'}</td>
                 </tr>`).join('');
             
             document.getElementById('btnPdfP').onclick = () => cetak(s, 'p');
@@ -1887,56 +1921,18 @@ ALTER TABLE presensi_records DISABLE ROW LEVEL SECURITY;</pre>
                     <td class="p-3 text-center font-extrabold text-rose-600 bg-rose-50/50">${s.peringatan}</td>
                     <td class="p-3 text-center font-extrabold text-sky-600 bg-sky-50/50">${s.sakit}</td>
                     <td class="p-3 text-center font-extrabold text-violet-600 bg-violet-50/50">${s.izin}</td>
-                    <td class="p-3 text-center font-bold text-slate-400 bg-slate-50">${s.alpa}</td>
-                    <td class="p-3 text-center font-extrabold ${s.rasioHadir >= 80 ? 'text-emerald-600' : 'text-rose-600'}">${s.rasioHadir}%</td>
-                </tr>
-            `).join('');
+                    <td class="p-3 text-center font-extrabold text-slate-400 bg-slate-50">${s.alpa}</td>
+                    <td class="p-3 text-center font-bold text-indigo-900">${s.rasioHadir}%</td>
+                </tr>`).join('');
         }
 
         function tutupDashboardRekap() {
             document.getElementById('modalRekap').style.display = 'none';
         }
 
-        function cetakLaporanRekapBerkala() {
-            if (isAppDisabled) return;
-            if (!dataRekapAktif) return;
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'pt', 'a4');
-
-                doc.setFontSize(16);
-                doc.text("SMP HAMALATUL QURAN RINGINAGUNG", doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
-                doc.setFontSize(11);
-                doc.text(`LAPORAN REKAPITULASI KEDISIPLINAN SANTRI (${dataRekapAktif.periodeHari} HARI TERAKHIR)`, doc.internal.pageSize.getWidth() / 2, 58, { align: 'center' });
-                doc.setFontSize(9);
-                doc.text(`Total Sesi Presensi: ${dataRekapAktif.totalSesi} Sesi | Rerata Tingkat Kehadiran: ${dataRekapAktif.rerataRasio}%`, doc.internal.pageSize.getWidth() / 2, 74, { align: 'center' });
-
-                const headers = [["No", "Nama Santri", "Kelas", "Aman (🟢)", "Lambat (🟡)", "Peringatan (🔴)", "Sakit (🔵)", "Izin (🟣)", "Alpa (⚪)", "Rasio Kehadiran"]];
-                const rows = dataRekapAktif.daftarSiswa.map((s, idx) => [
-                    idx + 1, s.nama, s.kelas, s.aman, s.terlambat, s.peringatan, s.sakit, s.izin, s.alpa, `${s.rasioHadir}%`
-                ]);
-
-                doc.autoTable({
-                    head: headers,
-                    body: rows,
-                    startY: 90,
-                    theme: 'grid',
-                    headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' },
-                    alternateRowStyles: { fillColor: [248, 250, 252] }
-                });
-
-                doc.save(`Rekapitulasi_Disiplin_${dataRekapAktif.periodeHari}Hari.pdf`);
-                showToast("Berhasil mencetak PDF Rekapitulasi!", "success");
-            } catch(e) {
-                showToast("Gagal mencetak Rekapitulasi PDF: " + e.message, "error");
-            }
-        }
-
-        setInterval(updateJamAktif, 1000);
-
         window.onload = function() {
+            setInterval(updateJamAktif, 1000);
             updateJamAktif();
-            inisialisasiStatusSaklarRahasia();
             setupSupabase();
         };
     </script>
