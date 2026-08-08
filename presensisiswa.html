@@ -551,7 +551,7 @@
                             <th class="p-4">Nama Siswa</th>
                             <th class="p-4">Kelas</th>
                             <th class="p-4">Waktu & Tanggal</th>
-                            <th class="p-4">Status</th>
+                            <th class="p-4">Status & Keterangan</th>
                         </tr>
                     </thead>
                     <tbody id="bodiModal"></tbody>
@@ -571,7 +571,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Dasbor Analisis Statistik Kedisiplinan (Rekap Umum & Rekap Ranking + Custom Date) -->
+    <!-- MODAL 2: Dasbor Analisis Statistik Kedisiplinan -->
     <div id="modalRekap" class="modal">
         <div class="modal-content mx-4 my-8 max-w-5xl flex flex-col">
             <!-- Header Modal -->
@@ -611,7 +611,7 @@
                     </div>
                 </div>
 
-                <!-- Form Custom Tanggal (Hanya Muncul jika Custom dipilih) -->
+                <!-- Form Custom Tanggal -->
                 <div id="container-custom-date" class="hidden pt-2 border-t border-slate-200/80 flex flex-col sm:flex-row items-center gap-3">
                     <div class="flex-1 w-full flex items-center gap-2">
                         <label class="text-[11px] font-bold text-slate-600 whitespace-nowrap">Mulai:</label>
@@ -629,7 +629,6 @@
 
             <!-- Area Konten Utama Rekap -->
             <div class="space-y-4">
-                <!-- Filter Search & Class -->
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="flex-1 relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
@@ -677,7 +676,7 @@
                 <!-- Tampilan Tabel 1: Rekap Umum -->
                 <div id="view-rekap-umum" class="border border-slate-200 rounded-2xl overflow-hidden shadow-inner bg-white">
                     <div class="overflow-x-auto max-h-[38vh]">
-                        <table class="w-full text-left border-collapse min-w-[700px]" id="table-rekap-data">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
                             <thead class="sticky top-0 bg-slate-50 border-b border-slate-200 text-slate-600 text-[10px] font-extrabold uppercase tracking-wide">
                                 <tr>
                                     <th class="p-3">Siswa</th>
@@ -691,9 +690,7 @@
                                     <th class="p-3 text-center">Rasio Kehadiran</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-xs text-slate-700 divide-y divide-slate-100" id="table-rekap-body">
-                                <!-- Diisi secara dinamis -->
-                            </tbody>
+                            <tbody class="text-xs text-slate-700 divide-y divide-slate-100" id="table-rekap-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -701,7 +698,7 @@
                 <!-- Tampilan Tabel 2: Rekap Ranking Kedisiplinan -->
                 <div id="view-rekap-ranking" class="hidden border border-slate-200 rounded-2xl overflow-hidden shadow-inner bg-white">
                     <div class="overflow-x-auto max-h-[38vh]">
-                        <table class="w-full text-left border-collapse min-w-[700px]" id="table-ranking-data">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
                             <thead class="sticky top-0 bg-slate-900 text-white text-[10px] font-extrabold uppercase tracking-wide">
                                 <tr>
                                     <th class="p-3 text-center w-16">Peringkat</th>
@@ -715,9 +712,7 @@
                                     <th class="p-3 text-center">Rasio Kehadiran</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-xs text-slate-700 divide-y divide-slate-100" id="table-ranking-body">
-                                <!-- Diisi secara dinamis -->
-                            </tbody>
+                            <tbody class="text-xs text-slate-700 divide-y divide-slate-100" id="table-ranking-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -736,13 +731,10 @@
         </div>
     </div>
 
-    <!-- Integrasi Logika Sinkronisasi Supabase Real-time & Fitur Rekap Custom / Ranking -->
     <script>
-        // Kunci penyimpanan lokal
         const DB_KEY = 'db_presensi_supabase_v10';
         const SISWA_KEY = 'db_siswa_supabase_v10';
 
-        // Nilai Default Kredensial Database Supabase
         const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
         const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
 
@@ -751,7 +743,6 @@
         let isBroadcasting = false;
         let pollingInterval = null; 
 
-        // Daftar default nama siswa awal
         const defaultDataSiswa = {
             "Kelas 7": [
                 "Aisyah Mughny", "Amirotun Nabilatur", "Aqila Adzka", "Arbaatul Mafahimul",
@@ -777,16 +768,15 @@
             ]
         };
 
-        // State global aplikasi
         let dataSiswa = {};
         let temporarySelections = {};
+        let temporaryKeterangan = {}; // Menyimpan teks keterangan tiap siswa
         let dataRekapAktif = null;
-        let modeRekapView = 'UMUM'; // 'UMUM' atau 'RANKING'
-        let opsiPeriodeAktif = '7'; // '7', '30', atau 'custom'
+        let modeRekapView = 'UMUM'; 
+        let opsiPeriodeAktif = '7'; 
         let customStartFilter = null;
         let customEndFilter = null;
 
-        // --- MANAJEMEN STATUS UI SINKRONISASI ---
         function setSyncStatus(status, text) {
             const syncBadge = document.getElementById('sync-badge');
             const syncText = document.getElementById('sync-text');
@@ -817,7 +807,6 @@
             }
         }
 
-        // Mode cadangan jika kegagalan koneksi terdeteksi
         function useOfflineFallback() {
             isCloudActive = false;
             if (pollingInterval) {
@@ -851,7 +840,6 @@
                 if (error && error.code !== 'PGRST116') {
                     if (error.status === 401 || error.status === 403 || error.message.includes('policy')) {
                         setSyncStatus('error', 'Supabase Terkunci (RLS Aktif)');
-                        showToast(`Sambungan gagal: Silakan matikan RLS pada tabel Supabase Anda!`, "error");
                     } else {
                         setSyncStatus('error', error.message);
                     }
@@ -879,7 +867,6 @@
             }
         }
 
-        // --- SISTEM SINKRONISASI POLLING HTTP ---
         function setupPollingSync() {
             if (!isCloudActive || !supabaseClient) return;
 
@@ -899,6 +886,7 @@
                         const sessionData = data.value;
                         if (sessionData.date === new Date().toDateString()) {
                             temporarySelections = sessionData.selections || {};
+                            temporaryKeterangan = sessionData.keterangan || {};
                             restoreSelections();
                         }
                     }
@@ -908,7 +896,6 @@
             }, 3500);
         }
 
-        // Memuat arsip laporan tersimpan dari Supabase
         async function muatLaporanDariSupabase() {
             if (!isCloudActive || !supabaseClient) return;
 
@@ -972,7 +959,8 @@
             try {
                 const payload = {
                     date: new Date().toDateString(),
-                    selections: temporarySelections
+                    selections: temporarySelections,
+                    keterangan: temporaryKeterangan
                 };
                 await supabaseClient.from('presensi_data').upsert({ key: 'current_session', value: payload });
             } catch(e) {
@@ -1053,7 +1041,6 @@
             });
         }
 
-        // --- NOTIFIKASI TOAST ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const card = document.createElement('div');
@@ -1165,7 +1152,7 @@
                             <td class="relative flex flex-col gap-3 pr-4">
                                 <span class="name-text">${i+1}. ${n}</span>
                                 
-                                <div class="flex items-center gap-1.5 mt-1">
+                                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
                                     <button onclick="event.stopPropagation(); setSakit('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🔵 Sakit
                                     </button>
@@ -1178,6 +1165,11 @@
                                     <button onclick="event.stopPropagation(); hapusSiswa('${kls}', ${i})" class="p-1.5 rounded-lg hover:bg-red-50 text-slate-300 hover:text-red-500 transition-all ml-auto" title="Hapus Siswa">
                                         <i data-lucide="user-minus" class="w-3.5 h-3.5"></i>
                                     </button>
+                                </div>
+
+                                <!-- Box Keterangan Masing-Masing Siswa -->
+                                <div class="mt-1" onclick="event.stopPropagation()">
+                                    <input type="text" id="ket-${id}" oninput="simpanKeteranganSiswa('${id}')" placeholder="Keterangan (misal: Sakit demam, Izin ada acara, dll)..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white/80 text-slate-700 font-medium placeholder-slate-400">
                                 </div>
                             </td>
                             <td style="text-align:right" class="w-1/3">
@@ -1198,6 +1190,14 @@
             lucide.createIcons();
         }
 
+        function simpanKeteranganSiswa(id) {
+            const inputEl = document.getElementById(`ket-${id}`);
+            if (inputEl) {
+                temporaryKeterangan[id] = inputEl.value;
+                broadcastActiveSelections();
+            }
+        }
+
         function saveCurrentSelections() {
             temporarySelections = {};
             const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin');
@@ -1213,6 +1213,15 @@
                 
                 temporarySelections[id] = { statusClass, timeText };
             });
+
+            // Simpan juga semua nilai keterangan aktif saat ini
+            document.querySelectorAll('.student-row').forEach(row => {
+                const id = row.getAttribute('id');
+                const inputEl = document.getElementById(`ket-${id}`);
+                if (inputEl && inputEl.value.trim() !== '') {
+                    temporaryKeterangan[id] = inputEl.value;
+                }
+            });
         }
 
         function restoreSelections() {
@@ -1220,6 +1229,9 @@
                 row.className = "student-row";
                 row.querySelector('.waktu-text').innerText = "-";
                 row.querySelector('.check-icon').innerText = "✔";
+                const id = row.getAttribute('id');
+                const inputEl = document.getElementById(`ket-${id}`);
+                if (inputEl) inputEl.value = "";
             });
 
             for (const [id, value] of Object.entries(temporarySelections)) {
@@ -1231,6 +1243,13 @@
                     if (value.statusClass === 'status-sakit') chk.innerText = 'S';
                     else if (value.statusClass === 'status-izin') chk.innerText = 'I';
                     else chk.innerText = '✔';
+                }
+            }
+
+            for (const [id, val] of Object.entries(temporaryKeterangan)) {
+                const inputEl = document.getElementById(`ket-${id}`);
+                if (inputEl) {
+                    inputEl.value = val;
                 }
             }
         }
@@ -1402,7 +1421,6 @@
             });
         }
 
-        // --- AKSI KETUKAN DAN TOMBOL PRESENSI ---
         function toggleAbsen(id, kls, nama) {
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
@@ -1474,6 +1492,13 @@
             txtWaktu.innerText = `${h}, ${t} - ${j}`;
             chk.innerText = 'S';
             
+            // Otomatis isi placeholder keterangan jika kosong
+            const inputKet = document.getElementById(`ket-${id}`);
+            if (inputKet && !inputKet.value.trim()) {
+                inputKet.value = "Sakit";
+                temporaryKeterangan[id] = "Sakit";
+            }
+
             showToast(`${nama} ditandai SAKIT 🔵`, "success");
             broadcastActiveSelections();
         }
@@ -1491,6 +1516,13 @@
             row.className = "student-row status-izin";
             txtWaktu.innerText = `${h}, ${t} - ${j}`;
             chk.innerText = 'I';
+
+            // Otomatis isi placeholder keterangan jika kosong
+            const inputKet = document.getElementById(`ket-${id}`);
+            if (inputKet && !inputKet.value.trim()) {
+                inputKet.value = "Izin";
+                temporaryKeterangan[id] = "Izin";
+            }
             
             showToast(`${nama} ditandai IZIN 🟣`, "success");
             broadcastActiveSelections();
@@ -1504,6 +1536,12 @@
             row.className = "student-row";
             txtWaktu.innerText = "-";
             chk.innerText = "✔";
+
+            const inputKet = document.getElementById(`ket-${id}`);
+            if (inputKet) {
+                inputKet.value = "";
+                delete temporaryKeterangan[id];
+            }
             
             showToast(`Status ${nama} di-reset`, "warning");
             broadcastActiveSelections();
@@ -1529,11 +1567,16 @@
                     color = "#7c3aed"; statusText = "IZIN"; bgColor = "#f3e8ff"; isHadir = true;
                 }
 
+                const id = r.getAttribute('id');
+                const ketInput = document.getElementById(`ket-${id}`);
+                const keteranganSiswa = ketInput ? ketInput.value.trim() : (temporaryKeterangan[id] || "");
+
                 return {
                     nama: r.querySelector('.name-text').innerText.replace(/^\d+\.\s*/, ''), 
                     kelas: r.closest('.class-box').querySelector('h2').innerText,
                     waktu: r.querySelector('.waktu-text').innerText,
                     status: statusText,
+                    keterangan: keteranganSiswa,
                     hexColor: color,
                     bgHex: bgColor,
                     hadir: isHadir
@@ -1580,10 +1623,14 @@
                         row.className = "student-row";
                         row.querySelector('.waktu-text').innerText = "-";
                         row.querySelector('.check-icon').innerText = "✔";
+                        const id = row.getAttribute('id');
+                        const inputEl = document.getElementById(`ket-${id}`);
+                        if (inputEl) inputEl.value = "";
                     });
                     temporarySelections = {};
+                    temporaryKeterangan = {};
                     
-                    const emptyPayload = { date: new Date().toDateString(), selections: {} };
+                    const emptyPayload = { date: new Date().toDateString(), selections: {}, keterangan: {} };
                     await supabaseClient.from('presensi_data').upsert({ key: 'current_session', value: emptyPayload });
 
                     broadcastActiveSelections();
@@ -1602,13 +1649,16 @@
                     row.className = "student-row";
                     row.querySelector('.waktu-text').innerText = "-";
                     row.querySelector('.check-icon').innerText = "✔";
+                    const id = row.getAttribute('id');
+                    const inputEl = document.getElementById(`ket-${id}`);
+                    if (inputEl) inputEl.value = "";
                 });
                 temporarySelections = {};
+                temporaryKeterangan = {};
                 renderHistori();
             }
         }
 
-        // Cetak dokumen PDF harian
         function cetak(payload, mode = 'p') {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF(mode === 'l' ? 'l' : 'p', 'mm', 'a4');
@@ -1631,26 +1681,16 @@
                 d.nama,
                 d.kelas,
                 d.waktu,
-                d.status
+                `${d.status} ${d.keterangan ? '(' + d.keterangan + ')' : ''}`
             ]);
 
             doc.autoTable({
                 startY: 32,
-                head: [['No', 'Nama Siswa', 'Kelas', 'Waktu & Tanggal', 'Status']],
+                head: [['No', 'Nama Siswa', 'Kelas', 'Waktu & Tanggal', 'Status & Keterangan']],
                 body: tableData,
                 theme: 'grid',
                 styles: { fontSize: 8, cellPadding: 2.5 },
-                headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' },
-                didParseCell: function(data) {
-                    if (data.section === 'body' && data.column.index === 4) {
-                        const status = data.cell.raw;
-                        if (status === 'AMAN') data.cell.styles.textColor = [22, 163, 74];
-                        else if (status === 'TERLAMBAT') data.cell.styles.textColor = [202, 138, 4];
-                        else if (status === 'PERINGATAN') data.cell.styles.textColor = [220, 38, 38];
-                        else if (status === 'SAKIT') data.cell.styles.textColor = [2, 132, 199];
-                        else if (status === 'IZIN') data.cell.styles.textColor = [124, 58, 237];
-                    }
-                }
+                headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' }
             });
 
             doc.save(`Presensi_${payload.waktuSimpan.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
@@ -1703,7 +1743,10 @@
                     <td style="padding:14px; color:var(--primary); font-weight:700;">${d.nama}</td>
                     <td style="padding:14px; color:#475569; font-weight:600;">${d.kelas}</td>
                     <td style="padding:14px; color:#64748b; font-weight:600;">${d.waktu}</td>
-                    <td style="padding:14px; color:${d.hexColor}; font-weight:800; letter-spacing:0.5px;">${d.status}</td>
+                    <td style="padding:14px; font-weight:800; letter-spacing:0.5px;">
+                        <span style="color:${d.hexColor};">${d.status}</span>
+                        ${d.keterangan ? '<div class="text-[11px] font-medium text-slate-600 mt-0.5">Ket: ' + d.keterangan + '</div>' : ''}
+                    </td>
                 </tr>`).join('');
             
             document.getElementById('btnPdfP').onclick = () => cetak(s, 'p');
@@ -1745,7 +1788,6 @@
             document.getElementById('modalDetail').style.display = 'none'; 
         }
 
-        // --- PROCESSING DISCIPLINE STATISTICS & RANKING ALGORITHM ---
         function hitungStatistikDisiplin(opsiPeriode = '7', customStart = null, customEnd = null) {
             const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             if (localDb.length === 0) return null;
@@ -1865,13 +1907,6 @@
                 const totalHadir = profile.aman + profile.terlambat + profile.peringatan + profile.sakit + profile.izin;
                 const rasioHadir = totalSesiSiswa > 0 ? ((totalHadir / totalSesiSiswa) * 100).toFixed(1) : "0.0";
                 
-                // SKOR DISIPLIN TEPAT SASARAN (Utamakan banyak aman/tertib, izin tetap di bawah siswa yang berangkat/hadir)
-                // - Tepat Waktu (Aman): +20 poin
-                // - Terlambat: +5 poin (di bawah berangkat/ontime, tetapi di atas izin/sakit/alpa)
-                // - Izin: +3 poin (kalah dengan siswa yang berangkat/terlambat)
-                // - Sakit: +2 poin
-                // - Peringatan: -5 poin
-                // - Alpa: -15 poin
                 const poinDisiplin = (profile.aman * 20) + (profile.terlambat * 5) + (profile.izin * 3) + (profile.sakit * 2) - (profile.peringatan * 5) - (profile.alpa * 15);
 
                 return {
@@ -1898,7 +1933,6 @@
             };
         }
 
-        // Buka dashboard modal rekapitulasi
         function bukaDashboardRekap(periode = '7') {
             opsiPeriodeAktif = periode;
             
@@ -2005,7 +2039,6 @@
             showToast(`Filter tanggal diterapkan: ${startVal} s/d ${endVal}`, "success");
         }
 
-        // --- SWITCHER TAB REKAP UMUM vs REKAP RANKING ---
         function gantiTabRekap(mode) {
             modeRekapView = mode;
             const btnUmum = document.getElementById('btn-tab-rekap-umum');
@@ -2050,7 +2083,6 @@
             }
         }
 
-        // Render Tabel 1: Rekap Umum
         function renderTabelRekap(listSiswa) {
             const tbody = document.getElementById('table-rekap-body');
             if (!tbody) return;
@@ -2088,7 +2120,6 @@
             }).join('');
         }
 
-        // Render Tabel 2: Rekap Ranking Kedisiplinan (Sesuai Ketentuan Tepat Sasaran)
         function renderTabelRanking(listSiswa) {
             const tbody = document.getElementById('table-ranking-body');
             if (!tbody) return;
@@ -2098,10 +2129,6 @@
                 return;
             }
 
-            // Algoritma Ranking Tepat Sasaran:
-            // 1. Prioritaskan yang banyak aman/tertib (aman desc)
-            // 2. Siswa yang terlambat tetap menang dari yang izin (karena izin tetap kalah dengan siswa yang berangkat meskipun terlambat)
-            // 3. Skor Disiplin gabungan
             const rankedList = [...listSiswa].sort((a, b) => {
                 if (b.aman !== a.aman) return b.aman - a.aman;
                 if (b.poinDisiplin !== a.poinDisiplin) return b.poinDisiplin - a.poinDisiplin;
@@ -2145,7 +2172,6 @@
             }).join('');
         }
 
-        // Cetak Dokumen PDF Rekapitulasi Berkala / Ranking
         function cetakLaporanRekapBerkala() {
             if (!dataRekapAktif || dataRekapAktif.daftarSiswa.length === 0) {
                 showToast("Tidak ada data rekapitulasi untuk diunduh!", "warning");
