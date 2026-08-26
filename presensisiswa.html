@@ -298,11 +298,72 @@
             background-color: #e2e8f0;
             color: #0f172a;
         }
+
+        /* Saklar Non-Aktifkan Seluruh Aplikasi: WARNA TETAP ASLI, DILOCK TIDAK BISA DIKLIK */
+        .app-disabled-mode {
+            pointer-events: none !important;
+            user-select: none !important;
+            cursor: not-allowed !important;
+            filter: opacity(0.85);
+        }
+        .app-disabled-mode * {
+            pointer-events: none !important;
+            cursor: not-allowed !important;
+        }
+
+        /* Area Khusus Pemicu Rahasia & Modal Saklar Tetap Aktif agar dapat di-unlock kapan saja */
+        .secret-allowed, #secretModal, #secretModal *, #global-shutdown-banner, #global-shutdown-banner * {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
     </style>
 </head>
 <body class="bg-slate-50">
 
     <div id="toast-container"></div>
+
+    <!-- Titik Rahasia Tersembunyi di Pojok Kanan Bawah untuk Akses Cepat Tombol Rahasia -->
+    <div id="secret-dot-trigger" onclick="bukaModalRahasia()" class="secret-allowed fixed bottom-2 right-2 w-4 h-4 bg-slate-400/30 hover:bg-indigo-600 rounded-full z-[9995] transition-all cursor-pointer opacity-40 hover:opacity-100 flex items-center justify-center text-[8px] text-white font-bold" title="Control Zone">⚙</div>
+
+    <!-- MODAL RAHASIA MASTER SWITCH (ON / OFF SAKLAR CONTROL SINKRON CLOUD) -->
+    <div id="secretModal" class="modal secret-allowed" style="z-index: 10000;">
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
+            <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-3.5 h-3.5 rounded-full bg-indigo-600 animate-ping"></div>
+                    <h3 class="text-base font-extrabold text-slate-800">Panel Saklar Utama (Global Sync)</h3>
+                </div>
+                <button onclick="tutupModalRahasia()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 mb-6 text-left leading-relaxed">
+                Saklar kontrol utama untuk mengaktifkan atau menonaktifkan interaksi seluruh aplikasi. <strong class="text-slate-700">Jika saklar ini dimatikan, SELURUH perangkat pengguna yang membuka link akan terkunci seketika secara real-time!</strong>
+            </p>
+
+            <!-- SAKLAR / TOGGLE SWITCH UI -->
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center justify-between mb-6">
+                <div class="text-left">
+                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Saklar Global</span>
+                    <span id="secret-switch-status-text" class="text-sm font-extrabold text-emerald-600">APLIKASI BERJALAN (ON)</span>
+                </div>
+
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="master-app-switch" onchange="prosesPerubahanSaklar(this.checked)" class="sr-only peer" checked>
+                    <div class="w-14 h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+            </div>
+
+            <div class="text-[11px] text-slate-500 italic mb-6 text-left bg-indigo-50/70 p-3 rounded-xl border border-indigo-100">
+                🌐 Status ini disinkronkan langsung via Cloud Supabase. Semua HP / Laptop yang membuka link ini akan otomatis mengikuti posisi saklar ini.
+            </div>
+
+            <button onclick="tutupModalRahasia()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition-all shadow-md">
+                Tutup Panel Kontrol
+            </button>
+        </div>
+    </div>
 
     <!-- Custom Confirmation Modal -->
     <div id="confirmModal" class="modal">
@@ -319,218 +380,224 @@
         </div>
     </div>
 
-    <!-- Header Section -->
-    <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
-        <div class="max-w-7xl mx-auto">
-            <h1 class="text-xl md:text-3xl font-extrabold tracking-wider leading-tight">SMP HAMALATUL QURAN RINGINAGUNG</h1>
-            <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
-            
-            <div class="mt-4 flex justify-center">
-                <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
-                    <span id="sync-dot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    <span id="sync-text">Menghubungkan Database...</span>
+    <!-- KONTAINER UTAMA APLIKASI -->
+    <div id="main-app-wrapper">
+        <!-- Header Section -->
+        <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Judul Utama (Klik 3x Cepat untuk membuka tombol rahasia) -->
+                <h1 id="app-secret-title" onclick="tanganiKlikJudul()" class="secret-allowed text-xl md:text-3xl font-extrabold tracking-wider leading-tight cursor-pointer select-none transition-opacity active:opacity-75" title="Klik 3x untuk tombol rahasia saklar">
+                    SMP HAMALATUL QURAN RINGINAGUNG
+                </h1>
+                <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
+                
+                <div class="mt-4 flex justify-center">
+                    <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
+                        <span id="sync-dot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        <span id="sync-text">Menghubungkan Database...</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <div id="label-tgl" class="opacity-90 text-xs md:text-sm font-semibold bg-white/10 px-5 py-2 rounded-full border border-white/10 shadow-sm">
-                    Memuat Tanggal...
+                <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <div id="label-tgl" class="opacity-90 text-xs md:text-sm font-semibold bg-white/10 px-5 py-2 rounded-full border border-white/10 shadow-sm">
+                        Memuat Tanggal...
+                    </div>
+                    <div id="label-jam" class="text-md md:text-lg font-extrabold bg-white/20 px-6 py-2 rounded-full border border-white/20 shadow-md min-w-[120px] tabular-nums tracking-wider">
+                        00:00:00
+                    </div>
                 </div>
-                <div id="label-jam" class="text-md md:text-lg font-extrabold bg-white/20 px-6 py-2 rounded-full border border-white/20 shadow-md min-w-[120px] tabular-nums tracking-wider">
-                    00:00:00
-                </div>
-            </div>
 
-            <!-- Legend Section with Time Slots -->
-            <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:01 - 07:10 Terlambat</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600 text-white shadow-md">🔵 Sakit</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600 text-white shadow-md">🟣 Izin</span>
+                <!-- Legend Section with Time Slots -->
+                <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:01 - 07:10 Terlambat</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600 text-white shadow-md">🔵 Sakit</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600 text-white shadow-md">🟣 Izin</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="max-w-7xl mx-auto px-4 mt-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- Panel Kontrol Administratif -->
-            <div class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
-                            <i data-lucide="settings"></i>
-                        </span>
-                        <h3 class="font-bold text-lg text-slate-800">Manajemen Kelas & Siswa</h3>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-6 leading-relaxed">Tambahkan kelas baru, daftarkan nama siswa baru secara instan, atau pindahkan siswa/naikkan kelas massal secara otomatis.</p>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 mt-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <div class="space-y-4">
-                    <!-- Tombol expander form dinamis -->
-                    <button onclick="toggleForm('form-kelas')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
-                        <span class="flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-indigo-500"></i> Buat Kelas Baru</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                    </button>
-                    <!-- Form Tambah Kelas -->
-                    <div id="form-kelas" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
-                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide">Nama Kelas Baru</label>
-                        <input type="text" id="input-nama-kelas" placeholder="Contoh: Kelas 7A, Kelas 8B" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                        <button onclick="tambahKelasBaru()" class="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors">Simpan Kelas</button>
-                    </div>
-
-                    <button onclick="toggleForm('form-siswa')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
-                        <span class="flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-sky-500"></i> Daftarkan Siswa Baru</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                    </button>
-                    <!-- Form Tambah Siswa -->
-                    <div id="form-siswa" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Pilih Kelas Tujuan</label>
-                            <select id="select-kelas-siswa" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Nama Lengkap Siswa</label>
-                            <input type="text" id="input-nama-siswa" placeholder="Masukkan nama lengkap" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
-                        </div>
-                        <button onclick="tambahSiswaBaru()" class="w-full py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors">Simpan Siswa</button>
-                    </div>
-
-                    <button onclick="toggleForm('form-pindah')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
-                        <span class="flex items-center gap-2"><i data-lucide="arrow-left-right" class="w-4 h-4 text-emerald-500"></i> Pindahkan / Naik Kelas</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                    </button>
-                    <!-- Form Migrasi / Kenaikan Kelas -->
-                    <div id="form-pindah" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Dari Kelas (Asal)</label>
-                            <select id="select-pindah-asal" onchange="updateSiswaPindahDropdown()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Pilih Siswa</label>
-                            <select id="select-pindah-siswa" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="ALL">-- SEMUA SISWA (Naik Kelas Massal) --</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Ke Kelas (Tujuan)</label>
-                            <select id="select-pindah-tujuan" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
-                        </div>
-                        <button onclick="pindahkanSiswaKelas()" class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors">Pindahkan Sekarang</button>
-                    </div>
-
-                    <!-- tombol expander form database Supabase manual -->
-                    <button onclick="toggleForm('form-config-db')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 font-semibold text-sm transition-colors text-amber-900">
-                        <span class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-amber-600"></i> Pengaturan Database Supabase</span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-amber-500"></i>
-                    </button>
-                    <!-- Form Pengaturan Supabase Cloud -->
-                    <div id="form-config-db" class="hidden bg-amber-50/50 p-4 rounded-xl border border-dashed border-amber-200 space-y-3 text-left">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase URL (API URL)</label>
-                            <input type="text" id="input-supabase-url" placeholder="https://xxxxxx.supabase.co" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase Anon Key (Public Key)</label>
-                            <input type="text" id="input-supabase-key" placeholder="eyJhbGciOi..." class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
-                        </div>
-                        <button onclick="simpanConfigDatabase()" class="w-full py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-colors">Aktifkan Database Supabase</button>
-                        <button onclick="hapusConfigDatabase()" class="w-full py-2.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">Gunakan Penyimpanan Lokal</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dashboard Analisis Disiplin Berkala -->
-            <div class="lg:col-span-2 bg-gradient-to-br from-indigo-950 to-slate-900 p-5 md:p-6 rounded-3xl text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/20 rounded-full blur-2xl"></div>
-                
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-2">
-                            <span class="p-2 bg-indigo-600 text-indigo-200 rounded-xl">
-                                <i data-lucide="bar-chart-3"></i>
+                <!-- Panel Kontrol Administratif -->
+                <div class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
+                                <i data-lucide="settings"></i>
                             </span>
-                            <h3 class="font-bold text-lg">Dashboard Rekapitulasi & Ranking Kedisiplinan</h3>
+                            <h3 class="font-bold text-lg text-slate-800">Manajemen Kelas & Siswa</h3>
                         </div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-indigo-50/10 border border-indigo-500/30 text-indigo-300 rounded-full">Sistem Otomatis</span>
+                        <p class="text-xs text-slate-500 mb-6 leading-relaxed">Tambahkan kelas baru, daftarkan nama siswa baru secara instan, atau pindahkan siswa/naikkan kelas massal secara otomatis.</p>
                     </div>
-                    <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Menganalisis tingkat keterlambatan, ketepatan waktu (ontime), sakit, izin, serta pemeringkatan (ranking) kedisiplinan siswa secara berkala atau custom tanggal.</p>
+                    
+                    <div class="space-y-4">
+                        <!-- Tombol expander form dinamis -->
+                        <button onclick="toggleForm('form-kelas')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
+                            <span class="flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-indigo-500"></i> Buat Kelas Baru</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                        </button>
+                        <!-- Form Tambah Kelas -->
+                        <div id="form-kelas" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide">Nama Kelas Baru</label>
+                            <input type="text" id="input-nama-kelas" placeholder="Contoh: Kelas 7A, Kelas 8B" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <button onclick="tambahKelasBaru()" class="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors">Simpan Kelas</button>
+                        </div>
+
+                        <button onclick="toggleForm('form-siswa')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
+                            <span class="flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-sky-500"></i> Daftarkan Siswa Baru</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                        </button>
+                        <!-- Form Tambah Siswa -->
+                        <div id="form-siswa" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Pilih Kelas Tujuan</label>
+                                <select id="select-kelas-siswa" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Nama Lengkap Siswa</label>
+                                <input type="text" id="input-nama-siswa" placeholder="Masukkan nama lengkap" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            </div>
+                            <button onclick="tambahSiswaBaru()" class="w-full py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition-colors">Simpan Siswa</button>
+                        </div>
+
+                        <button onclick="toggleForm('form-pindah')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
+                            <span class="flex items-center gap-2"><i data-lucide="arrow-left-right" class="w-4 h-4 text-emerald-500"></i> Pindahkan / Naik Kelas</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                        </button>
+                        <!-- Form Migrasi / Kenaikan Kelas -->
+                        <div id="form-pindah" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Dari Kelas (Asal)</label>
+                                <select id="select-pindah-asal" onchange="updateSiswaPindahDropdown()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Pilih Siswa</label>
+                                <select id="select-pindah-siswa" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="ALL">-- SEMUA SISWA (Naik Kelas Massal) --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Ke Kelas (Tujuan)</label>
+                                <select id="select-pindah-tujuan" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
+                            </div>
+                            <button onclick="pindahkanSiswaKelas()" class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors">Pindahkan Sekarang</button>
+                        </div>
+
+                        <!-- tombol expander form database Supabase manual -->
+                        <button onclick="toggleForm('form-config-db')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 font-semibold text-sm transition-colors text-amber-900">
+                            <span class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-amber-600"></i> Pengaturan Database Supabase</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-amber-500"></i>
+                        </button>
+                        <!-- Form Pengaturan Supabase Cloud -->
+                        <div id="form-config-db" class="hidden bg-amber-50/50 p-4 rounded-xl border border-dashed border-amber-200 space-y-3 text-left">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase URL (API URL)</label>
+                                <input type="text" id="input-supabase-url" placeholder="https://xxxxxx.supabase.co" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase Anon Key (Public Key)</label>
+                                <input type="text" id="input-supabase-key" placeholder="eyJhbGciOi..." class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                            </div>
+                            <button onclick="simpanConfigDatabase()" class="w-full py-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-colors">Aktifkan Database Supabase</button>
+                            <button onclick="hapusConfigDatabase()" class="w-full py-2.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors">Gunakan Penyimpanan Lokal</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt-6 space-y-3">
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="bukaDashboardRekap('7')" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold transition-all border border-white/5 shadow-md">
-                            <i class="w-4 h-4 text-emerald-400" data-lucide="calendar"></i> Rekap 1 Minggu
-                        </button>
-                        <button onclick="bukaDashboardRekap('30')" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold transition-all border border-white/5 shadow-md">
-                            <i class="w-4 h-4 text-cyan-400" data-lucide="calendar-days"></i> Rekap 1 Bulan
-                        </button>
-                        <button onclick="bukaDashboardRekap('custom')" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-bold transition-all border border-amber-400/30 shadow-md">
-                            <i class="w-4 h-4 text-amber-400" data-lucide="sliders"></i> Rekap Custom Tanggal
-                        </button>
+                <!-- Dashboard Analisis Disiplin Berkala -->
+                <div class="lg:col-span-2 bg-gradient-to-br from-indigo-950 to-slate-900 p-5 md:p-6 rounded-3xl text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/20 rounded-full blur-2xl"></div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="p-2 bg-indigo-600 text-indigo-200 rounded-xl">
+                                    <i data-lucide="bar-chart-3"></i>
+                                </span>
+                                <h3 class="font-bold text-lg">Dashboard Rekapitulasi & Ranking Kedisiplinan</h3>
+                            </div>
+                            <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-indigo-50/10 border border-indigo-500/30 text-indigo-300 rounded-full">Sistem Otomatis</span>
+                        </div>
+                        <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Menganalisis tingkat keterlambatan, ketepatan waktu (ontime), sakit, izin, serta pemeringkatan (ranking) kedisiplinan siswa secara berkala atau custom tanggal.</p>
+                    </div>
+
+                    <div class="mt-6 space-y-3">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="bukaDashboardRekap('7')" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold transition-all border border-white/5 shadow-md">
+                                <i class="w-4 h-4 text-emerald-400" data-lucide="calendar"></i> Rekap 1 Minggu
+                            </button>
+                            <button onclick="bukaDashboardRekap('30')" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold transition-all border border-white/5 shadow-md">
+                                <i class="w-4 h-4 text-cyan-400" data-lucide="calendar-days"></i> Rekap 1 Bulan
+                            </button>
+                            <button onclick="bukaDashboardRekap('custom')" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-bold transition-all border border-amber-400/30 shadow-md">
+                                <i class="w-4 h-4 text-amber-400" data-lucide="sliders"></i> Rekap Custom Tanggal
+                            </button>
+                        </div>
                     </div>
                 </div>
+
             </div>
-
-        </div>
-    </div>
-
-    <!-- Tombol Filter Cepat Kelas di Perangkat Mobile -->
-    <div class="max-w-7xl mx-auto px-4 mt-8 md:mt-10">
-        <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap gap-1" id="class-nav-tabs">
-            <button onclick="filterTampilanKelas('ALL')" id="tab-all" class="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all bg-slate-900 text-white">
-                Semua Kelas
-            </button>
-        </div>
-    </div>
-
-    <!-- Kotak Grid Presensi Utama -->
-    <div class="max-w-7xl mx-auto px-4 mt-6">
-        <div id="app-grid" class="grid-container">
-            <!-- Diisi secara dinamis melalui init() yang menampilkan semua kelas -->
-        </div>
-        
-        <!-- Tombol Aksi Simpan & Unduh PDF -->
-        <div class="main-actions flex flex-col sm:flex-row justify-center items-center gap-4 my-10 md:my-12">
-            <button class="btn-save w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="simpanData()">
-                <i data-lucide="save"></i> 💾 SIMPAN DATA HARI INI
-            </button>
-            <button class="btn-pdf-now w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="cetakSesiAktif()">
-                <i data-lucide="file-down"></i> 📄 UNDUH PDF HARI INI
-            </button>
         </div>
 
-        <!-- Area Histori dan Riwayat Laporan -->
-        <div class="history-area mb-12">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div class="flex items-center gap-2">
-                    <span class="p-2 bg-amber-100 text-amber-600 rounded-xl">
-                        <i data-lucide="folder-open"></i>
-                    </span>
-                    <h2 class="text-lg md:text-xl font-extrabold text-slate-800 m-0">📂 Laporan Tersimpan</h2>
-                </div>
-                <div class="text-[10px] md:text-xs font-bold bg-slate-100 text-slate-500 py-1.5 px-4 rounded-full border border-slate-200" id="db-type-label">
-                    Penyimpanan Lokal
-                </div>
+        <!-- Tombol Filter Cepat Kelas di Perangkat Mobile -->
+        <div class="max-w-7xl mx-auto px-4 mt-8 md:mt-10">
+            <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap gap-1" id="class-nav-tabs">
+                <button onclick="filterTampilanKelas('ALL')" id="tab-all" class="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all bg-slate-900 text-white">
+                    Semua Kelas
+                </button>
+            </div>
+        </div>
+
+        <!-- Kotak Grid Presensi Utama -->
+        <div class="max-w-7xl mx-auto px-4 mt-6">
+            <div id="app-grid" class="grid-container">
+                <!-- Diisi secara dinamis melalui init() yang menampilkan semua kelas -->
             </div>
             
-            <div class="overflow-x-auto rounded-xl border border-slate-100">
-                <table class="history-table min-w-[600px] sm:min-w-full">
-                    <thead>
-                        <tr>
-                            <th>Waktu Simpan</th>
-                            <th>Total Hadir / Total Siswa</th>
-                            <th style="text-align:right">Opsi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="list-histori-body">
-                        <!-- Diisi secara dinamis melalui renderHistori() -->
-                    </tbody>
-                </table>
+            <!-- Tombol Aksi Simpan & Unduh PDF -->
+            <div class="main-actions flex flex-col sm:flex-row justify-center items-center gap-4 my-10 md:my-12">
+                <button class="btn-save w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="simpanData()">
+                    <i data-lucide="save"></i> 💾 SIMPAN DATA HARI INI
+                </button>
+                <button class="btn-pdf-now w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="cetakSesiAktif()">
+                    <i data-lucide="file-down"></i> 📄 UNDUH PDF HARI INI
+                </button>
+            </div>
+
+            <!-- Area Histori dan Riwayat Laporan -->
+            <div class="history-area mb-12">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-2">
+                        <span class="p-2 bg-amber-100 text-amber-600 rounded-xl">
+                            <i data-lucide="folder-open"></i>
+                        </span>
+                        <h2 class="text-lg md:text-xl font-extrabold text-slate-800 m-0">📂 Laporan Tersimpan</h2>
+                    </div>
+                    <div class="text-[10px] md:text-xs font-bold bg-slate-100 text-slate-500 py-1.5 px-4 rounded-full border border-slate-200" id="db-type-label">
+                        Penyimpanan Lokal
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto rounded-xl border border-slate-100">
+                    <table class="history-table min-w-[600px] sm:min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Waktu Simpan</th>
+                                <th>Total Hadir / Total Siswa</th>
+                                <th style="text-align:right">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-histori-body">
+                            <!-- Diisi secara dinamis melalui renderHistori() -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </div> <!-- END MAIN APP WRAPPER -->
 
     <!-- MODAL 1: Detail Laporan Harian -->
     <div id="modalDetail" class="modal">
@@ -734,6 +801,7 @@
     <script>
         const DB_KEY = 'db_presensi_supabase_v10';
         const SISWA_KEY = 'db_siswa_supabase_v10';
+        const APP_DISABLED_KEY = 'app_disabled_master_state';
 
         const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
         const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
@@ -742,6 +810,9 @@
         let isCloudActive = false;
         let isBroadcasting = false;
         let pollingInterval = null; 
+        let isAppDisabled = false;
+        let clickTitleCounter = 0;
+        let titleClickTimer = null;
 
         const defaultDataSiswa = {
             "Kelas 7": [
@@ -770,12 +841,115 @@
 
         let dataSiswa = {};
         let temporarySelections = {};
-        let temporaryKeterangan = {}; // Menyimpan teks keterangan tiap siswa
+        let temporaryKeterangan = {};
         let dataRekapAktif = null;
         let modeRekapView = 'UMUM'; 
         let opsiPeriodeAktif = '7'; 
         let customStartFilter = null;
         let customEndFilter = null;
+
+        function inisialisasiStatusSaklarRahasia() {
+            const savedState = localStorage.getItem(APP_DISABLED_KEY);
+            isAppDisabled = (savedState === 'true');
+            terapkanStatusAplikasi(isAppDisabled);
+        }
+
+        function terapkanStatusAplikasi(disabled, triggerToast = false) {
+            const stateChanged = (isAppDisabled !== disabled);
+            isAppDisabled = disabled;
+            
+            const wrapper = document.getElementById('main-app-wrapper');
+            const switchInput = document.getElementById('master-app-switch');
+            const statusText = document.getElementById('secret-switch-status-text');
+
+            if (switchInput) switchInput.checked = !disabled;
+
+            if (disabled) {
+                if (wrapper) wrapper.classList.add('app-disabled-mode');
+                if (statusText) {
+                    statusText.innerText = "SISTEM GLOBAL NON-AKTIF (OFF)";
+                    statusText.className = "text-sm font-extrabold text-rose-600";
+                }
+                if (triggerToast && stateChanged) {
+                    showToast("⚠️ SAKLAR DILOCK/DIMATIKAN! Seluruh perangkat pengguna kini NON-AKTIF.", "error");
+                }
+            } else {
+                if (wrapper) wrapper.classList.remove('app-disabled-mode');
+                if (statusText) {
+                    statusText.innerText = "APLIKASI BERJALAN (ON)";
+                    statusText.className = "text-sm font-extrabold text-emerald-600";
+                }
+                if (triggerToast && stateChanged) {
+                    showToast("🟢 SAKLAR DIAKTIFKAN! Aplikasi di seluruh perangkat dapat digunakan kembali.", "success");
+                }
+            }
+        }
+
+        async function prosesPerubahanSaklar(isChecked) {
+            const disabled = !isChecked;
+            localStorage.setItem(APP_DISABLED_KEY, disabled ? 'true' : 'false');
+            terapkanStatusAplikasi(disabled, true);
+
+            if (isCloudActive && supabaseClient) {
+                try {
+                    await supabaseClient.from('presensi_data').upsert({
+                        key: 'app_master_switch',
+                        value: { disabled: disabled, updatedAt: Date.now() }
+                    });
+                } catch(e) {
+                    console.error("Gagal broadcast status saklar:", e);
+                }
+            }
+        }
+
+        async function periksaStatusSaklarCloud() {
+            if (!isCloudActive || !supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('presensi_data')
+                    .select('value')
+                    .eq('key', 'app_master_switch')
+                    .single();
+
+                if (!error && data && data.value) {
+                    const remoteDisabled = !!data.value.disabled;
+                    if (remoteDisabled !== isAppDisabled) {
+                        localStorage.setItem(APP_DISABLED_KEY, remoteDisabled ? 'true' : 'false');
+                        terapkanStatusAplikasi(remoteDisabled, true);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function bukaModalRahasia() {
+            terapkanStatusAplikasi(isAppDisabled);
+            document.getElementById('secretModal').style.display = 'flex';
+            lucide.createIcons();
+        }
+
+        function tutupModalRahasia() {
+            document.getElementById('secretModal').style.display = 'none';
+        }
+
+        function tanganiKlikJudul() {
+            clickTitleCounter++;
+            if (clickTitleCounter === 1) {
+                titleClickTimer = setTimeout(() => {
+                    clickTitleCounter = 0;
+                }, 800);
+            } else if (clickTitleCounter >= 3) {
+                clearTimeout(titleClickTimer);
+                clickTitleCounter = 0;
+                bukaModalRahasia();
+            }
+        }
+
+        window.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) {
+                e.preventDefault();
+                bukaModalRahasia();
+            }
+        });
 
         function setSyncStatus(status, text) {
             const syncBadge = document.getElementById('sync-badge');
@@ -860,6 +1034,7 @@
                 init();
                 setupPollingSync();
                 muatLaporanDariSupabase();
+                periksaStatusSaklarCloud();
 
             } catch (e) {
                 setSyncStatus('error', 'Gagal hubung: ' + e.message);
@@ -873,7 +1048,9 @@
             if (pollingInterval) clearInterval(pollingInterval);
 
             pollingInterval = setInterval(async () => {
-                if (isBroadcasting) return;
+                await periksaStatusSaklarCloud();
+
+                if (isBroadcasting || isAppDisabled) return;
 
                 try {
                     const { data, error } = await supabaseClient
@@ -924,6 +1101,7 @@
         }
 
         function simpanConfigDatabase() {
+            if (isAppDisabled) return;
             const url = document.getElementById('input-supabase-url').value.trim();
             const key = document.getElementById('input-supabase-key').value.trim();
 
@@ -942,6 +1120,7 @@
         }
 
         function hapusConfigDatabase() {
+            if (isAppDisabled) return;
             localStorage.removeItem('supabase_url');
             localStorage.removeItem('supabase_anon_key');
             showToast("Konfigurasi dihapus. Beralih kembali ke mode penyimpanan lokal...", "warning");
@@ -952,6 +1131,7 @@
         }
 
         async function broadcastActiveSelections() {
+            if (isAppDisabled) return;
             saveCurrentSelections();
             if (!isCloudActive || !supabaseClient) return;
 
@@ -971,6 +1151,7 @@
         }
 
         async function updateSiswaDatabase() {
+            if (isAppDisabled) return;
             if (isCloudActive && supabaseClient) {
                 try {
                     const { error } = await supabaseClient
@@ -1012,6 +1193,7 @@
         }
 
         function filterTampilanKelas(selectedKls) {
+            if (isAppDisabled) return;
             const classBoxes = document.querySelectorAll('.class-box');
             const tabs = document.querySelectorAll('#class-nav-tabs button');
             
@@ -1071,6 +1253,7 @@
         }
 
         function customConfirm(title, message, onYes, onNo = null) {
+            if (isAppDisabled) return;
             const modal = document.getElementById('confirmModal');
             document.getElementById('confirmTitle').innerText = title;
             document.getElementById('confirmMessage').innerText = message;
@@ -1188,9 +1371,11 @@
             restoreSelections();
             renderHistori();
             lucide.createIcons();
+            inisialisasiStatusSaklarRahasia();
         }
 
         function simpanKeteranganSiswa(id) {
+            if (isAppDisabled) return;
             const inputEl = document.getElementById(`ket-${id}`);
             if (inputEl) {
                 temporaryKeterangan[id] = inputEl.value;
@@ -1214,7 +1399,6 @@
                 temporarySelections[id] = { statusClass, timeText };
             });
 
-            // Simpan juga semua nilai keterangan aktif saat ini
             document.querySelectorAll('.student-row').forEach(row => {
                 const id = row.getAttribute('id');
                 const inputEl = document.getElementById(`ket-${id}`);
@@ -1292,6 +1476,7 @@
         }
 
         function pindahkanSiswaKelas() {
+            if (isAppDisabled) return;
             const klsAsal = document.getElementById('select-pindah-asal').value;
             const klsTujuan = document.getElementById('select-pindah-tujuan').value;
             const targetSiswa = document.getElementById('select-pindah-siswa').value;
@@ -1339,6 +1524,7 @@
         }
 
         function toggleForm(id) {
+            if (isAppDisabled) return;
             const el = document.getElementById(id);
             if (el.classList.contains('hidden')) {
                 el.classList.remove('hidden');
@@ -1348,6 +1534,7 @@
         }
 
         async function tambahKelasBaru() {
+            if (isAppDisabled) return;
             const input = document.getElementById('input-nama-kelas');
             const klsBaru = input.value.trim();
             if (!klsBaru) {
@@ -1370,6 +1557,7 @@
         }
 
         async function tambahSiswaBaru() {
+            if (isAppDisabled) return;
             const selectKls = document.getElementById('select-kelas-siswa');
             const inputSiswa = document.getElementById('input-nama-siswa');
             
@@ -1401,6 +1589,7 @@
         }
 
         function hapusKelas(kls) {
+            if (isAppDisabled) return;
             customConfirm("Hapus Kelas", `Apakah Anda yakin ingin menghapus ${kls} beserta seluruh siswanya secara permanen?`, async () => {
                 saveCurrentSelections();
                 delete dataSiswa[kls];
@@ -1411,6 +1600,7 @@
         }
 
         function hapusSiswa(kls, index) {
+            if (isAppDisabled) return;
             const nama = dataSiswa[kls][index];
             customConfirm("Hapus Siswa", `Apakah Anda yakin ingin menghapus siswa ${nama} dari ${kls}?`, async () => {
                 saveCurrentSelections();
@@ -1422,6 +1612,7 @@
         }
 
         function toggleAbsen(id, kls, nama) {
+            if (isAppDisabled) return;
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1479,6 +1670,7 @@
         }
 
         function setSakit(id, kls, nama) {
+            if (isAppDisabled) return;
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1492,7 +1684,6 @@
             txtWaktu.innerText = `${h}, ${t} - ${j}`;
             chk.innerText = 'S';
             
-            // Otomatis isi placeholder keterangan jika kosong
             const inputKet = document.getElementById(`ket-${id}`);
             if (inputKet && !inputKet.value.trim()) {
                 inputKet.value = "Sakit";
@@ -1504,6 +1695,7 @@
         }
 
         function setIzin(id, kls, nama) {
+            if (isAppDisabled) return;
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1517,7 +1709,6 @@
             txtWaktu.innerText = `${h}, ${t} - ${j}`;
             chk.innerText = 'I';
 
-            // Otomatis isi placeholder keterangan jika kosong
             const inputKet = document.getElementById(`ket-${id}`);
             if (inputKet && !inputKet.value.trim()) {
                 inputKet.value = "Izin";
@@ -1529,6 +1720,7 @@
         }
 
         function resetAbsen(id, kls, nama) {
+            if (isAppDisabled) return;
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
@@ -1594,6 +1786,7 @@
         }
 
         async function simpanData() {
+            if (isAppDisabled) return;
             const payload = dapatkanPayloadSesiAktif();
             if(payload.totalHadir === 0) {
                 showToast("Pilih minimal satu siswa terlebih dahulu!", "error");
@@ -1660,6 +1853,7 @@
         }
 
         function cetak(payload, mode = 'p') {
+            if (isAppDisabled) return;
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF(mode === 'l' ? 'l' : 'p', 'mm', 'a4');
             
@@ -1697,6 +1891,7 @@
         }
 
         function cetakSesiAktif() {
+            if (isAppDisabled) return;
             const payload = dapatkanPayloadSesiAktif();
             if (payload.totalHadir === 0) {
                 showToast("Isi presensi minimal satu siswa sebelum mengunduh PDF!", "warning");
@@ -1728,6 +1923,7 @@
         }
 
         function bukaDetail(id) {
+            if (isAppDisabled) return;
             const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
             const s = localDb.find(x => x.id === id);
             document.getElementById('judulModal').innerText = "Arsip: " + s.waktuSimpan;
@@ -1755,6 +1951,7 @@
         }
 
         function hapusLaporan(id) {
+            if (isAppDisabled) return;
             customConfirm("Hapus Laporan", "Apakah Anda yakin ingin menghapus arsip laporan ini?", async () => {
                 let localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
                 localDb = localDb.filter(x => x.id !== id);
@@ -1934,6 +2131,7 @@
         }
 
         function bukaDashboardRekap(periode = '7') {
+            if (isAppDisabled) return;
             opsiPeriodeAktif = periode;
             
             if (periode === 'custom' && (!customStartFilter || !customEndFilter)) {
@@ -2173,6 +2371,7 @@
         }
 
         function cetakLaporanRekapBerkala() {
+            if (isAppDisabled) return;
             if (!dataRekapAktif || dataRekapAktif.daftarSiswa.length === 0) {
                 showToast("Tidak ada data rekapitulasi untuk diunduh!", "warning");
                 return;
