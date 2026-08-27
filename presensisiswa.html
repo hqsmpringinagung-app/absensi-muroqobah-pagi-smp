@@ -338,10 +338,6 @@
                 </button>
             </div>
 
-            <p class="text-xs text-slate-500 mb-6 text-left leading-relaxed">
-                Saklar kontrol utama untuk mengaktifkan atau menonaktifkan interaksi seluruh aplikasi. <strong class="text-slate-700">Jika saklar ini dimatikan, SELURUH perangkat pengguna yang membuka link akan terkunci seketika secara real-time!</strong>
-            </p>
-
             <!-- SAKLAR / TOGGLE SWITCH UI -->
             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center justify-between mb-6">
                 <div class="text-left">
