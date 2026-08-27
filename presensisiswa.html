@@ -382,12 +382,7 @@
                 </h1>
                 <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
                 
-                <div class="mt-4 flex justify-center">
-                    <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
-                        <span id="sync-dot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        <span id="sync-text">Menghubungkan Database...</span>
-                    </div>
-                </div>
+                
 
                 <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <div id="label-tgl" class="opacity-90 text-xs md:text-sm font-semibold bg-white/10 px-5 py-2 rounded-full border border-white/10 shadow-sm">
