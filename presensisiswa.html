@@ -350,11 +350,6 @@
                     <div class="w-14 h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
                 </label>
             </div>
-
-            <div class="text-[11px] text-slate-500 italic mb-6 text-left bg-indigo-50/70 p-3 rounded-xl border border-indigo-100">
-                🌐 Status ini disinkronkan langsung via Cloud Supabase. Semua HP / Laptop yang membuka link ini akan otomatis mengikuti posisi saklar ini.
-            </div>
-
             <button onclick="tutupModalRahasia()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition-all shadow-md">
                 Tutup Panel Kontrol
             </button>
