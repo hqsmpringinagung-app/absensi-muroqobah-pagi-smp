@@ -870,18 +870,14 @@
                     statusText.innerText = "SISTEM GLOBAL NON-AKTIF (OFF)";
                     statusText.className = "text-sm font-extrabold text-rose-600";
                 }
-                if (triggerToast && stateChanged) {
-                    showToast("⚠️ SAKLAR DILOCK/DIMATIKAN! Seluruh perangkat pengguna kini NON-AKTIF.", "error");
-                }
+                
             } else {
                 if (wrapper) wrapper.classList.remove('app-disabled-mode');
                 if (statusText) {
                     statusText.innerText = "APLIKASI BERJALAN (ON)";
                     statusText.className = "text-sm font-extrabold text-emerald-600";
                 }
-                if (triggerToast && stateChanged) {
-                    showToast("🟢 SAKLAR DIAKTIFKAN! Aplikasi di seluruh perangkat dapat digunakan kembali.", "success");
-                }
+                
             }
         }
 
