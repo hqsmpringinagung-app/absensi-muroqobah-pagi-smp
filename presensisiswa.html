@@ -20,10 +20,10 @@
             --primary-light: #1e293b;
             --accent: #2563eb;
             --success: #15803d;
-            --warning: #a16207;
+            --warning: #b45309;
             --danger: #b91c1c;
-            --sakit: #0369a1;
-            --izin: #6d28d9;
+            --sakit: #0284c7;
+            --izin: #7c3aed;
             --bg: #f8fafc;
             --card-bg: #ffffff;
         }
@@ -136,36 +136,36 @@
             font-weight: 800;
         }
 
-        /* Lencana warna untuk status kehadiran (LEBIH TAJAM & KONTRAS) */
-        .status-hijau { background-color: #bbf7d0 !important; }
-        .status-hijau:hover { background-color: #86efac !important; }
-        .status-hijau .name-text { color: #064e3b; font-weight: 800; }
-        .status-hijau .check-icon { background-color: var(--success); border-color: var(--success); color: white; transform: scale(1.05); }
-        .status-hijau .waktu-text { color: #065f46 !important; }
+        /* Lencana warna ASLI & TAJAM penuh untuk status kehadiran */
+        .status-hijau { background-color: #22c55e !important; }
+        .status-hijau:hover { background-color: #16a34a !important; }
+        .status-hijau .name-text { color: #ffffff !important; }
+        .status-hijau .check-icon { background-color: #ffffff; border-color: #ffffff; color: #16a34a; transform: scale(1.05); }
+        .status-hijau .waktu-text { color: #ffffff !important; }
 
-        .status-kuning { background-color: #fef08a !important; }
-        .status-kuning:hover { background-color: #fde047 !important; }
-        .status-kuning .name-text { color: #451a03; font-weight: 800; }
-        .status-kuning .check-icon { background-color: var(--warning); border-color: var(--warning); color: white; transform: scale(1.05); }
-        .status-kuning .waktu-text { color: #854d0e !important; }
+        .status-kuning { background-color: #eab308 !important; }
+        .status-kuning:hover { background-color: #ca8a04 !important; }
+        .status-kuning .name-text { color: #ffffff !important; }
+        .status-kuning .check-icon { background-color: #ffffff; border-color: #ffffff; color: #ca8a04; transform: scale(1.05); }
+        .status-kuning .waktu-text { color: #ffffff !important; }
 
-        .status-merah { background-color: #fecaca !important; }
-        .status-merah:hover { background-color: #fca5a5 !important; }
-        .status-merah .name-text { color: #450a0a; font-weight: 800; }
-        .status-merah .check-icon { background-color: var(--danger); border-color: var(--danger); color: white; transform: scale(1.05); }
-        .status-merah .waktu-text { color: #991b1b !important; }
+        .status-merah { background-color: #ef4444 !important; }
+        .status-merah:hover { background-color: #dc2626 !important; }
+        .status-merah .name-text { color: #ffffff !important; }
+        .status-merah .check-icon { background-color: #ffffff; border-color: #ffffff; color: #dc2626; transform: scale(1.05); }
+        .status-merah .waktu-text { color: #ffffff !important; }
 
-        .status-sakit { background-color: #bae6fd !important; }
-        .status-sakit:hover { background-color: #7dd3fc !important; }
-        .status-sakit .name-text { color: #082f49; font-weight: 800; }
-        .status-sakit .check-icon { background-color: var(--sakit); border-color: var(--sakit); color: white; transform: scale(1.05); }
-        .status-sakit .waktu-text { color: #075985 !important; }
+        .status-sakit { background-color: #0284c7 !important; }
+        .status-sakit:hover { background-color: #0369a1 !important; }
+        .status-sakit .name-text { color: #ffffff !important; }
+        .status-sakit .check-icon { background-color: #ffffff; border-color: #ffffff; color: #0284c7; transform: scale(1.05); }
+        .status-sakit .waktu-text { color: #ffffff !important; }
 
-        .status-izin { background-color: #e9d5ff !important; }
-        .status-izin:hover { background-color: #d8b4fe !important; }
-        .status-izin .name-text { color: #3b0764; font-weight: 800; }
-        .status-izin .check-icon { background-color: var(--izin); border-color: var(--izin); color: white; transform: scale(1.05); }
-        .status-izin .waktu-text { color: #581c87 !important; }
+        .status-izin { background-color: #7c3aed !important; }
+        .status-izin:hover { background-color: #6d28d9 !important; }
+        .status-izin .name-text { color: #ffffff !important; }
+        .status-izin .check-icon { background-color: #ffffff; border-color: #ffffff; color: #7c3aed; transform: scale(1.05); }
+        .status-izin .waktu-text { color: #ffffff !important; }
 
         /* Desain tombol kustom */
         .btn-save {
@@ -299,7 +299,7 @@
             color: #0f172a;
         }
 
-        /* Saklar Non-Aktifkan Seluruh Aplikasi: WARNA TETAP ASLI, DILOCK TIDAK BISA DIKLIK */
+        /* Saklar Non-Aktifkan Seluruh Aplikasi */
         .app-disabled-mode {
             pointer-events: none !important;
             user-select: none !important;
@@ -311,7 +311,6 @@
             cursor: not-allowed !important;
         }
 
-        /* Area Khusus Pemicu Rahasia & Modal Saklar Tetap Aktif agar dapat di-unlock kapan saja */
         .secret-allowed, #secretModal, #secretModal *, #global-shutdown-banner, #global-shutdown-banner * {
             pointer-events: auto !important;
             cursor: pointer !important;
@@ -322,10 +321,8 @@
 
     <div id="toast-container"></div>
 
-    <!-- Titik Rahasia Tersembunyi di Pojok Kanan Bawah untuk Akses Cepat Tombol Rahasia -->
     <div id="secret-dot-trigger" onclick="bukaModalRahasia()" class="secret-allowed fixed bottom-2 right-2 w-4 h-4 bg-slate-400/30 hover:bg-indigo-600 rounded-full z-[9995] transition-all cursor-pointer opacity-40 hover:opacity-100 flex items-center justify-center text-[8px] text-white font-bold" title="Control Zone">⚙</div>
 
-    <!-- MODAL RAHASIA MASTER SWITCH (ON / OFF SAKLAR CONTROL SINKRON CLOUD) -->
     <div id="secretModal" class="modal secret-allowed" style="z-index: 10000;">
         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
             <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
@@ -338,7 +335,6 @@
                 </button>
             </div>
 
-            <!-- SAKLAR / TOGGLE SWITCH UI -->
             <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center justify-between mb-6">
                 <div class="text-left">
                     <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Saklar Global</span>
@@ -350,13 +346,13 @@
                     <div class="w-14 h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
                 </label>
             </div>
+
             <button onclick="tutupModalRahasia()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition-all shadow-md">
                 Tutup Panel Kontrol
             </button>
         </div>
     </div>
 
-    <!-- Custom Confirmation Modal -->
     <div id="confirmModal" class="modal">
         <div class="bg-white p-6 rounded-2xl shadow-xl w-11/12 max-w-md mx-auto text-center transform transition-all">
             <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
@@ -371,18 +367,20 @@
         </div>
     </div>
 
-    <!-- KONTAINER UTAMA APLIKASI -->
     <div id="main-app-wrapper">
-        <!-- Header Section -->
         <div class="header px-4 py-8 md:px-6 md:py-12 text-center relative">
             <div class="max-w-7xl mx-auto">
-                <!-- Judul Utama (Klik 3x Cepat untuk membuka tombol rahasia) -->
-                <h1 id="app-secret-title" onclick="tanganiKlikJudul()" class="secret-allowed text-xl md:text-3xl font-extrabold tracking-wider leading-tight cursor-pointer select-none transition-opacity active:opacity-75" title="Klik 3x untuk tombol rahasia saklar">
+                <h1 id="app-secret-title" onclick="tanganiKlikJudul()" class="secret-allowed text-xl md:text-3xl font-extrabold tracking-wider leading-tight cursor-pointer select-none transition-opacity active:opacity-75">
                     SMP HAMALATUL QURAN RINGINAGUNG
                 </h1>
                 <h2 class="text-sm md:text-lg mt-2 opacity-90 font-medium tracking-wide">PRESENSI DIGITAL PRO (MUTUAL MONITORING LIVE)</h2>
                 
-                
+                <div class="mt-4 flex justify-center">
+                    <div id="sync-badge" class="flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 backdrop-blur px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold text-emerald-300">
+                        <span id="sync-dot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        <span id="sync-text">Menghubungkan Database...</span>
+                    </div>
+                </div>
 
                 <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <div id="label-tgl" class="opacity-90 text-xs md:text-sm font-semibold bg-white/10 px-5 py-2 rounded-full border border-white/10 shadow-sm">
@@ -393,12 +391,10 @@
                     </div>
                 </div>
 
-                <!-- Legend Section with Time Slots -->
                 <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:01 - 07:10 Terlambat</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
-                    <br>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600 text-white shadow-md">🔵 Sakit</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600 text-white shadow-md">🟣 Izin</span>
                 </div>
@@ -408,7 +404,6 @@
         <div class="max-w-7xl mx-auto px-4 mt-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                <!-- Panel Kontrol Administratif -->
                 <div class="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 mb-4">
@@ -421,12 +416,10 @@
                     </div>
                     
                     <div class="space-y-4">
-                        <!-- Tombol expander form dinamis -->
                         <button onclick="toggleForm('form-kelas')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 font-semibold text-sm transition-colors text-slate-700">
                             <span class="flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-indigo-500"></i> Buat Kelas Baru</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
                         </button>
-                        <!-- Form Tambah Kelas -->
                         <div id="form-kelas" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
                             <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide">Nama Kelas Baru</label>
                             <input type="text" id="input-nama-kelas" placeholder="Contoh: Kelas 7A, Kelas 8B" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
@@ -437,7 +430,6 @@
                             <span class="flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-sky-500"></i> Daftarkan Siswa Baru</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
                         </button>
-                        <!-- Form Tambah Siswa -->
                         <div id="form-siswa" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Pilih Kelas Tujuan</label>
@@ -454,7 +446,6 @@
                             <span class="flex items-center gap-2"><i data-lucide="arrow-left-right" class="w-4 h-4 text-emerald-500"></i> Pindahkan / Naik Kelas</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
                         </button>
-                        <!-- Form Migrasi / Kenaikan Kelas -->
                         <div id="form-pindah" class="hidden bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200 space-y-3">
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Dari Kelas (Asal)</label>
@@ -473,12 +464,10 @@
                             <button onclick="pindahkanSiswaKelas()" class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors">Pindahkan Sekarang</button>
                         </div>
 
-                        <!-- tombol expander form database Supabase manual -->
                         <button onclick="toggleForm('form-config-db')" class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 font-semibold text-sm transition-colors text-amber-900">
                             <span class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-amber-600"></i> Pengaturan Database Supabase</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-amber-500"></i>
                         </button>
-                        <!-- Form Pengaturan Supabase Cloud -->
                         <div id="form-config-db" class="hidden bg-amber-50/50 p-4 rounded-xl border border-dashed border-amber-200 space-y-3 text-left">
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wide mb-1">Supabase URL (API URL)</label>
@@ -494,7 +483,6 @@
                     </div>
                 </div>
 
-                <!-- Dashboard Analisis Disiplin Berkala -->
                 <div class="lg:col-span-2 bg-gradient-to-br from-indigo-950 to-slate-900 p-5 md:p-6 rounded-3xl text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
                     <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/20 rounded-full blur-2xl"></div>
                     
@@ -529,7 +517,6 @@
             </div>
         </div>
 
-        <!-- Tombol Filter Cepat Kelas di Perangkat Mobile -->
         <div class="max-w-7xl mx-auto px-4 mt-8 md:mt-10">
             <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap gap-1" id="class-nav-tabs">
                 <button onclick="filterTampilanKelas('ALL')" id="tab-all" class="flex-1 text-center py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all bg-slate-900 text-white">
@@ -538,13 +525,9 @@
             </div>
         </div>
 
-        <!-- Kotak Grid Presensi Utama -->
         <div class="max-w-7xl mx-auto px-4 mt-6">
-            <div id="app-grid" class="grid-container">
-                <!-- Diisi secara dinamis melalui init() yang menampilkan semua kelas -->
-            </div>
+            <div id="app-grid" class="grid-container"></div>
             
-            <!-- Tombol Aksi Simpan & Unduh PDF -->
             <div class="main-actions flex flex-col sm:flex-row justify-center items-center gap-4 my-10 md:my-12">
                 <button class="btn-save w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="simpanData()">
                     <i data-lucide="save"></i> 💾 SIMPAN DATA HARI INI
@@ -554,7 +537,6 @@
                 </button>
             </div>
 
-            <!-- Area Histori dan Riwayat Laporan -->
             <div class="history-area mb-12">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                     <div class="flex items-center gap-2">
@@ -577,16 +559,13 @@
                                 <th style="text-align:right">Opsi</th>
                             </tr>
                         </thead>
-                        <tbody id="list-histori-body">
-                            <!-- Diisi secara dinamis melalui renderHistori() -->
-                        </tbody>
+                        <tbody id="list-histori-body"></tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div> <!-- END MAIN APP WRAPPER -->
+    </div>
 
-    <!-- MODAL 1: Detail Laporan Harian -->
     <div id="modalDetail" class="modal">
         <div class="modal-content mx-4 my-8">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
@@ -625,10 +604,8 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Dasbor Analisis Statistik Kedisiplinan -->
     <div id="modalRekap" class="modal">
         <div class="modal-content mx-4 my-8 max-w-5xl flex flex-col">
-            <!-- Header Modal -->
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
                 <div class="flex items-center gap-3">
                     <span class="p-2 bg-indigo-600 text-white rounded-xl shadow-lg">
@@ -642,7 +619,6 @@
                 <button onclick="tutupDashboardRekap()" class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x"></i></button>
             </div>
 
-            <!-- Tab Menu Switcher: Rekap Umum vs Rekap Ranking -->
             <div class="flex items-center justify-between gap-2 bg-slate-100 p-1.5 rounded-2xl mb-4 border border-slate-200">
                 <div class="flex items-center gap-1 w-full">
                     <button onclick="gantiTabRekap('UMUM')" id="btn-tab-rekap-umum" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all tab-btn-active flex items-center justify-center gap-2">
@@ -654,7 +630,6 @@
                 </div>
             </div>
 
-            <!-- Area Pilihan Opsi Waktu (1 Minggu, 1 Bulan, Custom) -->
             <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 mb-4 space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-1.5">
@@ -665,7 +640,6 @@
                     </div>
                 </div>
 
-                <!-- Form Custom Tanggal -->
                 <div id="container-custom-date" class="hidden pt-2 border-t border-slate-200/80 flex flex-col sm:flex-row items-center gap-3">
                     <div class="flex-1 w-full flex items-center gap-2">
                         <label class="text-[11px] font-bold text-slate-600 whitespace-nowrap">Mulai:</label>
@@ -681,7 +655,6 @@
                 </div>
             </div>
 
-            <!-- Area Konten Utama Rekap -->
             <div class="space-y-4">
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="flex-1 relative">
@@ -695,7 +668,6 @@
                     </select>
                 </div>
 
-                <!-- Lencana Rangkuman Statistik -->
                 <div class="grid grid-cols-2 md:grid-cols-7 gap-2.5">
                     <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-2xl text-center shadow-sm">
                         <div class="text-[10px] font-bold text-indigo-500 uppercase tracking-wide">Rerata Hadir</div>
@@ -727,7 +699,6 @@
                     </div>
                 </div>
 
-                <!-- Tampilan Tabel 1: Rekap Umum -->
                 <div id="view-rekap-umum" class="border border-slate-200 rounded-2xl overflow-hidden shadow-inner bg-white">
                     <div class="overflow-x-auto max-h-[38vh]">
                         <table class="w-full text-left border-collapse min-w-[700px]">
@@ -749,7 +720,6 @@
                     </div>
                 </div>
 
-                <!-- Tampilan Tabel 2: Rekap Ranking Kedisiplinan -->
                 <div id="view-rekap-ranking" class="hidden border border-slate-200 rounded-2xl overflow-hidden shadow-inner bg-white">
                     <div class="overflow-x-auto max-h-[38vh]">
                         <table class="w-full text-left border-collapse min-w-[700px]">
@@ -773,7 +743,6 @@
 
             </div>
 
-            <!-- Tombol Aksi Bawah Modal Rekap -->
             <div class="border-t border-slate-100 pt-4 mt-4 flex flex-col sm:flex-row gap-3">
                 <button onclick="cetakLaporanRekapBerkala()" class="flex-1 flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs py-3.5 px-4 rounded-xl transition-all shadow-md">
                     <i data-lucide="file-text" class="w-4 h-4"></i> Cetak Laporan PDF (<span id="label-mode-cetak">Rekap Umum</span>)
@@ -857,14 +826,12 @@
                     statusText.innerText = "SISTEM GLOBAL NON-AKTIF (OFF)";
                     statusText.className = "text-sm font-extrabold text-rose-600";
                 }
-                
             } else {
                 if (wrapper) wrapper.classList.remove('app-disabled-mode');
                 if (statusText) {
                     statusText.innerText = "APLIKASI BERJALAN (ON)";
                     statusText.className = "text-sm font-extrabold text-emerald-600";
                 }
-                
             }
         }
 
@@ -1333,7 +1300,6 @@
                                     </button>
                                 </div>
 
-                                <!-- Box Keterangan Masing-Masing Siswa -->
                                 <div class="mt-1" onclick="event.stopPropagation()">
                                     <input type="text" id="ket-${id}" oninput="simpanKeteranganSiswa('${id}')" placeholder="Keterangan (misal: Sakit demam, Izin ada acara, dll)..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white/80 text-slate-700 font-medium placeholder-slate-400">
                                 </div>
@@ -1731,15 +1697,15 @@
                 let isHadir = false;
 
                 if(r.classList.contains('status-hijau')) {
-                    color = "#15803d"; statusText = "AMAN"; bgColor = "#bbf7d0"; isHadir = true;
+                    color = "#ffffff"; statusText = "AMAN"; bgColor = "#22c55e"; isHadir = true;
                 } else if(r.classList.contains('status-kuning')) { 
-                    color = "#a16207"; statusText = "TERLAMBAT"; bgColor = "#fef08a"; isHadir = true;
+                    color = "#ffffff"; statusText = "TERLAMBAT"; bgColor = "#eab308"; isHadir = true;
                 } else if(r.classList.contains('status-merah')) { 
-                    color = "#b91c1c"; statusText = "PERINGATAN"; bgColor = "#fecaca"; isHadir = true;
+                    color = "#ffffff"; statusText = "PERINGATAN"; bgColor = "#ef4444"; isHadir = true;
                 } else if(r.classList.contains('status-sakit')) { 
-                    color = "#0369a1"; statusText = "SAKIT"; bgColor = "#bae6fd"; isHadir = true;
+                    color = "#ffffff"; statusText = "SAKIT"; bgColor = "#0284c7"; isHadir = true;
                 } else if(r.classList.contains('status-izin')) { 
-                    color = "#6d28d9"; statusText = "IZIN"; bgColor = "#e9d5ff"; isHadir = true;
+                    color = "#ffffff"; statusText = "IZIN"; bgColor = "#7c3aed"; isHadir = true;
                 }
 
                 const id = r.getAttribute('id');
