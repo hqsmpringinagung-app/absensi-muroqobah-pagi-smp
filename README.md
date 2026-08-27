@@ -19,11 +19,11 @@
             --primary: #0f172a;
             --primary-light: #1e293b;
             --accent: #2563eb;
-            --success: #16a34a;
-            --warning: #ca8a04;
-            --danger: #dc2626;
-            --sakit: #0284c7;
-            --izin: #7c3aed;
+            --success: #15803d;
+            --warning: #a16207;
+            --danger: #b91c1c;
+            --sakit: #0369a1;
+            --izin: #6d28d9;
             --bg: #f8fafc;
             --card-bg: #ffffff;
         }
@@ -136,36 +136,36 @@
             font-weight: 800;
         }
 
-        /* Lencana warna untuk status kehadiran */
-        .status-hijau { background-color: #dcfce7 !important; }
-        .status-hijau:hover { background-color: #bbf7d0 !important; }
-        .status-hijau .name-text { color: #14532d; }
+        /* Lencana warna untuk status kehadiran (LEBIH TAJAM & KONTRAS) */
+        .status-hijau { background-color: #bbf7d0 !important; }
+        .status-hijau:hover { background-color: #86efac !important; }
+        .status-hijau .name-text { color: #064e3b; font-weight: 800; }
         .status-hijau .check-icon { background-color: var(--success); border-color: var(--success); color: white; transform: scale(1.05); }
-        .status-hijau .waktu-text { color: #15803d !important; }
+        .status-hijau .waktu-text { color: #065f46 !important; }
 
-        .status-kuning { background-color: #fef9c3 !important; }
-        .status-kuning:hover { background-color: #fef08a !important; }
-        .status-kuning .name-text { color: #713f12; }
+        .status-kuning { background-color: #fef08a !important; }
+        .status-kuning:hover { background-color: #fde047 !important; }
+        .status-kuning .name-text { color: #451a03; font-weight: 800; }
         .status-kuning .check-icon { background-color: var(--warning); border-color: var(--warning); color: white; transform: scale(1.05); }
-        .status-kuning .waktu-text { color: #a16207 !important; }
+        .status-kuning .waktu-text { color: #854d0e !important; }
 
-        .status-merah { background-color: #fee2e2 !important; }
-        .status-merah:hover { background-color: #fecaca !important; }
-        .status-merah .name-text { color: #7f1d1d; }
+        .status-merah { background-color: #fecaca !important; }
+        .status-merah:hover { background-color: #fca5a5 !important; }
+        .status-merah .name-text { color: #450a0a; font-weight: 800; }
         .status-merah .check-icon { background-color: var(--danger); border-color: var(--danger); color: white; transform: scale(1.05); }
-        .status-merah .waktu-text { color: #b91c1c !important; }
+        .status-merah .waktu-text { color: #991b1b !important; }
 
-        .status-sakit { background-color: #e0f2fe !important; }
-        .status-sakit:hover { background-color: #bae6fd !important; }
-        .status-sakit .name-text { color: #0369a1; }
+        .status-sakit { background-color: #bae6fd !important; }
+        .status-sakit:hover { background-color: #7dd3fc !important; }
+        .status-sakit .name-text { color: #082f49; font-weight: 800; }
         .status-sakit .check-icon { background-color: var(--sakit); border-color: var(--sakit); color: white; transform: scale(1.05); }
-        .status-sakit .waktu-text { color: #0369a1 !important; }
+        .status-sakit .waktu-text { color: #075985 !important; }
 
-        .status-izin { background-color: #f3e8ff !important; }
-        .status-izin:hover { background-color: #e9d5ff !important; }
-        .status-izin .name-text { color: #6d28d9; }
+        .status-izin { background-color: #e9d5ff !important; }
+        .status-izin:hover { background-color: #d8b4fe !important; }
+        .status-izin .name-text { color: #3b0764; font-weight: 800; }
         .status-izin .check-icon { background-color: var(--izin); border-color: var(--izin); color: white; transform: scale(1.05); }
-        .status-izin .waktu-text { color: #6d28d9 !important; }
+        .status-izin .waktu-text { color: #581c87 !important; }
 
         /* Desain tombol kustom */
         .btn-save {
@@ -395,9 +395,10 @@
 
                 <!-- Legend Section with Time Slots -->
                 <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-500 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-yellow-500 text-slate-950 shadow-md">🟡 07:01 - 07:10 Terlambat</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-500 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
+                    <br>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600 text-white shadow-md">🔵 Sakit</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600 text-white shadow-md">🟣 Izin</span>
                 </div>
@@ -1730,15 +1731,15 @@
                 let isHadir = false;
 
                 if(r.classList.contains('status-hijau')) {
-                    color = "#16a34a"; statusText = "AMAN"; bgColor = "#dcfce7"; isHadir = true;
+                    color = "#15803d"; statusText = "AMAN"; bgColor = "#bbf7d0"; isHadir = true;
                 } else if(r.classList.contains('status-kuning')) { 
-                    color = "#ca8a04"; statusText = "TERLAMBAT"; bgColor = "#fef9c3"; isHadir = true;
+                    color = "#a16207"; statusText = "TERLAMBAT"; bgColor = "#fef08a"; isHadir = true;
                 } else if(r.classList.contains('status-merah')) { 
-                    color = "#dc2626"; statusText = "PERINGATAN"; bgColor = "#fee2e2"; isHadir = true;
+                    color = "#b91c1c"; statusText = "PERINGATAN"; bgColor = "#fecaca"; isHadir = true;
                 } else if(r.classList.contains('status-sakit')) { 
-                    color = "#0284c7"; statusText = "SAKIT"; bgColor = "#e0f2fe"; isHadir = true;
+                    color = "#0369a1"; statusText = "SAKIT"; bgColor = "#bae6fd"; isHadir = true;
                 } else if(r.classList.contains('status-izin')) { 
-                    color = "#7c3aed"; statusText = "IZIN"; bgColor = "#f3e8ff"; isHadir = true;
+                    color = "#6d28d9"; statusText = "IZIN"; bgColor = "#e9d5ff"; isHadir = true;
                 }
 
                 const id = r.getAttribute('id');
