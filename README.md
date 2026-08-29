@@ -136,36 +136,36 @@
             font-weight: 800;
         }
 
-        /* Lencana warna ASLI & TAJAM penuh untuk status kehadiran */
-        .status-hijau { background-color: #22c55e !important; }
-        .status-hijau:hover { background-color: #16a34a !important; }
-        .status-hijau .name-text { color: #ffffff !important; }
-        .status-hijau .check-icon { background-color: #ffffff; border-color: #ffffff; color: #16a34a; transform: scale(1.05); }
-        .status-hijau .waktu-text { color: #ffffff !important; }
+        /* Lencana warna DIPUDARKAN LEMBUT (Soft Pastel Tone - Tidak Terlalu Tajam/Silau) */
+        .status-hijau { background-color: #d1fae5 !important; border-left: 5px solid #10b981; }
+        .status-hijau:hover { background-color: #a7f3d0 !important; }
+        .status-hijau .name-text { color: #065f46 !important; }
+        .status-hijau .check-icon { background-color: #10b981; border-color: #10b981; color: #ffffff; transform: scale(1.05); }
+        .status-hijau .waktu-text { color: #047857 !important; }
 
-        .status-kuning { background-color: #eab308 !important; }
-        .status-kuning:hover { background-color: #ca8a04 !important; }
-        .status-kuning .name-text { color: #ffffff !important; }
-        .status-kuning .check-icon { background-color: #ffffff; border-color: #ffffff; color: #ca8a04; transform: scale(1.05); }
-        .status-kuning .waktu-text { color: #ffffff !important; }
+        .status-kuning { background-color: #fef3c7 !important; border-left: 5px solid #f59e0b; }
+        .status-kuning:hover { background-color: #fde68a !important; }
+        .status-kuning .name-text { color: #92400e !important; }
+        .status-kuning .check-icon { background-color: #f59e0b; border-color: #f59e0b; color: #ffffff; transform: scale(1.05); }
+        .status-kuning .waktu-text { color: #b45309 !important; }
 
-        .status-merah { background-color: #ef4444 !important; }
-        .status-merah:hover { background-color: #dc2626 !important; }
-        .status-merah .name-text { color: #ffffff !important; }
-        .status-merah .check-icon { background-color: #ffffff; border-color: #ffffff; color: #dc2626; transform: scale(1.05); }
-        .status-merah .waktu-text { color: #ffffff !important; }
+        .status-merah { background-color: #fee2e2 !important; border-left: 5px solid #f43f5e; }
+        .status-merah:hover { background-color: #fecaca !important; }
+        .status-merah .name-text { color: #991b1b !important; }
+        .status-merah .check-icon { background-color: #f43f5e; border-color: #f43f5e; color: #ffffff; transform: scale(1.05); }
+        .status-merah .waktu-text { color: #b91c1c !important; }
 
-        .status-sakit { background-color: #0284c7 !important; }
-        .status-sakit:hover { background-color: #0369a1 !important; }
-        .status-sakit .name-text { color: #ffffff !important; }
-        .status-sakit .check-icon { background-color: #ffffff; border-color: #ffffff; color: #0284c7; transform: scale(1.05); }
-        .status-sakit .waktu-text { color: #ffffff !important; }
+        .status-sakit { background-color: #e0f2fe !important; border-left: 5px solid #0284c7; }
+        .status-sakit:hover { background-color: #bae6fd !important; }
+        .status-sakit .name-text { color: #0369a1 !important; }
+        .status-sakit .check-icon { background-color: #0284c7; border-color: #0284c7; color: #ffffff; transform: scale(1.05); }
+        .status-sakit .waktu-text { color: #0284c7 !important; }
 
-        .status-izin { background-color: #7c3aed !important; }
-        .status-izin:hover { background-color: #6d28d9 !important; }
-        .status-izin .name-text { color: #ffffff !important; }
-        .status-izin .check-icon { background-color: #ffffff; border-color: #ffffff; color: #7c3aed; transform: scale(1.05); }
-        .status-izin .waktu-text { color: #ffffff !important; }
+        .status-izin { background-color: #ede9fe !important; border-left: 5px solid #7c3aed; }
+        .status-izin:hover { background-color: #ddd6fe !important; }
+        .status-izin .name-text { color: #5b21b6 !important; }
+        .status-izin .check-icon { background-color: #7c3aed; border-color: #7c3aed; color: #ffffff; transform: scale(1.05); }
+        .status-izin .waktu-text { color: #6d28d9 !important; }
 
         /* Desain tombol kustom */
         .btn-save {
@@ -392,11 +392,11 @@
                 </div>
 
                 <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600 text-white shadow-md">🔵 Sakit</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600 text-white shadow-md">🟣 Izin</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600/90 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600/90 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
                 </div>
             </div>
         </div>
@@ -1697,15 +1697,15 @@
                 let isHadir = false;
 
                 if(r.classList.contains('status-hijau')) {
-                    color = "#ffffff"; statusText = "AMAN"; bgColor = "#22c55e"; isHadir = true;
+                    color = "#047857"; statusText = "AMAN"; bgColor = "#d1fae5"; isHadir = true;
                 } else if(r.classList.contains('status-kuning')) { 
-                    color = "#ffffff"; statusText = "TERLAMBAT"; bgColor = "#eab308"; isHadir = true;
+                    color = "#b45309"; statusText = "TERLAMBAT"; bgColor = "#fef3c7"; isHadir = true;
                 } else if(r.classList.contains('status-merah')) { 
-                    color = "#ffffff"; statusText = "PERINGATAN"; bgColor = "#ef4444"; isHadir = true;
+                    color = "#b91c1c"; statusText = "PERINGATAN"; bgColor = "#fee2e2"; isHadir = true;
                 } else if(r.classList.contains('status-sakit')) { 
-                    color = "#ffffff"; statusText = "SAKIT"; bgColor = "#0284c7"; isHadir = true;
+                    color = "#0284c7"; statusText = "SAKIT"; bgColor = "#e0f2fe"; isHadir = true;
                 } else if(r.classList.contains('status-izin')) { 
-                    color = "#ffffff"; statusText = "IZIN"; bgColor = "#7c3aed"; isHadir = true;
+                    color = "#6d28d9"; statusText = "IZIN"; bgColor = "#ede9fe"; isHadir = true;
                 }
 
                 const id = r.getAttribute('id');
