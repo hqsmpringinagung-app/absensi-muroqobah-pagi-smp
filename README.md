@@ -7,11 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    <!-- Tailwind CSS untuk sistem grid adaptif berkinerja tinggi -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons untuk gaya vektor yang responsif dan tajam -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Supabase JS Client library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
@@ -35,7 +32,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Scrollbar premium yang membulat */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -48,7 +44,6 @@
             border-radius: 10px;
         }
 
-        /* Header Glassmorphism */
         .header { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
             color: white; 
@@ -68,7 +63,6 @@
             filter: blur(80px);
         }
         
-        /* Grid kontainer 3 kolom di desktop */
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(1, minmax(0, 1fr)); 
@@ -85,7 +79,6 @@
             }
         }
         
-        /* Kartu Modern */
         .class-box { 
             background: var(--card-bg); 
             border-radius: 24px; 
@@ -115,7 +108,6 @@
         .student-row { cursor: pointer; transition: all 0.2s ease; }
         .student-row:hover { background-color: #f8fafc; }
         
-        /* Baris nama dibesarkan */
         .name-text { 
             font-weight: 700; 
             font-size: 1.05rem; 
@@ -136,7 +128,6 @@
             font-weight: 800;
         }
 
-        /* Lencana warna DIPUDARKAN LEMBUT (Soft Pastel Tone - Tidak Terlalu Tajam/Silau) */
         .status-hijau { background-color: #d1fae5 !important; border-left: 5px solid #10b981; }
         .status-hijau:hover { background-color: #a7f3d0 !important; }
         .status-hijau .name-text { color: #065f46 !important; }
@@ -167,7 +158,6 @@
         .status-izin .check-icon { background-color: #7c3aed; border-color: #7c3aed; color: #ffffff; transform: scale(1.05); }
         .status-izin .waktu-text { color: #6d28d9 !important; }
 
-        /* Desain tombol kustom */
         .btn-save {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
@@ -202,7 +192,6 @@
             filter: brightness(1.1);
         }
 
-        /* Area & Tabel Histori */
         .history-area {
             background: white;
             padding: 28px;
@@ -284,7 +273,6 @@
             opacity: 1;
         }
 
-        /* Visual Tab Active State */
         .tab-btn-active {
             background-color: #2563eb !important;
             color: #ffffff !important;
@@ -299,7 +287,6 @@
             color: #0f172a;
         }
 
-        /* Saklar Non-Aktifkan Seluruh Aplikasi */
         .app-disabled-mode {
             pointer-events: none !important;
             user-select: none !important;
@@ -315,6 +302,17 @@
             pointer-events: auto !important;
             cursor: pointer !important;
         }
+
+        .penalty-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -324,27 +322,112 @@
     <div id="secret-dot-trigger" onclick="bukaModalRahasia()" class="secret-allowed fixed bottom-2 right-2 w-4 h-4 bg-slate-400/30 hover:bg-indigo-600 rounded-full z-[9995] transition-all cursor-pointer opacity-40 hover:opacity-100 flex items-center justify-center text-[8px] text-white font-bold" title="Control Zone">⚙</div>
 
     <div id="secretModal" class="modal secret-allowed" style="z-index: 10000;">
-        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
-            <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-lg mx-auto text-center border border-slate-200 relative max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4 sticky top-0 bg-white z-10">
                 <div class="flex items-center gap-2">
                     <div class="w-3.5 h-3.5 rounded-full bg-indigo-600 animate-ping"></div>
-                    <h3 class="text-base font-extrabold text-slate-800">Panel Saklar Utama (Global Sync)</h3>
+                    <h3 class="text-base font-extrabold text-slate-800">Panel Saklar, Jam & Hukuman</h3>
                 </div>
                 <button onclick="tutupModalRahasia()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex items-center justify-between mb-6">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center justify-between mb-5">
                 <div class="text-left">
                     <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Saklar Global</span>
-                    <span id="secret-switch-status-text" class="text-sm font-extrabold text-emerald-600">APLIKASI BERJALAN (ON)</span>
+                    <span id="secret-switch-status-text" class="text-xs font-extrabold text-emerald-600">APLIKASI BERJALAN (ON)</span>
                 </div>
 
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="master-app-switch" onchange="prosesPerubahanSaklar(this.checked)" class="sr-only peer" checked>
-                    <div class="w-14 h-8 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <div class="w-12 h-7 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                 </label>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5 text-left space-y-3">
+                <span class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Pengaturan Rentang Jam Presensi</span>
+                <p class="text-[11px] text-slate-500 mb-2">Tentukan jam mulai sampai batas untuk masing-masing bagian.</p>
+                
+                <div class="grid grid-cols-1 gap-2">
+                    <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-200">
+                        <span class="text-xs font-extrabold text-emerald-700 flex items-center gap-1.5">🟢 Tertib</span>
+                        <div class="flex items-center gap-1.5">
+                            <input type="time" id="cfg-tertib-mulai" value="06:30" class="px-2 py-1 text-xs rounded-lg border border-slate-300 font-bold bg-slate-50">
+                            <span class="text-xs text-slate-400 font-bold">s/d</span>
+                            <input type="time" id="cfg-tertib-selesai" value="07:00" class="px-2 py-1 text-xs rounded-lg border border-slate-300 font-bold bg-slate-50">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-200">
+                        <span class="text-xs font-extrabold text-amber-700 flex items-center gap-1.5">🟡 Terlambat</span>
+                        <div class="flex items-center gap-1.5">
+                            <input type="time" id="cfg-terlambat-mulai" value="07:01" class="px-2 py-1 text-xs rounded-lg border border-slate-300 font-bold bg-slate-50">
+                            <span class="text-xs text-slate-400 font-bold">s/d</span>
+                            <input type="time" id="cfg-terlambat-selesai" value="07:10" class="px-2 py-1 text-xs rounded-lg border border-slate-300 font-bold bg-slate-50">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-200">
+                        <span class="text-xs font-extrabold text-rose-700 flex items-center gap-1.5">🔴 Peringatan</span>
+                        <div class="flex items-center gap-1.5">
+                            <input type="time" id="cfg-peringatan-mulai" value="07:11" class="px-2 py-1 text-xs rounded-lg border border-slate-300 font-bold bg-slate-50">
+                            <span class="text-xs text-slate-400 font-bold">s/d</span>
+                            <input type="time" id="cfg-peringatan-selesai" value="08:20" class="px-2 py-1 text-xs rounded-lg border border-slate-300 font-bold bg-slate-50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50/60 p-4 rounded-2xl border border-indigo-100 mb-6 text-left space-y-3">
+                <span class="block text-xs font-extrabold text-indigo-900 uppercase tracking-wider mb-1">Pengaturan Hukuman Keterlambatan</span>
+                <p class="text-[11px] text-slate-600 mb-2">Tentukan rentang jam dasar patokan keterlambatan beserta pengali baris per menitnya.</p>
+                
+                <div class="grid grid-cols-1 gap-2.5">
+                    <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-indigo-100">
+                        <span class="text-xs font-bold text-slate-700">Rentang Waktu Patokan:</span>
+                        <div class="flex items-center gap-1">
+                            <input type="time" id="cfg-hukuman-mulai" value="07:00" class="px-2 py-1 text-xs rounded-lg border border-indigo-300 font-extrabold bg-indigo-50/50 text-indigo-900">
+                            <span class="text-xs text-slate-400 font-bold">s/d</span>
+                            <input type="time" id="cfg-hukuman-selesai" value="08:20" class="px-2 py-1 text-xs rounded-lg border border-indigo-300 font-extrabold bg-indigo-50/50 text-indigo-900">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-indigo-100">
+                        <span class="text-xs font-bold text-slate-700">Multiplier (Baris per Menit):</span>
+                        <input type="number" id="cfg-hukuman-multiplier" value="1" min="1" max="10" class="w-16 px-2.5 py-1 text-xs rounded-lg border border-indigo-300 font-extrabold bg-indigo-50/50 text-indigo-900 text-center">
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-indigo-200/60 space-y-2">
+                    <span class="block text-[11px] font-extrabold text-indigo-900 uppercase tracking-wider">Hari Aktif Hukuman:</span>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-1" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Senin
+                        </label>
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-2" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Selasa
+                        </label>
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-3" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Rabu
+                        </label>
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-4" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Kamis
+                        </label>
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-5" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Jumat
+                        </label>
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-6" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Sabtu
+                        </label>
+                        <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="cfg-day-0" class="rounded text-indigo-600 focus:ring-indigo-500"> Minggu
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="simpanConfigJam()" class="w-full mt-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-all shadow-sm">
+                    Simpan Seluruh Pengaturan Jam & Hukuman
+                </button>
             </div>
 
             <button onclick="tutupModalRahasia()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition-all shadow-md">
@@ -392,9 +475,9 @@
                 </div>
 
                 <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600/90 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600/90 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
+                    <span id="badge-tertib-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600/90 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
+                    <span id="badge-terlambat-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600/90 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
+                    <span id="badge-peringatan-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
                 </div>
@@ -758,6 +841,7 @@
         const DB_KEY = 'db_presensi_supabase_v10';
         const SISWA_KEY = 'db_siswa_supabase_v10';
         const APP_DISABLED_KEY = 'app_disabled_master_state';
+        const TIME_CONFIG_KEY = 'presensi_time_config_v3';
 
         const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
         const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
@@ -769,6 +853,19 @@
         let isAppDisabled = false;
         let clickTitleCounter = 0;
         let titleClickTimer = null;
+
+        let timeConfig = {
+            tertibMulai: "06:30",
+            tertibSelesai: "07:00",
+            terlambatMulai: "07:01",
+            terlambatSelesai: "07:10",
+            peringatanMulai: "07:11",
+            peringatanSelesai: "08:20",
+            hukumanMulai: "07:00",
+            hukumanSelesai: "08:20",
+            hukumanMultiplier: 1,
+            activeDays: { 0: false, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true }
+        };
 
         const defaultDataSiswa = {
             "Kelas 7": [
@@ -804,6 +901,77 @@
         let customStartFilter = null;
         let customEndFilter = null;
 
+        function loadTimeConfig() {
+            const saved = localStorage.getItem(TIME_CONFIG_KEY);
+            if (saved) {
+                try {
+                    timeConfig = {...timeConfig, ...JSON.parse(saved)};
+                } catch(e) {}
+            }
+            
+            if(document.getElementById('cfg-tertib-mulai')) document.getElementById('cfg-tertib-mulai').value = timeConfig.tertibMulai;
+            if(document.getElementById('cfg-tertib-selesai')) document.getElementById('cfg-tertib-selesai').value = timeConfig.tertibSelesai;
+            if(document.getElementById('cfg-terlambat-mulai')) document.getElementById('cfg-terlambat-mulai').value = timeConfig.terlambatMulai;
+            if(document.getElementById('cfg-terlambat-selesai')) document.getElementById('cfg-terlambat-selesai').value = timeConfig.terlambatSelesai;
+            if(document.getElementById('cfg-peringatan-mulai')) document.getElementById('cfg-peringatan-mulai').value = timeConfig.peringatanMulai;
+            if(document.getElementById('cfg-peringatan-selesai')) document.getElementById('cfg-peringatan-selesai').value = timeConfig.peringatanSelesai;
+            if(document.getElementById('cfg-hukuman-mulai')) document.getElementById('cfg-hukuman-mulai').value = timeConfig.hukumanMulai || "07:00";
+            if(document.getElementById('cfg-hukuman-selesai')) document.getElementById('cfg-hukuman-selesai').value = timeConfig.hukumanSelesai || "08:20";
+            if(document.getElementById('cfg-hukuman-multiplier')) document.getElementById('cfg-hukuman-multiplier').value = timeConfig.hukumanMultiplier || 1;
+
+            if (timeConfig.activeDays) {
+                for (let d = 0; d <= 6; d++) {
+                    const cb = document.getElementById(`cfg-day-${d}`);
+                    if (cb) cb.checked = !!timeConfig.activeDays[d];
+                }
+            }
+
+            updateBadgeLabels();
+        }
+
+        function updateBadgeLabels() {
+            const tAman = document.getElementById('badge-tertib-desc');
+            const tLambat = document.getElementById('badge-terlambat-desc');
+            const tPeringatan = document.getElementById('badge-peringatan-desc');
+
+            if(tAman) tAman.innerText = `🟢 ${timeConfig.tertibMulai} - ${timeConfig.tertibSelesai} Aman`;
+            if(tLambat) tLambat.innerText = `🟡 ${timeConfig.terlambatMulai} - ${timeConfig.terlambatSelesai} Terlambat`;
+            if(tPeringatan) tPeringatan.innerText = `🔴 ${timeConfig.peringatanMulai} - ${timeConfig.peringatanSelesai} Peringatan`;
+        }
+
+        function simpanConfigJam() {
+            if (isAppDisabled) return;
+            
+            let activeDaysObj = {};
+            for (let d = 0; d <= 6; d++) {
+                const cb = document.getElementById(`cfg-day-${d}`);
+                activeDaysObj[d] = cb ? cb.checked : (d !== 0);
+            }
+
+            timeConfig = {
+                tertibMulai: document.getElementById('cfg-tertib-mulai').value || "06:30",
+                tertibSelesai: document.getElementById('cfg-tertib-selesai').value || "07:00",
+                terlambatMulai: document.getElementById('cfg-terlambat-mulai').value || "07:01",
+                terlambatSelesai: document.getElementById('cfg-terlambat-selesai').value || "07:10",
+                peringatanMulai: document.getElementById('cfg-peringatan-mulai').value || "07:11",
+                peringatanSelesai: document.getElementById('cfg-peringatan-selesai').value || "08:20",
+                hukumanMulai: document.getElementById('cfg-hukuman-mulai').value || "07:00",
+                hukumanSelesai: document.getElementById('cfg-hukuman-selesai').value || "08:20",
+                hukumanMultiplier: parseInt(document.getElementById('cfg-hukuman-multiplier').value, 10) || 1,
+                activeDays: activeDaysObj
+            };
+
+            localStorage.setItem(TIME_CONFIG_KEY, JSON.stringify(timeConfig));
+            updateBadgeLabels();
+            showToast("Pengaturan jam, hukuman & hari aktif berhasil disimpan!", "success");
+            tutupModalRahasia();
+        }
+
+        function timeToMinutes(timeStr) {
+            const parts = timeStr.split(':');
+            return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+        }
+
         function inisialisasiStatusSaklarRahasia() {
             const savedState = localStorage.getItem(APP_DISABLED_KEY);
             isAppDisabled = (savedState === 'true');
@@ -811,9 +979,7 @@
         }
 
         function terapkanStatusAplikasi(disabled, triggerToast = false) {
-            const stateChanged = (isAppDisabled !== disabled);
             isAppDisabled = disabled;
-            
             const wrapper = document.getElementById('main-app-wrapper');
             const switchInput = document.getElementById('master-app-switch');
             const statusText = document.getElementById('secret-switch-status-text');
@@ -824,13 +990,13 @@
                 if (wrapper) wrapper.classList.add('app-disabled-mode');
                 if (statusText) {
                     statusText.innerText = "SISTEM GLOBAL NON-AKTIF (OFF)";
-                    statusText.className = "text-sm font-extrabold text-rose-600";
+                    statusText.className = "text-xs font-extrabold text-rose-600";
                 }
             } else {
                 if (wrapper) wrapper.classList.remove('app-disabled-mode');
                 if (statusText) {
                     statusText.innerText = "APLIKASI BERJALAN (ON)";
-                    statusText.className = "text-sm font-extrabold text-emerald-600";
+                    statusText.className = "text-xs font-extrabold text-emerald-600";
                 }
             }
         }
@@ -846,9 +1012,7 @@
                         key: 'app_master_switch',
                         value: { disabled: disabled, updatedAt: Date.now() }
                     });
-                } catch(e) {
-                    console.error("Gagal broadcast status saklar:", e);
-                }
+                } catch(e) {}
             }
         }
 
@@ -873,6 +1037,7 @@
 
         function bukaModalRahasia() {
             terapkanStatusAplikasi(isAppDisabled);
+            loadTimeConfig();
             document.getElementById('secretModal').style.display = 'flex';
             lucide.createIcons();
         }
@@ -962,11 +1127,6 @@
                     .single();
 
                 if (error && error.code !== 'PGRST116') {
-                    if (error.status === 401 || error.status === 403 || error.message.includes('policy')) {
-                        setSyncStatus('error', 'Supabase Terkunci (RLS Aktif)');
-                    } else {
-                        setSyncStatus('error', error.message);
-                    }
                     useOfflineFallback();
                     return;
                 }
@@ -987,7 +1147,6 @@
                 periksaStatusSaklarCloud();
 
             } catch (e) {
-                setSyncStatus('error', 'Gagal hubung: ' + e.message);
                 useOfflineFallback();
             }
         }
@@ -1017,9 +1176,7 @@
                             restoreSelections();
                         }
                     }
-                } catch (e) {
-                    console.warn("Polling Sync Gagal:", e);
-                }
+                } catch (e) {}
             }, 3500);
         }
 
@@ -1045,9 +1202,7 @@
                     localStorage.setItem(DB_KEY, JSON.stringify(results));
                     renderHistori();
                 }
-            } catch (e) {
-                console.warn("Gagal memuat arsip records dari cloud:", e);
-            }
+            } catch (e) {}
         }
 
         function simpanConfigDatabase() {
@@ -1093,9 +1248,7 @@
                     keterangan: temporaryKeterangan
                 };
                 await supabaseClient.from('presensi_data').upsert({ key: 'current_session', value: payload });
-            } catch(e) {
-                console.warn("Gagal menyiarkan status pemantauan:", e);
-            } finally {
+            } catch(e) {} finally {
                 isBroadcasting = false;
             }
         }
@@ -1104,10 +1257,7 @@
             if (isAppDisabled) return;
             if (isCloudActive && supabaseClient) {
                 try {
-                    const { error } = await supabaseClient
-                        .from('presensi_data')
-                        .upsert({ key: 'classes', value: dataSiswa });
-                    if (error) throw error;
+                    await supabaseClient.from('presensi_data').upsert({ key: 'classes', value: dataSiswa });
                 } catch (e) {
                     showToast("Gagal menyinkronkan daftar siswa ke Cloud", "error");
                 }
@@ -1240,6 +1390,7 @@
         }
 
         function init() {
+            loadTimeConfig();
             const labelTgl = document.getElementById('label-tgl');
             if (labelTgl) {
                 labelTgl.innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -1285,6 +1436,8 @@
                             <td class="relative flex flex-col gap-3 pr-4">
                                 <span class="name-text">${i+1}. ${n}</span>
                                 
+                                <div id="badge-container-${id}"></div>
+
                                 <div class="flex items-center gap-1.5 mt-1 flex-wrap">
                                     <button onclick="event.stopPropagation(); setSakit('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🔵 Sakit
@@ -1363,6 +1516,8 @@
                 row.querySelector('.waktu-text').innerText = "-";
                 row.querySelector('.check-icon').innerText = "✔";
                 const id = row.getAttribute('id');
+                const badgeContainer = document.getElementById(`badge-container-${id}`);
+                if (badgeContainer) badgeContainer.innerHTML = "";
                 const inputEl = document.getElementById(`ket-${id}`);
                 if (inputEl) inputEl.value = "";
             });
@@ -1383,6 +1538,12 @@
                 const inputEl = document.getElementById(`ket-${id}`);
                 if (inputEl) {
                     inputEl.value = val;
+                    if (val.includes("Menit Terlambat") || val.includes("Baris Hukuman")) {
+                        const badgeContainer = document.getElementById(`badge-container-${id}`);
+                        if (badgeContainer) {
+                            badgeContainer.innerHTML = `<div class="penalty-badge bg-amber-100 text-amber-900 border border-amber-300">⚠️ ${val}</div>`;
+                        }
+                    }
                 }
             }
         }
@@ -1565,8 +1726,11 @@
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
+            const badgeContainer = document.getElementById(`badge-container-${id}`);
+            if (badgeContainer) badgeContainer.innerHTML = "";
+
             const now = new Date();
-            
+            const dayOfWeek = now.getDay(); 
             const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
             const t = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
             const j = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
@@ -1583,18 +1747,83 @@
             chk.innerText = '✔';
             const totalMenit = (jam * 60) + fontMenit;
 
+            const tertibStart = timeToMinutes(timeConfig.tertibMulai);
+            const tertibEnd = timeToMinutes(timeConfig.tertibSelesai);
+            const terlambatStart = timeToMinutes(timeConfig.terlambatMulai);
+            const terlambatEnd = timeToMinutes(timeConfig.terlambatSelesai);
+            const peringatanStart = timeToMinutes(timeConfig.peringatanMulai);
+            const peringatanEnd = timeToMinutes(timeConfig.peringatanSelesai);
+
+            const hukumanMulaiMin = timeToMinutes(timeConfig.hukumanMulai || "07:00");
+            const hukumanSelesaiMin = timeToMinutes(timeConfig.hukumanSelesai || "08:20");
+            const multiplier = parseInt(timeConfig.hukumanMultiplier || 1, 10);
+            
+            const isPenaltyActiveDay = timeConfig.activeDays ? !!timeConfig.activeDays[dayOfWeek] : (dayOfWeek !== 0);
+
             if (!row.classList.contains('status-hijau') && !row.classList.contains('status-kuning') && !row.classList.contains('status-merah')) {
-                if (totalMenit >= 390 && totalMenit <= 420) {
+                if (totalMenit >= tertibStart && totalMenit <= tertibEnd) {
                     row.classList.add('status-hijau');
                     showToast(`${nama} AMAN 🟢`, "success");
                 } 
-                else if (totalMenit >= 421 && totalMenit <= 430) {
+                else if (totalMenit >= terlambatStart && totalMenit <= terlambatEnd) {
                     row.classList.add('status-kuning');
-                    showToast(`${nama} TERLAMBAT 🟡`, "warning");
+                    
+                    if (isPenaltyActiveDay) {
+                        let diffMinutes = 0;
+                        if (totalMenit >= hukumanMulaiMin && totalMenit <= hukumanSelesaiMin) {
+                            diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
+                        } else if (totalMenit > hukumanSelesaiMin) {
+                            diffMinutes = hukumanSelesaiMin - hukumanMulaiMin;
+                        } else {
+                            diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
+                        }
+
+                        const totalBarisHukuman = diffMinutes * multiplier;
+                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
+                        
+                        const inputKet = document.getElementById(`ket-${id}`);
+                        if (inputKet) {
+                            inputKet.value = infoHukuman;
+                            temporaryKeterangan[id] = infoHukuman;
+                        }
+                        if (badgeContainer) {
+                            badgeContainer.innerHTML = `<div class="penalty-badge bg-amber-100 text-amber-900 border border-amber-300">⚠️ ${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris Hukuman</div>`;
+                        }
+
+                        showToast(`${nama} TERLAMBAT 🟡 | ${totalBarisHukuman} Baris`, "warning");
+                    } else {
+                        showToast(`${nama} TERLAMBAT 🟡 (Hari Libur Hukuman)`, "warning");
+                    }
                 } 
-                else if (totalMenit >= 431 && totalMenit <= 500) {
+                else if (totalMenit >= peringatanStart && totalMenit <= peringatanEnd) {
                     row.classList.add('status-merah');
-                    showToast(`${nama} PERINGATAN 🔴`, "error");
+                    
+                    if (isPenaltyActiveDay) {
+                        let diffMinutes = 0;
+                        if (totalMenit >= hukumanMulaiMin && totalMenit <= hukumanSelesaiMin) {
+                            diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
+                        } else if (totalMenit > hukumanSelesaiMin) {
+                            diffMinutes = hukumanSelesaiMin - hukumanMulaiMin;
+                        } else {
+                            diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
+                        }
+
+                        const totalBarisHukuman = diffMinutes * multiplier;
+                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
+
+                        const inputKet = document.getElementById(`ket-${id}`);
+                        if (inputKet) {
+                            inputKet.value = infoHukuman;
+                            temporaryKeterangan[id] = infoHukuman;
+                        }
+                        if (badgeContainer) {
+                            badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">🚨 ${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris Hukuman</div>`;
+                        }
+
+                        showToast(`${nama} PERINGATAN 🔴 | ${totalBarisHukuman} Baris`, "error");
+                    } else {
+                        showToast(`${nama} PERINGATAN 🔴 (Hari Libur Hukuman)`, "error");
+                    }
                 } 
                 else {
                     row.classList.add('status-merah');
@@ -1604,14 +1833,68 @@
             } else if (row.classList.contains('status-hijau')) {
                 row.className = "student-row status-kuning";
                 txtWaktu.innerText = formattedTime;
+                
+                if (isPenaltyActiveDay) {
+                    let diffMinutes = 0;
+                    if (totalMenit >= hukumanMulaiMin && totalMenit <= hukumanSelesaiMin) {
+                        diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
+                    } else if (totalMenit > hukumanSelesaiMin) {
+                        diffMinutes = hukumanSelesaiMin - hukumanMulaiMin;
+                    } else {
+                        diffMinutes = 1;
+                    }
+
+                    const totalBarisHukuman = diffMinutes * multiplier;
+                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
+                    
+                    const inputKet = document.getElementById(`ket-${id}`);
+                    if (inputKet) {
+                        inputKet.value = infoHukuman;
+                        temporaryKeterangan[id] = infoHukuman;
+                    }
+                    if (badgeContainer) {
+                        badgeContainer.innerHTML = `<div class="penalty-badge bg-amber-100 text-amber-900 border border-amber-300">⚠️ ${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris Hukuman</div>`;
+                    }
+                }
+
                 showToast(`${nama} ditandai TERLAMBAT 🟡`, "warning");
             } else if (row.classList.contains('status-kuning')) {
                 row.className = "student-row status-merah";
                 txtWaktu.innerText = formattedTime;
+                
+                if (isPenaltyActiveDay) {
+                    let diffMinutes = 0;
+                    if (totalMenit >= hukumanMulaiMin && totalMenit <= hukumanSelesaiMin) {
+                        diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
+                    } else if (totalMenit > hukumanSelesaiMin) {
+                        diffMinutes = hukumanSelesaiMin - hukumanMulaiMin;
+                    } else {
+                        diffMinutes = 1;
+                    }
+
+                    const totalBarisHukuman = diffMinutes * multiplier;
+                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
+
+                    const inputKet = document.getElementById(`ket-${id}`);
+                    if (inputKet) {
+                        inputKet.value = infoHukuman;
+                        temporaryKeterangan[id] = infoHukuman;
+                    }
+                    if (badgeContainer) {
+                        badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">🚨 ${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris Hukuman</div>`;
+                    }
+                }
+
                 showToast(`${nama} ditandai PERINGATAN 🔴`, "error");
             } else {
                 row.className = "student-row";
                 txtWaktu.innerText = "-";
+                if (badgeContainer) badgeContainer.innerHTML = "";
+                const inputKet = document.getElementById(`ket-${id}`);
+                if (inputKet) {
+                    inputKet.value = "";
+                    delete temporaryKeterangan[id];
+                }
                 showToast(`Status presensi ${nama} dibatalkan`, "warning");
             }
 
@@ -1623,6 +1906,8 @@
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
+            const badgeContainer = document.getElementById(`badge-container-${id}`);
+            if (badgeContainer) badgeContainer.innerHTML = "";
             
             const now = new Date();
             const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
@@ -1648,6 +1933,8 @@
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
+            const badgeContainer = document.getElementById(`badge-container-${id}`);
+            if (badgeContainer) badgeContainer.innerHTML = "";
             
             const now = new Date();
             const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
@@ -1673,6 +1960,8 @@
             const row = document.getElementById(id);
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
+            const badgeContainer = document.getElementById(`badge-container-${id}`);
+            if (badgeContainer) badgeContainer.innerHTML = "";
             
             row.className = "student-row";
             txtWaktu.innerText = "-";
