@@ -474,7 +474,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
+                <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3" id="dynamic-badge-ranges">
                     <span id="badge-tertib-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600/90 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
                     <span id="badge-terlambat-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600/90 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
                     <span id="badge-peringatan-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
@@ -792,9 +792,9 @@
                                     <th class="p-3 text-center text-emerald-600">Aman (🟢)</th>
                                     <th class="p-3 text-center text-yellow-600">Terlambat (🟡)</th>
                                     <th class="p-3 text-center text-rose-600">Peringatan (🔴)</th>
+                                    <th class="p-3 text-center text-amber-700 font-extrabold">Akumulasi Baris</th>
                                     <th class="p-3 text-center text-sky-600">Sakit (🔵)</th>
                                     <th class="p-3 text-center text-violet-600">Izin (🟣)</th>
-                                    <th class="p-3 text-center text-slate-500">Alpa (⚪)</th>
                                     <th class="p-3 text-center">Rasio Kehadiran</th>
                                 </tr>
                             </thead>
@@ -814,6 +814,7 @@
                                     <th class="p-3 text-center">Skor Disiplin</th>
                                     <th class="p-3 text-center text-emerald-300">Tepat Waktu (🟢)</th>
                                     <th class="p-3 text-center text-yellow-300">Terlambat (🟡)</th>
+                                    <th class="p-3 text-center text-amber-300">Total Baris Hukuman</th>
                                     <th class="p-3 text-center text-violet-300">Izin (🟣)</th>
                                     <th class="p-3 text-center text-sky-300">Sakit (🔵)</th>
                                     <th class="p-3 text-center">Rasio Kehadiran</th>
@@ -841,7 +842,7 @@
         const DB_KEY = 'db_presensi_supabase_v10';
         const SISWA_KEY = 'db_siswa_supabase_v10';
         const APP_DISABLED_KEY = 'app_disabled_master_state';
-        const TIME_CONFIG_KEY = 'presensi_time_config_v3';
+        const TIME_CONFIG_KEY = 'presensi_time_config_v4';
 
         const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
         const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
@@ -930,13 +931,16 @@
         }
 
         function updateBadgeLabels() {
-            const tAman = document.getElementById('badge-tertib-desc');
-            const tLambat = document.getElementById('badge-terlambat-desc');
-            const tPeringatan = document.getElementById('badge-peringatan-desc');
-
-            if(tAman) tAman.innerText = `🟢 ${timeConfig.tertibMulai} - ${timeConfig.tertibSelesai} Aman`;
-            if(tLambat) tLambat.innerText = `🟡 ${timeConfig.terlambatMulai} - ${timeConfig.terlambatSelesai} Terlambat`;
-            if(tPeringatan) tPeringatan.innerText = `🔴 ${timeConfig.peringatanMulai} - ${timeConfig.peringatanSelesai} Peringatan`;
+            const container = document.getElementById('dynamic-badge-ranges');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600/90 text-white shadow-md">🟢 ${timeConfig.tertibMulai} - ${timeConfig.tertibSelesai} Aman</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600/90 text-white shadow-md">🟡 ${timeConfig.terlambatMulai} - ${timeConfig.terlambatSelesai} Terlambat</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 ${timeConfig.peringatanMulai} - ${timeConfig.peringatanSelesai} Peringatan</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
+            `;
         }
 
         function simpanConfigJam() {
@@ -1103,6 +1107,7 @@
                 pollingInterval = null;
             }
             loadStudentDatabase();
+            loadTimeConfig();
             init();
         }
 
@@ -1141,6 +1146,7 @@
                     await supabaseClient.from('presensi_data').upsert({ key: 'classes', value: dataSiswa });
                 }
 
+                loadTimeConfig();
                 init();
                 setupPollingSync();
                 muatLaporanDariSupabase();
@@ -1538,7 +1544,7 @@
                 const inputEl = document.getElementById(`ket-${id}`);
                 if (inputEl) {
                     inputEl.value = val;
-                    if (val.includes("Menit Terlambat") || val.includes("Baris Hukuman")) {
+                    if (val.includes("Menit Terlambat") || val.includes("Baris")) {
                         const badgeContainer = document.getElementById(`badge-container-${id}`);
                         if (badgeContainer) {
                             badgeContainer.innerHTML = `<div class="penalty-badge bg-amber-100 text-amber-900 border border-amber-300">⚠️ ${val}</div>`;
@@ -2001,12 +2007,19 @@
                 const ketInput = document.getElementById(`ket-${id}`);
                 const keteranganSiswa = ketInput ? ketInput.value.trim() : (temporaryKeterangan[id] || "");
 
+                let jumlahBarisHukumanVal = "-";
+                const matchBaris = keteranganSiswa.match(/(\d+)\s*Baris/);
+                if (matchBaris) {
+                    jumlahBarisHukumanVal = `${matchBaris[1]} Baris`;
+                }
+
                 return {
                     nama: r.querySelector('.name-text').innerText.replace(/^\d+\.\s*/, ''), 
                     kelas: r.closest('.class-box').querySelector('h2').innerText,
                     waktu: r.querySelector('.waktu-text').innerText,
                     status: statusText,
                     keterangan: keteranganSiswa,
+                    jumlahBaris: jumlahBarisHukumanVal,
                     hexColor: color,
                     bgHex: bgColor,
                     hadir: isHadir
@@ -2055,6 +2068,8 @@
                         row.querySelector('.waktu-text').innerText = "-";
                         row.querySelector('.check-icon').innerText = "✔";
                         const id = row.getAttribute('id');
+                        const badgeContainer = document.getElementById(`badge-container-${id}`);
+                        if (badgeContainer) badgeContainer.innerHTML = "";
                         const inputEl = document.getElementById(`ket-${id}`);
                         if (inputEl) inputEl.value = "";
                     });
@@ -2081,6 +2096,8 @@
                     row.querySelector('.waktu-text').innerText = "-";
                     row.querySelector('.check-icon').innerText = "✔";
                     const id = row.getAttribute('id');
+                    const badgeContainer = document.getElementById(`badge-container-${id}`);
+                    if (badgeContainer) badgeContainer.innerHTML = "";
                     const inputEl = document.getElementById(`ket-${id}`);
                     if (inputEl) inputEl.value = "";
                 });
@@ -2100,7 +2117,7 @@
             doc.text("SMP HAMALATUL QURAN RINGINAGUNG", doc.internal.pageSize.getWidth() / 2, 15, { align: "center" });
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            doc.text("LAPORAN PRESENSI DIGITAL HARIAN", doc.internal.pageSize.getWidth() / 2, 21, { align: "center" });
+            doc.text("LAPORAN PRESENSI DIGITAL HARIAN & TAKZIRAN HUKUMAN", doc.internal.pageSize.getWidth() / 2, 21, { align: "center" });
             doc.text(`Waktu Simpan: ${payload.waktuSimpan}`, doc.internal.pageSize.getWidth() / 2, 26, { align: "center" });
 
             const dataTerurut = [
@@ -2113,12 +2130,13 @@
                 d.nama,
                 d.kelas,
                 d.waktu,
-                `${d.status} ${d.keterangan ? '(' + d.keterangan + ')' : ''}`
+                `${d.status} ${d.keterangan ? '(' + d.keterangan + ')' : ''}`,
+                d.jumlahBaris || "-"
             ]);
 
             doc.autoTable({
                 startY: 32,
-                head: [['No', 'Nama Siswa', 'Kelas', 'Waktu & Tanggal', 'Status & Keterangan']],
+                head: [['No', 'Nama Siswa', 'Kelas', 'Waktu & Tgl', 'Status Keterangan', 'Jumlah Baris']],
                 body: tableData,
                 theme: 'grid',
                 styles: { fontSize: 8, cellPadding: 2.5 },
@@ -2171,6 +2189,8 @@
                 ...s.data.filter(d => !d.hadir)
             ];
 
+            const modalContentArea = document.querySelector('#modalDetail .modal-content');
+            
             document.getElementById('bodiModal').innerHTML = dataTerurut.map((d, i) => `
                 <tr style="background-color:${d.bgHex}; border-bottom:1px solid #e2e8f0;" class="text-xs md:text-sm">
                     <td style="padding:14px; color:#475569; font-weight:600;">${i+1}</td>
@@ -2181,7 +2201,20 @@
                         <span style="color:${d.hexColor};">${d.status}</span>
                         ${d.keterangan ? '<div class="text-[11px] font-medium text-slate-600 mt-0.5">Ket: ' + d.keterangan + '</div>' : ''}
                     </td>
+                    <td style="padding:14px; font-weight:800; color:#b45309;">${d.jumlahBaris || "-"}</td>
                 </tr>`).join('');
+
+            const modalTableHead = document.querySelector('#modalDetail table thead tr');
+            if (modalTableHead && modalTableHead.children.length === 5) {
+                modalTableHead.innerHTML = `
+                    <th class="p-4">No</th>
+                    <th class="p-4">Nama Siswa</th>
+                    <th class="p-4">Kelas</th>
+                    <th class="p-4">Waktu & Tanggal</th>
+                    <th class="p-4">Status & Keterangan</th>
+                    <th class="p-4">Jumlah Baris</th>
+                `;
+            }
             
             document.getElementById('btnPdfP').onclick = () => cetak(s, 'p');
             document.getElementById('btnPdfL').onclick = () => cetak(s, 'l');
@@ -2288,6 +2321,7 @@
                         sakit: 0,
                         izin: 0,
                         alpa: 0,
+                        totalBarisHukuman: 0,
                         totalSesi: 0
                     };
                 });
@@ -2308,6 +2342,7 @@
                             sakit: 0,
                             izin: 0,
                             alpa: 0,
+                            totalBarisHukuman: 0,
                             totalSesi: 0
                         };
                     }
@@ -2321,9 +2356,19 @@
                     } else if (siswa.status === "TERLAMBAT") {
                         profile.terlambat++;
                         akumulasiTerlambat++;
+                        
+                        const matchBaris = siswa.keterangan ? siswa.keterangan.match(/(\d+)\s*Baris/) : null;
+                        if (matchBaris) {
+                            profile.totalBarisHukuman += parseInt(matchBaris[1], 10);
+                        }
                     } else if (siswa.status === "PERINGATAN") {
                         profile.peringatan++;
                         akumulasiPeringatan++;
+                        
+                        const matchBaris = siswa.keterangan ? siswa.keterangan.match(/(\d+)\s*Baris/) : null;
+                        if (matchBaris) {
+                            profile.totalBarisHukuman += parseInt(matchBaris[1], 10);
+                        }
                     } else if (siswa.status === "SAKIT") {
                         profile.sakit++;
                         akumulasiSakit++;
@@ -2342,13 +2387,13 @@
                 const totalHadir = profile.aman + profile.terlambat + profile.peringatan + profile.sakit + profile.izin;
                 const rasioHadir = totalSesiSiswa > 0 ? ((totalHadir / totalSesiSiswa) * 100).toFixed(1) : "0.0";
                 
-                const poinDisiplin = (profile.aman * 20) + (profile.terlambat * 5) + (profile.izin * 3) + (profile.sakit * 2) - (profile.peringatan * 5) - (profile.alpa * 15);
+                const poinDisiplin = (profile.aman * 20) + (profile.terlambat * 5) + (profile.izin * 3) + (profile.sakit * 2) - (profile.peringatan * 5) - (profile.alpa * 15) - (profile.totalBarisHukuman * 0.5);
 
                 return {
                     ...profile,
                     totalSesiSiswa,
                     rasioHadir: parseFloat(rasioHadir),
-                    poinDisiplin: poinDisiplin
+                    poinDisiplin: parseFloat(poinDisiplin.toFixed(1))
                 };
             });
 
@@ -2539,7 +2584,7 @@
                 const cellPeringatan = s.peringatan > 0 ? `<span class="bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.peringatan}</span>` : `<span class="text-slate-300">-</span>`;
                 const cellSakit = s.sakit > 0 ? `<span class="bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.sakit}</span>` : `<span class="text-slate-300">-</span>`;
                 const cellIzin = s.izin > 0 ? `<span class="bg-violet-50 text-violet-700 border border-violet-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.izin}</span>` : `<span class="text-slate-300">-</span>`;
-                const cellAlpa = s.alpa > 0 ? `<span class="bg-slate-100 text-slate-700 border border-slate-300 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.alpa}</span>` : `<span class="text-slate-300">-</span>`;
+                const cellBarisHukuman = s.totalBarisHukuman > 0 ? `<span class="bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1 rounded-full font-extrabold text-xs inline-block">${s.totalBarisHukuman} Baris</span>` : `<span class="text-slate-300">-</span>`;
 
                 return `
                     <tr class="hover:bg-slate-50 transition-colors">
@@ -2548,9 +2593,9 @@
                         <td class="p-3 text-center">${cellAman}</td>
                         <td class="p-3 text-center">${cellTerlambat}</td>
                         <td class="p-3 text-center">${cellPeringatan}</td>
+                        <td class="p-3 text-center">${cellBarisHukuman}</td>
                         <td class="p-3 text-center">${cellSakit}</td>
                         <td class="p-3 text-center">${cellIzin}</td>
-                        <td class="p-3 text-center">${cellAlpa}</td>
                         <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[11px] ${badgeColor}">${s.rasioHadir}%</span></td>
                     </tr>`;
             }).join('');
@@ -2561,15 +2606,15 @@
             if (!tbody) return;
 
             if (listSiswa.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center text-slate-400 italic">Tidak ada nama santri untuk diklasifikasikan</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-400 italic">Tidak ada nama santri untuk diklasifikasikan</td></tr>`;
                 return;
             }
 
             const rankedList = [...listSiswa].sort((a, b) => {
                 if (b.aman !== a.aman) return b.aman - a.aman;
                 if (b.poinDisiplin !== a.poinDisiplin) return b.poinDisiplin - a.poinDisiplin;
-                if (b.rasioHadir !== a.rasioHadir) return b.rasioHadir - a.rasioHadir;
-                return a.terlambat - b.terlambat;
+                if (a.totalBarisHukuman !== b.totalBarisHukuman) return a.totalBarisHukuman - b.totalBarisHukuman;
+                return b.rasioHadir - a.rasioHadir;
             });
 
             tbody.innerHTML = rankedList.map((s, index) => {
@@ -2593,6 +2638,8 @@
                 else if (s.rasioHadir >= 75) badgeColor = "bg-yellow-100 text-yellow-800";
                 else badgeColor = "bg-rose-100 text-rose-800 font-bold";
 
+                const cellBarisHukuman = s.totalBarisHukuman > 0 ? `<span class="bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full font-extrabold text-xs inline-block">${s.totalBarisHukuman} Baris</span>` : `<span class="text-slate-300">-</span>`;
+
                 return `
                     <tr class="${rowBg} transition-colors">
                         <td class="p-3 text-center">${rankBadge}</td>
@@ -2601,6 +2648,7 @@
                         <td class="p-3 text-center font-extrabold text-indigo-700 bg-indigo-50/60 rounded-xl">${s.poinDisiplin} Pts</td>
                         <td class="p-3 text-center font-bold text-emerald-700">${s.aman}</td>
                         <td class="p-3 text-center font-bold text-amber-600">${s.terlambat}</td>
+                        <td class="p-3 text-center">${cellBarisHukuman}</td>
                         <td class="p-3 text-center font-bold text-violet-600">${s.izin}</td>
                         <td class="p-3 text-center font-bold text-sky-600">${s.sakit}</td>
                         <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[11px] ${badgeColor}">${s.rasioHadir}%</span></td>
@@ -2634,7 +2682,7 @@
             doc.text("SMP HAMALATUL QURAN RINGINAGUNG", doc.internal.pageSize.getWidth() / 2, 14, { align: "center" });
             
             doc.setFontSize(11);
-            const judulPDF = isRankingMode ? "LAPORAN RANKING KEDISIPLINAN SANTRI" : "LAPORAN REKAPITULASI PRESENSI BERKALA";
+            const judulPDF = isRankingMode ? "LAPORAN RANKING KEDISIPLINAN & AKUMULASI HUKUMAN" : "LAPORAN REKAPITULASI PRESENSI & TOTAL BARIS HUKUMAN";
             doc.text(judulPDF, doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
             
             doc.setFontSize(9);
@@ -2655,23 +2703,23 @@
                     `${s.poinDisiplin} Pts`,
                     s.aman,
                     s.terlambat,
+                    `${s.totalBarisHukuman} Baris`,
                     s.izin,
                     s.sakit,
                     s.peringatan,
-                    s.alpa,
                     `${s.rasioHadir}%`
                 ]);
 
                 doc.autoTable({
                     startY: 30,
-                    head: [['Rank', 'Nama Santri / Siswa', 'Kelas', 'Skor', 'Ontime (🟢)', 'Lambat (🟡)', 'Izin (🟣)', 'Sakit (🔵)', 'Peringatan (🔴)', 'Alpa (⚪)', 'Rasio']],
+                    head: [['Rank', 'Nama Santri', 'Kelas', 'Skor', 'Ontime', 'Lambat', 'Total Baris', 'Izin', 'Sakit', 'Peringatan', 'Rasio']],
                     body: tableData,
                     theme: 'grid',
                     styles: { fontSize: 8, cellPadding: 2.5 },
                     headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' }
                 });
 
-                doc.save(`Ranking_Kedisiplinan_${dataRekapAktif.textPeriode.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+                doc.save(`Ranking_Disiplin_${dataRekapAktif.textPeriode.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
             } else {
                 const tableData = listTarget.map((s, idx) => [
                     idx + 1,
@@ -2682,23 +2730,23 @@
                     s.peringatan,
                     s.sakit,
                     s.izin,
-                    s.alpa,
+                    `${s.totalBarisHukuman} Baris`,
                     `${s.rasioHadir}%`
                 ]);
 
                 doc.autoTable({
                     startY: 30,
-                    head: [['No', 'Nama Santri / Siswa', 'Kelas', 'Ontime (🟢)', 'Lambat (🟡)', 'Peringatan (🔴)', 'Sakit (🔵)', 'Izin (🟣)', 'Alpa (⚪)', 'Rasio Kehadiran']],
+                    head: [['No', 'Nama Santri / Siswa', 'Kelas', 'Ontime (🟢)', 'Lambat (🟡)', 'Peringatan (🔴)', 'Sakit (🔵)', 'Izin (🟣)', 'Akumulasi Baris', 'Rasio']],
                     body: tableData,
                     theme: 'grid',
                     styles: { fontSize: 8, cellPadding: 2.5 },
                     headStyles: { fillColor: [15, 23, 42], textColor: [255, 255, 255], fontStyle: 'bold' }
                 });
 
-                doc.save(`Rekap_Presensi_${dataRekapAktif.textPeriode.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+                doc.save(`Rekap_Presensi_Hukuman_${dataRekapAktif.textPeriode.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
             }
 
-            showToast("Mengunduh laporan PDF Rekapitulasi...", "success");
+            showToast("Mengunduh laporan PDF Rekapitulasi Berkelanjutan...", "success");
         }
 
         function tutupDashboardRekap() {
