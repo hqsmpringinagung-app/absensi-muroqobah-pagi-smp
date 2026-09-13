@@ -163,6 +163,7 @@
             background-color: #fae8ff !important;
             border-left: 5px solid #d946ef !important;
         }
+        .status-izin-keluar:hover { background-color: #f5d0fe !important; }
         .status-izin-keluar .name-text { color: #86198f !important; }
         .status-izin-keluar .check-icon { background-color: #d946ef; border-color: #d946ef; color: #ffffff; transform: scale(1.05); }
         .status-izin-keluar .waktu-text { color: #a21caf !important; }
@@ -740,7 +741,7 @@
                     <input type="text" id="input-alasan-izin-keluar" placeholder="Contoh: Ke kamar mandi, Ambil kitab di asrama, ke UKS..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-white font-medium">
                 </div>
                 <div class="bg-fuchsia-50 p-3.5 rounded-xl border border-fuchsia-100 text-xs text-fuchsia-900 font-medium leading-relaxed">
-                    💡 <b>Info:</b> Siswa akan ditandai berstatus <b>IZIN KELUAR</b> dengan lencana besar khusus di layar utama. Operator dapat mengklik tombol <b>"Sudah Kembali"</b> kapan saja saat santri telah kembali ke kelas.
+                    💡 <b>Info:</b> Siswa akan ditandai berstatus <b>IZIN KELUAR</b> dengan lencana khusus di layar utama. Operator dapat mengklik tombol <b>"Sudah Kembali"</b> kapan saja saat santri telah kembali ke kelas.
                 </div>
             </div>
 
@@ -1047,8 +1048,9 @@
 
             localStorage.setItem(TIME_CONFIG_KEY, JSON.stringify(timeConfig));
             updateBadgeLabels();
-            showToast("Pengaturan jam, hukuman, hari aktif & izin keluar berhasil disimpan!", "success");
+            showToast("Pengaturan jam, hukuman, hari aktif & izin keluar berhasil disinkronkan!", "success");
             tutupModalRahasia();
+            broadcastActiveSelections();
         }
 
         function timeToMinutes(timeStr) {
@@ -1259,11 +1261,17 @@
                         if (sessionData.date === new Date().toDateString()) {
                             temporarySelections = sessionData.selections || {};
                             temporaryKeterangan = sessionData.keterangan || {};
+                            temporaryIzinKeluar = sessionData.izinKeluar || {};
+                            if (sessionData.timeConfig) {
+                                timeConfig = sessionData.timeConfig;
+                                localStorage.setItem(TIME_CONFIG_KEY, JSON.stringify(timeConfig));
+                                loadTimeConfig();
+                            }
                             restoreSelections();
                         }
                     }
                 } catch (e) {}
-            }, 3500);
+            }, 3000);
         }
 
         async function muatLaporanDariSupabase() {
@@ -1331,7 +1339,9 @@
                 const payload = {
                     date: new Date().toDateString(),
                     selections: temporarySelections,
-                    keterangan: temporaryKeterangan
+                    keterangan: temporaryKeterangan,
+                    izinKeluar: temporaryIzinKeluar,
+                    timeConfig: timeConfig
                 };
                 await supabaseClient.from('presensi_data').upsert({ key: 'current_session', value: payload });
             } catch(e) {} finally {
@@ -2345,7 +2355,7 @@
                     temporaryKeterangan = {};
                     temporaryIzinKeluar = {};
                     
-                    const emptyPayload = { date: new Date().toDateString(), selections: {}, keterangan: {} };
+                    const emptyPayload = { date: new Date().toDateString(), selections: {}, keterangan: {}, izinKeluar: {} };
                     await supabaseClient.from('presensi_data').upsert({ key: 'current_session', value: emptyPayload });
 
                     broadcastActiveSelections();
