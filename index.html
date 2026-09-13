@@ -21,6 +21,7 @@
             --danger: #b91c1c;
             --sakit: #0284c7;
             --izin: #7c3aed;
+            --izin-keluar: #d946ef;
             --bg: #f8fafc;
             --card-bg: #ffffff;
         }
@@ -157,6 +158,14 @@
         .status-izin .name-text { color: #5b21b6 !important; }
         .status-izin .check-icon { background-color: #7c3aed; border-color: #7c3aed; color: #ffffff; transform: scale(1.05); }
         .status-izin .waktu-text { color: #6d28d9 !important; }
+
+        .status-izin-keluar {
+            background-color: #fae8ff !important;
+            border-left: 5px solid #d946ef !important;
+        }
+        .status-izin-keluar .name-text { color: #86198f !important; }
+        .status-izin-keluar .check-icon { background-color: #d946ef; border-color: #d946ef; color: #ffffff; transform: scale(1.05); }
+        .status-izin-keluar .waktu-text { color: #a21caf !important; }
 
         .btn-save {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -345,6 +354,30 @@
                 </label>
             </div>
 
+            <!-- Pengaturan Mode Izin Keluar -->
+            <div class="bg-fuchsia-50/60 p-4 rounded-2xl border border-fuchsia-100 mb-5 text-left space-y-3">
+                <span class="block text-xs font-extrabold text-fuchsia-900 uppercase tracking-wider mb-1">Pengaturan Mode Tombol Izin Keluar</span>
+                <p class="text-[11px] text-slate-600 mb-2">Pilih apakah tombol Izin Keluar membutuhkan pop-up pengisian keterangan terlebih dahulu atau langsung aktif.</p>
+                
+                <div class="grid grid-cols-1 gap-2">
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-fuchsia-200 cursor-pointer hover:bg-fuchsia-50/50 transition-all">
+                        <input type="radio" name="cfg-izin-mode" id="cfg-izin-mode-popup" value="popup" class="text-fuchsia-600 focus:ring-fuchsia-500 w-4 h-4" checked>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-800">Tambah Keterangan (Pop-up)</span>
+                            <span class="block text-[11px] text-slate-500">Operator wajib mengisi alasan/tujuan sebelum izin aktif.</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center gap-3 bg-white p-3 rounded-xl border border-fuchsia-200 cursor-pointer hover:bg-fuchsia-50/50 transition-all">
+                        <input type="radio" name="cfg-izin-mode" id="cfg-izin-mode-direct" value="direct" class="text-fuchsia-600 focus:ring-fuchsia-500 w-4 h-4">
+                        <div>
+                            <span class="block text-xs font-bold text-slate-800">Langsung Izin Keluar (Tanpa Pop-up)</span>
+                            <span class="block text-[11px] text-slate-500">Tombol diklik langsung aktif berstatus izin keluar.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5 text-left space-y-3">
                 <span class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Pengaturan Rentang Jam Presensi</span>
                 <p class="text-[11px] text-slate-500 mb-2">Tentukan jam mulai sampai batas untuk masing-masing bagian.</p>
@@ -480,6 +513,7 @@
                     <span id="badge-peringatan-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-fuchsia-600/90 text-white shadow-md">🚪 Izin Keluar</span>
                 </div>
             </div>
         </div>
@@ -687,6 +721,36 @@
         </div>
     </div>
 
+    <!-- Modal Input Detail Izin Keluar -->
+    <div id="modalIzinKeluar" class="modal secret-allowed" style="z-index: 10005;">
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="p-2 bg-fuchsia-100 text-fuchsia-700 rounded-xl"><i data-lucide="door-open"></i></span>
+                    <h3 class="text-base font-extrabold text-slate-800" id="izin-keluar-modal-title">Form Izin Keluar</h3>
+                </div>
+                <button onclick="tutupModalIzinKeluar()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-left mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">Keperluan / Tujuan Izin Keluar</label>
+                    <input type="text" id="input-alasan-izin-keluar" placeholder="Contoh: Ke kamar mandi, Ambil kitab di asrama, ke UKS..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 bg-white font-medium">
+                </div>
+                <div class="bg-fuchsia-50 p-3.5 rounded-xl border border-fuchsia-100 text-xs text-fuchsia-900 font-medium leading-relaxed">
+                    💡 <b>Info:</b> Siswa akan ditandai berstatus <b>IZIN KELUAR</b> dengan lencana besar khusus di layar utama. Operator dapat mengklik tombol <b>"Sudah Kembali"</b> kapan saja saat santri telah kembali ke kelas.
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="tutupModalIzinKeluar()" class="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all">Batal</button>
+                <button onclick="prosesSimpanIzinKeluar()" class="flex-1 py-3 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-extrabold text-xs transition-all shadow-md">Simpan & Aktifkan</button>
+            </div>
+        </div>
+    </div>
+
     <div id="modalRekap" class="modal">
         <div class="modal-content mx-4 my-8 max-w-5xl flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
@@ -842,7 +906,7 @@
         const DB_KEY = 'db_presensi_supabase_v10';
         const SISWA_KEY = 'db_siswa_supabase_v10';
         const APP_DISABLED_KEY = 'app_disabled_master_state';
-        const TIME_CONFIG_KEY = 'presensi_time_config_v4';
+        const TIME_CONFIG_KEY = 'presensi_time_config_v5';
 
         const DEFAULT_SUPABASE_URL = "https://ogbvyeypznbwurmsmwld.supabase.co";
         const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9nYnZ5ZXlwem5id3VybXNtd2xkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTM1MzgsImV4cCI6MjA5NzM2OTUzOH0.LSO8qrGBs85lkSD5mzVL7zOBO5LTHJX90v7Q-FJEYQo";
@@ -865,6 +929,7 @@
             hukumanMulai: "07:00",
             hukumanSelesai: "08:20",
             hukumanMultiplier: 1,
+            izinMode: "popup", // "popup" atau "direct"
             activeDays: { 0: false, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true }
         };
 
@@ -896,6 +961,8 @@
         let dataSiswa = {};
         let temporarySelections = {};
         let temporaryKeterangan = {};
+        let temporaryIzinKeluar = {}; // Menyimpan status izin keluar aktif { id: { keperluan, waktu, originalClass, originalTimeText, originalKet } }
+        let currentActiveIzinModal = null;
         let dataRekapAktif = null;
         let modeRekapView = 'UMUM'; 
         let opsiPeriodeAktif = '7'; 
@@ -920,6 +987,14 @@
             if(document.getElementById('cfg-hukuman-selesai')) document.getElementById('cfg-hukuman-selesai').value = timeConfig.hukumanSelesai || "08:20";
             if(document.getElementById('cfg-hukuman-multiplier')) document.getElementById('cfg-hukuman-multiplier').value = timeConfig.hukumanMultiplier || 1;
 
+            const modeIzin = timeConfig.izinMode || "popup";
+            const radioPopup = document.getElementById('cfg-izin-mode-popup');
+            const radioDirect = document.getElementById('cfg-izin-mode-direct');
+            if (radioPopup && radioDirect) {
+                if (modeIzin === 'direct') radioDirect.checked = true;
+                else radioPopup.checked = true;
+            }
+
             if (timeConfig.activeDays) {
                 for (let d = 0; d <= 6; d++) {
                     const cb = document.getElementById(`cfg-day-${d}`);
@@ -940,6 +1015,7 @@
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 ${timeConfig.peringatanMulai} - ${timeConfig.peringatanSelesai} Peringatan</span>
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-fuchsia-600/90 text-white shadow-md">🚪 Izin Keluar</span>
             `;
         }
 
@@ -952,6 +1028,9 @@
                 activeDaysObj[d] = cb ? cb.checked : (d !== 0);
             }
 
+            const radioDirect = document.getElementById('cfg-izin-mode-direct');
+            const izinMode = (radioDirect && radioDirect.checked) ? "direct" : "popup";
+
             timeConfig = {
                 tertibMulai: document.getElementById('cfg-tertib-mulai').value || "06:30",
                 tertibSelesai: document.getElementById('cfg-tertib-selesai').value || "07:00",
@@ -962,12 +1041,13 @@
                 hukumanMulai: document.getElementById('cfg-hukuman-mulai').value || "07:00",
                 hukumanSelesai: document.getElementById('cfg-hukuman-selesai').value || "08:20",
                 hukumanMultiplier: parseInt(document.getElementById('cfg-hukuman-multiplier').value, 10) || 1,
+                izinMode: izinMode,
                 activeDays: activeDaysObj
             };
 
             localStorage.setItem(TIME_CONFIG_KEY, JSON.stringify(timeConfig));
             updateBadgeLabels();
-            showToast("Pengaturan jam, hukuman & hari aktif berhasil disimpan!", "success");
+            showToast("Pengaturan jam, hukuman, hari aktif & izin keluar berhasil disimpan!", "success");
             tutupModalRahasia();
         }
 
@@ -1443,6 +1523,7 @@
                                 <span class="name-text">${i+1}. ${n}</span>
                                 
                                 <div id="badge-container-${id}"></div>
+                                <div id="badge-keluar-${id}"></div>
 
                                 <div class="flex items-center gap-1.5 mt-1 flex-wrap">
                                     <button onclick="event.stopPropagation(); setSakit('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
@@ -1450,6 +1531,9 @@
                                     </button>
                                     <button onclick="event.stopPropagation(); setIzin('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🟣 Izin
+                                    </button>
+                                    <button onclick="event.stopPropagation(); handleIzinKeluarClick('${id}', '${kls}', '${n}')" class="px-5 py-3 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-200 border border-fuchsia-300 text-fuchsia-900 font-extrabold text-xs tracking-wide transition-all shadow-md flex items-center gap-2">
+                                        🚪 Izin Keluar
                                     </button>
                                     <button onclick="event.stopPropagation(); resetAbsen('${id}', '${kls}', '${n}')" class="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-200 border border-slate-200 text-slate-500 font-extrabold text-[10px] transition-all shadow-sm flex items-center justify-center" title="Batal">
                                         <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -1493,7 +1577,7 @@
 
         function saveCurrentSelections() {
             temporarySelections = {};
-            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin');
+            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin, .student-row.status-izin-keluar');
             activeRows.forEach(row => {
                 const id = row.getAttribute('id');
                 const timeText = row.querySelector('.waktu-text').innerText;
@@ -1503,6 +1587,7 @@
                 else if (row.classList.contains('status-merah')) statusClass = 'status-merah';
                 else if (row.classList.contains('status-sakit')) statusClass = 'status-sakit';
                 else if (row.classList.contains('status-izin')) statusClass = 'status-izin';
+                else if (row.classList.contains('status-izin-keluar')) statusClass = 'status-izin-keluar';
                 
                 temporarySelections[id] = { statusClass, timeText };
             });
@@ -1524,6 +1609,8 @@
                 const id = row.getAttribute('id');
                 const badgeContainer = document.getElementById(`badge-container-${id}`);
                 if (badgeContainer) badgeContainer.innerHTML = "";
+                const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+                if (badgeKeluar) badgeKeluar.innerHTML = "";
                 const inputEl = document.getElementById(`ket-${id}`);
                 if (inputEl) inputEl.value = "";
             });
@@ -1536,6 +1623,7 @@
                     const chk = row.querySelector('.check-icon');
                     if (value.statusClass === 'status-sakit') chk.innerText = 'S';
                     else if (value.statusClass === 'status-izin') chk.innerText = 'I';
+                    else if (value.statusClass === 'status-izin-keluar') chk.innerText = '🚪';
                     else chk.innerText = '✔';
                 }
             }
@@ -1552,6 +1640,170 @@
                     }
                 }
             }
+
+            for (const [id, info] of Object.entries(temporaryIzinKeluar)) {
+                const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+                if (badgeKeluar) {
+                    badgeKeluar.innerHTML = `
+                        <div class="mt-2 p-3 rounded-2xl bg-fuchsia-100 border border-fuchsia-300 text-fuchsia-900 flex items-center justify-between gap-3 shadow-sm">
+                            <div>
+                                <span class="font-extrabold uppercase tracking-wide block text-xs text-fuchsia-700">🚪 IZIN KELUAR KELAS</span>
+                                <span class="text-sm font-bold block mt-0.5">Keperluan: ${info.keperluan}</span>
+                                <span class="text-[10px] opacity-75 font-semibold">Waktu Keluar: ${info.waktu}</span>
+                            </div>
+                            <button onclick="event.stopPropagation(); tandaiSudahKembali('${id}')" class="px-4 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-extrabold text-xs shadow-md transition-all whitespace-nowrap">
+                                ✅ Sudah Kembali
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function handleIzinKeluarClick(id, kls, nama) {
+            if (isAppDisabled) return;
+            loadTimeConfig();
+            if (timeConfig.izinMode === 'direct') {
+                aktifkanIzinKeluarLangsung(id, kls, nama);
+            } else {
+                bukaModalIzinKeluar(id, kls, nama);
+            }
+        }
+
+        function bukaModalIzinKeluar(id, kls, nama) {
+            if (isAppDisabled) return;
+            currentActiveIzinModal = { id, kls, nama };
+            document.getElementById('izin-keluar-modal-title').innerText = `Izin Keluar: ${nama}`;
+            document.getElementById('input-alasan-izin-keluar').value = "";
+            document.getElementById('modalIzinKeluar').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('input-alasan-izin-keluar').focus();
+            }, 100);
+            lucide.createIcons();
+        }
+
+        function tutupModalIzinKeluar() {
+            document.getElementById('modalIzinKeluar').style.display = 'none';
+            currentActiveIzinModal = null;
+        }
+
+        function prosesSimpanIzinKeluar() {
+            if (!currentActiveIzinModal || isAppDisabled) return;
+            const { id, kls, nama } = currentActiveIzinModal;
+            const keperluan = document.getElementById('input-alasan-izin-keluar').value.trim() || "Keperluan mendesak";
+            terapkanStatusIzinKeluar(id, keperluan);
+            tutupModalIzinKeluar();
+        }
+
+        function aktifkanIzinKeluarLangsung(id, kls, nama) {
+            terapkanStatusIzinKeluar(id, "Izin Keluar Cepat");
+        }
+
+        function terapkanStatusIzinKeluar(id, keperluan) {
+            const row = document.getElementById(id);
+            const txtWaktu = row.querySelector('.waktu-text');
+            const chk = row.querySelector('.check-icon');
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+
+            const now = new Date();
+            const j = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+            
+            let originalClass = "student-row";
+            if (row.classList.contains('status-hijau')) originalClass = "student-row status-hijau";
+            else if (row.classList.contains('status-kuning')) originalClass = "student-row status-kuning";
+            else if (row.classList.contains('status-merah')) originalClass = "student-row status-merah";
+            else if (row.classList.contains('status-sakit')) originalClass = "student-row status-sakit";
+            else if (row.classList.contains('status-izin')) originalClass = "student-row status-izin";
+
+            const originalTimeText = txtWaktu.innerText;
+
+            row.className = "student-row status-izin-keluar";
+            txtWaktu.innerText = `Keluar: ${j}`;
+            chk.innerText = '🚪';
+
+            const inputKet = document.getElementById(`ket-${id}`);
+            const originalKet = inputKet ? inputKet.value : "";
+            if (inputKet) {
+                inputKet.value = `Izin Keluar: ${keperluan}`;
+                temporaryKeterangan[id] = `Izin Keluar: ${keperluan}`;
+            }
+
+            temporaryIzinKeluar[id] = { 
+                keperluan, 
+                waktu: j, 
+                originalClass, 
+                originalTimeText, 
+                originalKet 
+            };
+
+            if (badgeKeluar) {
+                badgeKeluar.innerHTML = `
+                    <div class="mt-2 p-3 rounded-2xl bg-fuchsia-100 border border-fuchsia-300 text-fuchsia-900 flex items-center justify-between gap-3 shadow-sm">
+                        <div>
+                            <span class="font-extrabold uppercase tracking-wide block text-xs text-fuchsia-700">🚪 IZIN KELUAR KELAS</span>
+                            <span class="text-sm font-bold block mt-0.5">Keperluan: ${keperluan}</span>
+                            <span class="text-[10px] opacity-75 font-semibold">Waktu Keluar: ${j}</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); tandaiSudahKembali('${id}')" class="px-4 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-extrabold text-xs shadow-md transition-all whitespace-nowrap">
+                            ✅ Sudah Kembali
+                        </button>
+                    </div>
+                `;
+            }
+
+            showToast(`Siswa sedang IZIN KELUAR (${keperluan})`, "success");
+            broadcastActiveSelections();
+        }
+
+        function tandaiSudahKembali(id) {
+            if (isAppDisabled) return;
+            const row = document.getElementById(id);
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+            const infoKeluar = temporaryIzinKeluar[id];
+
+            const now = new Date();
+            const j = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+
+            delete temporaryIzinKeluar[id];
+            
+            if (infoKeluar && infoKeluar.originalClass && infoKeluar.originalClass !== "student-row") {
+                row.className = infoKeluar.originalClass;
+                row.querySelector('.waktu-text').innerText = infoKeluar.originalTimeText;
+                const chk = row.querySelector('.check-icon');
+                if (infoKeluar.originalClass.includes('status-sakit')) chk.innerText = 'S';
+                else if (infoKeluar.originalClass.includes('status-izin')) chk.innerText = 'I';
+                else chk.innerText = '✔';
+
+                const inputKet = document.getElementById(`ket-${id}`);
+                if (inputKet) {
+                    inputKet.value = infoKeluar.originalKet;
+                    if (infoKeluar.originalKet) {
+                        temporaryKeterangan[id] = infoKeluar.originalKet;
+                    } else {
+                        delete temporaryKeterangan[id];
+                    }
+                }
+            } else {
+                row.className = "student-row";
+                row.querySelector('.waktu-text').innerText = "-";
+                row.querySelector('.check-icon').innerText = '✔';
+                const inputKet = document.getElementById(`ket-${id}`);
+                if (inputKet) {
+                    inputKet.value = "";
+                    delete temporaryKeterangan[id];
+                }
+            }
+
+            if (badgeKeluar) {
+                badgeKeluar.innerHTML = `
+                    <div class="mt-2 p-2 rounded-xl bg-slate-100 border border-slate-300 text-slate-700 font-bold text-xs inline-block">
+                        ✅ Telah Kembali ke Kelas (${j})
+                    </div>
+                `;
+            }
+
+            showToast("Siswa telah kembali ke kelas. Status dikembalikan ke kondisi semula.", "success");
+            broadcastActiveSelections();
         }
 
         function populateSelectOptions() {
@@ -1733,7 +1985,10 @@
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
             const badgeContainer = document.getElementById(`badge-container-${id}`);
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
             if (badgeContainer) badgeContainer.innerHTML = "";
+            if (badgeKeluar) badgeKeluar.innerHTML = "";
+            delete temporaryIzinKeluar[id];
 
             const now = new Date();
             const dayOfWeek = now.getDay(); 
@@ -1745,7 +2000,7 @@
             const jam = now.getHours();
             const fontMenit = now.getMinutes();
 
-            if (row.classList.contains('status-sakit') || row.classList.contains('status-izin')) {
+            if (row.classList.contains('status-sakit') || row.classList.contains('status-izin') || row.classList.contains('status-izin-keluar')) {
                 resetAbsen(id, kls, nama);
                 return;
             }
@@ -1913,7 +2168,10 @@
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
             const badgeContainer = document.getElementById(`badge-container-${id}`);
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
             if (badgeContainer) badgeContainer.innerHTML = "";
+            if (badgeKeluar) badgeKeluar.innerHTML = "";
+            delete temporaryIzinKeluar[id];
             
             const now = new Date();
             const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
@@ -1940,7 +2198,10 @@
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
             const badgeContainer = document.getElementById(`badge-container-${id}`);
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
             if (badgeContainer) badgeContainer.innerHTML = "";
+            if (badgeKeluar) badgeKeluar.innerHTML = "";
+            delete temporaryIzinKeluar[id];
             
             const now = new Date();
             const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
@@ -1967,7 +2228,10 @@
             const txtWaktu = row.querySelector('.waktu-text');
             const chk = row.querySelector('.check-icon');
             const badgeContainer = document.getElementById(`badge-container-${id}`);
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
             if (badgeContainer) badgeContainer.innerHTML = "";
+            if (badgeKeluar) badgeKeluar.innerHTML = "";
+            delete temporaryIzinKeluar[id];
             
             row.className = "student-row";
             txtWaktu.innerText = "-";
@@ -2001,6 +2265,8 @@
                     color = "#0284c7"; statusText = "SAKIT"; bgColor = "#e0f2fe"; isHadir = true;
                 } else if(r.classList.contains('status-izin')) { 
                     color = "#6d28d9"; statusText = "IZIN"; bgColor = "#ede9fe"; isHadir = true;
+                } else if(r.classList.contains('status-izin-keluar')) { 
+                    color = "#d946ef"; statusText = "IZIN KELUAR"; bgColor = "#fae8ff"; isHadir = true;
                 }
 
                 const id = r.getAttribute('id');
@@ -2026,7 +2292,7 @@
                 };
             });
 
-            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin');
+            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin, .student-row.status-izin-keluar');
             return {
                 id: Date.now(),
                 waktuSimpan: new Date().toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
@@ -2070,11 +2336,14 @@
                         const id = row.getAttribute('id');
                         const badgeContainer = document.getElementById(`badge-container-${id}`);
                         if (badgeContainer) badgeContainer.innerHTML = "";
+                        const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+                        if (badgeKeluar) badgeKeluar.innerHTML = "";
                         const inputEl = document.getElementById(`ket-${id}`);
                         if (inputEl) inputEl.value = "";
                     });
                     temporarySelections = {};
                     temporaryKeterangan = {};
+                    temporaryIzinKeluar = {};
                     
                     const emptyPayload = { date: new Date().toDateString(), selections: {}, keterangan: {} };
                     await supabaseClient.from('presensi_data').upsert({ key: 'current_session', value: emptyPayload });
@@ -2098,11 +2367,14 @@
                     const id = row.getAttribute('id');
                     const badgeContainer = document.getElementById(`badge-container-${id}`);
                     if (badgeContainer) badgeContainer.innerHTML = "";
+                    const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+                    if (badgeKeluar) badgeKeluar.innerHTML = "";
                     const inputEl = document.getElementById(`ket-${id}`);
                     if (inputEl) inputEl.value = "";
                 });
                 temporarySelections = {};
                 temporaryKeterangan = {};
+                temporaryIzinKeluar = {};
                 renderHistori();
             }
         }
@@ -2189,8 +2461,6 @@
                 ...s.data.filter(d => !d.hadir)
             ];
 
-            const modalContentArea = document.querySelector('#modalDetail .modal-content');
-            
             document.getElementById('bodiModal').innerHTML = dataTerurut.map((d, i) => `
                 <tr style="background-color:${d.bgHex}; border-bottom:1px solid #e2e8f0;" class="text-xs md:text-sm">
                     <td style="padding:14px; color:#475569; font-weight:600;">${i+1}</td>
@@ -2372,7 +2642,7 @@
                     } else if (siswa.status === "SAKIT") {
                         profile.sakit++;
                         akumulasiSakit++;
-                    } else if (siswa.status === "IZIN") {
+                    } else if (siswa.status === "IZIN" || siswa.status === "IZIN KELUAR") {
                         profile.izin++;
                         akumulasiIzin++;
                     } else {
