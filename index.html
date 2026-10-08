@@ -21,6 +21,7 @@
             --danger: #b91c1c;
             --sakit: #0284c7;
             --izin: #7c3aed;
+            --alpa: #e11d48;
             --izin-keluar: #c026d3;
             --bg: #f8fafc;
             --card-bg: #ffffff;
@@ -158,6 +159,12 @@
         .status-izin .name-text { color: #5b21b6 !important; }
         .status-izin .check-icon { background-color: #7c3aed; border-color: #7c3aed; color: #ffffff; transform: scale(1.05); }
         .status-izin .waktu-text { color: #6d28d9 !important; }
+
+        .status-alpa { background-color: #ffe4e6 !important; border-left: 5px solid #e11d48; }
+        .status-alpa:hover { background-color: #fecdd3 !important; }
+        .status-alpa .name-text { color: #9f1239 !important; }
+        .status-alpa .check-icon { background-color: #e11d48; border-color: #e11d48; color: #ffffff; transform: scale(1.05); }
+        .status-alpa .waktu-text { color: #be123c !important; }
 
         .status-izin-keluar {
             background-color: #fae8ff !important;
@@ -313,7 +320,6 @@
             cursor: not-allowed !important;
         }
 
-        /* Memastikan elemen modal dan kontrol rahasia SELALU bisa diklik */
         .interactive-zone, .interactive-zone *, #secretModal, #secretModal *, #secret-dot-trigger {
             pointer-events: auto !important;
             cursor: pointer !important;
@@ -341,10 +347,8 @@
 
     <div id="toast-container"></div>
 
-    <!-- Tombol Roda Gigi Rahasia -->
     <div id="secret-dot-trigger" onclick="bukaModalRahasia()" class="interactive-zone fixed bottom-2 right-2 w-5 h-5 bg-slate-400/40 hover:bg-indigo-600 rounded-full z-[9995] transition-all opacity-50 hover:opacity-100 flex items-center justify-center text-[10px] text-white font-bold shadow-md" title="Panel Kontrol Rahasia">⚙</div>
 
-    <!-- Modal Panel Kontrol Rahasia -->
     <div id="secretModal" class="modal interactive-zone" style="z-index: 10005;">
         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-lg mx-auto text-center border border-slate-200 relative max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4 sticky top-0 bg-white z-10">
@@ -357,7 +361,6 @@
                 </button>
             </div>
 
-            <!-- Status Saklar Global -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center justify-between mb-5">
                 <div class="text-left">
                     <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Saklar Global</span>
@@ -370,7 +373,6 @@
                 </label>
             </div>
 
-            <!-- Pengaturan Rentang Jam Presensi -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5 text-left space-y-3">
                 <span class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Pengaturan Jam Presensi</span>
                 <p class="text-[11px] text-slate-500 mb-2">Tentukan jam mulai & selesai kategori kehadiran otomatis.</p>
@@ -405,7 +407,6 @@
                 </div>
             </div>
 
-            <!-- Hukuman, Hari & Mode Izin Keluar -->
             <div class="bg-indigo-50/60 p-4 rounded-2xl border border-indigo-100 mb-6 text-left space-y-3">
                 <span class="block text-xs font-extrabold text-indigo-900 uppercase tracking-wider mb-1">Pengaturan Hukuman, Hari & Tombol Izin</span>
                 
@@ -424,7 +425,6 @@
                     </div>
                 </div>
 
-                <!-- Mode Tombol Izin Keluar -->
                 <div class="pt-3 border-t border-indigo-200/60 space-y-2">
                     <span class="block text-[11px] font-extrabold text-indigo-900 uppercase tracking-wider">Mode Tombol Izin Keluar (Sinkron Global):</span>
                     <div class="grid grid-cols-2 gap-2">
@@ -434,7 +434,6 @@
                     </div>
                 </div>
 
-                <!-- Hari Aktif Hukuman (Semua Hari Aktif Default) -->
                 <div class="pt-2 border-t border-indigo-200/60 space-y-2">
                     <span class="block text-[11px] font-extrabold text-indigo-900 uppercase tracking-wider">Hari Aktif Hukuman (Senin - Minggu):</span>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -450,7 +449,6 @@
                         <label class="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-100 text-xs font-bold text-slate-700 cursor-pointer">
                             <input type="checkbox" id="cfg-day-4" checked class="rounded text-indigo-600 focus:ring-indigo-500"> Kamis
                         </label>
-                    
                     </div>
                 </div>
 
@@ -465,7 +463,6 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi -->
     <div id="confirmModal" class="modal">
         <div class="bg-white p-6 rounded-2xl shadow-xl w-11/12 max-w-md mx-auto text-center transform transition-all">
             <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
@@ -510,7 +507,7 @@
                     <span id="badge-peringatan-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 07:11 - 08:20 Peringatan</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
                     <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
-                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-fuchsia-600/90 text-white shadow-md">🚪 Izin Keluar</span>
+                    <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-700 text-white shadow-md">❌ Alpa</span>
                 </div>
             </div>
         </div>
@@ -610,7 +607,7 @@
                             </div>
                             <span class="text-[10px] uppercase font-extrabold tracking-widest px-3 py-1 bg-indigo-50/10 border border-indigo-500/30 text-indigo-300 rounded-full">Sistem Otomatis</span>
                         </div>
-                        <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Menganalisis tingkat keterlambatan, ketepatan waktu (ontime), sakit, izin, serta pemeringkatan (ranking) kedisiplinan siswa secara berkala atau custom tanggal.</p>
+                        <p class="text-xs text-indigo-200 leading-relaxed max-w-xl">Menganalisis tingkat keterlambatan, ketepatan waktu (ontime), sakit, izin, alpha, serta pemeringkatan (ranking) kedisiplinan siswa secara berkala atau custom tanggal.</p>
                     </div>
 
                     <div class="mt-6 space-y-3">
@@ -646,8 +643,8 @@
                 <button type="button" class="btn-save w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="simpanData()">
                     <i data-lucide="save"></i> 💾 SIMPAN DATA HARI INI
                 </button>
-                <button type="button" class="btn-pdf-now w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="cetakSesiAktif()">
-                    <i data-lucide="file-down"></i> 📄 UNDUH PDF HARI INI
+                <button type="button" class="btn-pdf-now w-full sm:w-auto flex items-center justify-center gap-2 py-4" onclick="bukaModalRentangHariPDF()">
+                    <i data-lucide="file-down"></i> 📄 UNDUH PDF PERKEMBANGAN HARI
                 </button>
             </div>
 
@@ -680,7 +677,6 @@
         </div>
     </div>
 
-    <!-- Modal Detail Laporan Arsip -->
     <div id="modalDetail" class="modal">
         <div class="modal-content mx-4 my-8">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
@@ -719,7 +715,42 @@
         </div>
     </div>
 
-    <!-- Modal Input Detail Izin Keluar -->
+    <!-- Modal Rentang Hari untuk PDF Perkembangan Harian -->
+    <div id="modalRentangHariPDF" class="modal interactive-zone" style="z-index: 10006;">
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="p-2 bg-rose-100 text-rose-700 rounded-xl"><i data-lucide="calendar-range"></i></span>
+                    <h3 class="text-base font-extrabold text-slate-800">Unduh PDF Perkembangan Harian</h3>
+                </div>
+                <button type="button" onclick="tutupModalRentangHariPDF()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-left mb-6">
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Pilih rentang tanggal untuk merekam perkembangan presensi per hari (Nama hari ditampilkan di kolom tabel lengkap dengan rincian Sakit, Izin, dan Tanpa Keterangan).
+                </p>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">Tanggal Mulai (Dari Hari)</label>
+                    <input type="date" id="pdf-tgl-mulai" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">Tanggal Selesai (Sampai Hari)</label>
+                    <input type="date" id="pdf-tgl-selesai" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white font-medium">
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="button" onclick="tutupModalRentangHariPDF()" class="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all">Batal</button>
+                <button type="button" onclick="prosesUnduhPDFPerkembanganHari()" class="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs transition-all shadow-md flex items-center justify-center gap-1.5">
+                    <i data-lucide="file-down" class="w-4 h-4"></i> Unduh PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="modalIzinKeluar" class="modal interactive-zone" style="z-index: 10005;">
         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl w-11/12 max-w-md mx-auto text-center border border-slate-200 relative">
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
@@ -759,7 +790,6 @@
         </div>
     </div>
 
-    <!-- Modal Dashboard Rekapitulasi -->
     <div id="modalRekap" class="modal">
         <div class="modal-content mx-4 my-8 max-w-5xl flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
@@ -849,9 +879,9 @@
                         <div class="text-[10px] font-bold text-violet-600 uppercase tracking-wide">Izin</div>
                         <div class="text-lg md:text-xl font-extrabold text-violet-900 mt-0.5" id="stat-izin">0</div>
                     </div>
-                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-center shadow-sm">
-                        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Alpa</div>
-                        <div class="text-lg md:text-xl font-extrabold text-slate-900 mt-0.5" id="stat-alpa">0</div>
+                    <div class="bg-rose-50 border border-rose-200 p-3 rounded-2xl text-center shadow-sm">
+                        <div class="text-[10px] font-bold text-rose-600 uppercase tracking-wide">Alpa</div>
+                        <div class="text-lg md:text-xl font-extrabold text-rose-900 mt-0.5" id="stat-alpa">0</div>
                     </div>
                 </div>
 
@@ -868,6 +898,7 @@
                                     <th class="p-3 text-center text-amber-700 font-extrabold">Akumulasi Baris</th>
                                     <th class="p-3 text-center text-sky-600">Sakit (🔵)</th>
                                     <th class="p-3 text-center text-violet-600">Izin (🟣)</th>
+                                    <th class="p-3 text-center text-rose-600">Alpa (❌)</th>
                                     <th class="p-3 text-center">Rasio Kehadiran</th>
                                 </tr>
                             </thead>
@@ -890,6 +921,7 @@
                                     <th class="p-3 text-center text-amber-300">Total Baris Hukuman</th>
                                     <th class="p-3 text-center text-violet-300">Izin (🟣)</th>
                                     <th class="p-3 text-center text-sky-300">Sakit (🔵)</th>
+                                    <th class="p-3 text-center text-rose-300">Alpa (❌)</th>
                                     <th class="p-3 text-center">Rasio Kehadiran</th>
                                 </tr>
                             </thead>
@@ -928,7 +960,6 @@
         let clickTitleCounter = 0;
         let titleClickTimer = null;
 
-        // Default hari aktif: Senin (1) sampai Minggu (0) aktif semua
         let timeConfig = {
             tertibMulai: "06:30",
             tertibSelesai: "07:00",
@@ -939,7 +970,7 @@
             hukumanMulai: "07:00",
             hukumanSelesai: "08:20",
             hukumanMultiplier: 1,
-            izinKeluarMode: "popup", // "popup" or "direct"
+            izinKeluarMode: "popup",
             activeDays: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true }
         };
 
@@ -1004,9 +1035,6 @@
             if (modeIzin === "direct") {
                 const radioDirect = document.getElementById('cfg-izin-direct');
                 if (radioDirect) radioDirect.checked = true;
-            } else {
-                const radioPopup = document.getElementById('cfg-izin-popup');
-                if (radioPopup) radioPopup.checked = true;
             }
 
             if (timeConfig.activeDays) {
@@ -1029,7 +1057,7 @@
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-600/90 text-white shadow-md">🔴 ${timeConfig.peringatanMulai} - ${timeConfig.peringatanSelesai} Peringatan</span>
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-sky-600/90 text-white shadow-md">🔵 Sakit</span>
                 <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-600/90 text-white shadow-md">🟣 Izin</span>
-                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-fuchsia-600/90 text-white shadow-md">🚪 Izin Keluar</span>
+                <span class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-rose-700 text-white shadow-md">❌ Alpa</span>
             `;
         }
 
@@ -1554,7 +1582,10 @@
                                     <button type="button" onclick="event.stopPropagation(); setIzin('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
                                         🟣 Izin
                                     </button>
-                                    <button type="button" onclick="event.stopPropagation(); bukaModalIzinKeluar('${id}', '${kls}', '${n}')" class="px-4 py-2.5 rounded-xl bg-fuchsia-200 hover:bg-fuchsia-300 border border-fuchsia-400 text-fuchsia-900 font-extrabold text-xs tracking-wide transition-all shadow-md flex items-center gap-2">
+                                    <button type="button" onclick="event.stopPropagation(); setAlpa('${id}', '${kls}', '${n}')" class="px-3.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-extrabold text-[10px] tracking-wide transition-all shadow-sm">
+                                        ❌ Alpa
+                                    </button>
+                                    <button type="button" onclick="event.stopPropagation(); bukaModalIzinKeluar('${id}', '${kls}', '${n}')" class="px-4 py-2.5 rounded-xl bg-fuchsia-200 hover:bg-fuchsia-300 border border-fuchsia-400 text-fuchsia-950 font-extrabold text-xs tracking-wide transition-all shadow-md flex items-center gap-2">
                                         🚪 Izin Keluar
                                     </button>
                                     <button type="button" onclick="event.stopPropagation(); resetAbsen('${id}', '${kls}', '${n}')" class="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-200 border border-slate-200 text-slate-500 font-extrabold text-[10px] transition-all shadow-sm flex items-center justify-center" title="Batal">
@@ -1599,7 +1630,7 @@
 
         function saveCurrentSelections() {
             temporarySelections = {};
-            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin, .student-row.status-izin-keluar');
+            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin, .student-row.status-alpa, .student-row.status-izin-keluar');
             activeRows.forEach(row => {
                 const id = row.getAttribute('id');
                 const timeText = row.querySelector('.waktu-text').innerText;
@@ -1609,6 +1640,7 @@
                 else if (row.classList.contains('status-merah')) statusClass = 'status-merah';
                 else if (row.classList.contains('status-sakit')) statusClass = 'status-sakit';
                 else if (row.classList.contains('status-izin')) statusClass = 'status-izin';
+                else if (row.classList.contains('status-alpa')) statusClass = 'status-alpa';
                 else if (row.classList.contains('status-izin-keluar')) statusClass = 'status-izin-keluar';
                 
                 temporarySelections[id] = { statusClass, timeText };
@@ -1647,6 +1679,7 @@
                     const chk = row.querySelector('.check-icon');
                     if (value.statusClass === 'status-sakit') chk.innerText = 'S';
                     else if (value.statusClass === 'status-izin') chk.innerText = 'I';
+                    else if (value.statusClass === 'status-alpa') chk.innerText = 'A';
                     else chk.innerText = '✔';
                 }
             }
@@ -1757,6 +1790,7 @@
             else if (row.classList.contains('status-merah')) originalClass = "student-row status-merah";
             else if (row.classList.contains('status-sakit')) originalClass = "student-row status-sakit";
             else if (row.classList.contains('status-izin')) originalClass = "student-row status-izin";
+            else if (row.classList.contains('status-alpa')) originalClass = "student-row status-alpa";
 
             const originalTimeText = txtWaktu.innerText;
 
@@ -1815,6 +1849,7 @@
                 const chk = row.querySelector('.check-icon');
                 if (infoKeluar.originalClass.includes('status-sakit')) chk.innerText = 'S';
                 else if (infoKeluar.originalClass.includes('status-izin')) chk.innerText = 'I';
+                else if (infoKeluar.originalClass.includes('status-alpa')) chk.innerText = 'A';
                 else chk.innerText = '✔';
 
                 const inputKet = document.getElementById(`ket-${id}`);
@@ -2039,7 +2074,7 @@
             const jam = now.getHours();
             const fontMenit = now.getMinutes();
 
-            if (row.classList.contains('status-sakit') || row.classList.contains('status-izin') || row.classList.contains('status-izin-keluar')) {
+            if (row.classList.contains('status-sakit') || row.classList.contains('status-izin') || row.classList.contains('status-alpa') || row.classList.contains('status-izin-keluar')) {
                 resetAbsen(id, kls, nama);
                 return;
             }
@@ -2078,10 +2113,15 @@
                             diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
                         }
 
-                        const totalBarisHukuman = diffMinutes * multiplier;
-                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
-                        
+                        let totalBarisHukuman = diffMinutes * multiplier;
                         const inputKet = document.getElementById(`ket-${id}`);
+                        const currentKetVal = inputKet ? inputKet.value.trim() : "";
+                        if (!currentKetVal) {
+                            totalBarisHukuman += 80;
+                        }
+
+                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
+                        
                         if (inputKet) {
                             inputKet.value = infoHukuman;
                             temporaryKeterangan[id] = infoHukuman;
@@ -2108,10 +2148,15 @@
                             diffMinutes = Math.max(1, totalMenit - hukumanMulaiMin);
                         }
 
-                        const totalBarisHukuman = diffMinutes * multiplier;
-                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
-
+                        let totalBarisHukuman = diffMinutes * multiplier;
                         const inputKet = document.getElementById(`ket-${id}`);
+                        const currentKetVal = inputKet ? inputKet.value.trim() : "";
+                        if (!currentKetVal) {
+                            totalBarisHukuman += 80;
+                        }
+
+                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
+
                         if (inputKet) {
                             inputKet.value = infoHukuman;
                             temporaryKeterangan[id] = infoHukuman;
@@ -2144,10 +2189,15 @@
                         diffMinutes = 1;
                     }
 
-                    const totalBarisHukuman = diffMinutes * multiplier;
-                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
-                    
+                    let totalBarisHukuman = diffMinutes * multiplier;
                     const inputKet = document.getElementById(`ket-${id}`);
+                    const currentKetVal = inputKet ? inputKet.value.trim() : "";
+                    if (!currentKetVal) {
+                        totalBarisHukuman += 80;
+                    }
+
+                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
+                    
                     if (inputKet) {
                         inputKet.value = infoHukuman;
                         temporaryKeterangan[id] = infoHukuman;
@@ -2172,10 +2222,15 @@
                         diffMinutes = 1;
                     }
 
-                    const totalBarisHukuman = diffMinutes * multiplier;
-                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
-
+                    let totalBarisHukuman = diffMinutes * multiplier;
                     const inputKet = document.getElementById(`ket-${id}`);
+                    const currentKetVal = inputKet ? inputKet.value.trim() : "";
+                    if (!currentKetVal) {
+                        totalBarisHukuman += 80;
+                    }
+
+                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
+
                     if (inputKet) {
                         inputKet.value = infoHukuman;
                         temporaryKeterangan[id] = infoHukuman;
@@ -2261,6 +2316,39 @@
             broadcastActiveSelections();
         }
 
+        function setAlpa(id, kls, nama) {
+            if (isAppDisabled) return;
+            const row = document.getElementById(id);
+            const txtWaktu = row.querySelector('.waktu-text');
+            const chk = row.querySelector('.check-icon');
+            const badgeContainer = document.getElementById(`badge-container-${id}`);
+            const badgeKeluar = document.getElementById(`badge-keluar-${id}`);
+            if (badgeContainer) badgeContainer.innerHTML = "";
+            if (badgeKeluar) badgeKeluar.innerHTML = "";
+            delete temporaryIzinKeluar[id];
+            
+            const now = new Date();
+            const h = now.toLocaleDateString('id-ID', { weekday: 'short' });
+            const t = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+            const j = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+            
+            row.className = "student-row status-alpa";
+            txtWaktu.innerText = `${h}, ${t} - ${j}`;
+            chk.innerText = 'A';
+
+            const inputKet = document.getElementById(`ket-${id}`);
+            if (inputKet) {
+                inputKet.value = "Alpha / Tanpa Keterangan (+80 Baris)";
+                temporaryKeterangan[id] = "Alpha / Tanpa Keterangan (+80 Baris)";
+            }
+            if (badgeContainer) {
+                badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">❌ Alpha • 80 Baris Hukuman</div>`;
+            }
+            
+            showToast(`${nama} ditandai ALPA ❌ (+80 Baris)`, "error");
+            broadcastActiveSelections();
+        }
+
         function resetAbsen(id, kls, nama) {
             if (isAppDisabled) return;
             const row = document.getElementById(id);
@@ -2304,18 +2392,29 @@
                     color = "#0284c7"; statusText = "SAKIT"; bgColor = "#e0f2fe"; isHadir = true;
                 } else if(r.classList.contains('status-izin')) { 
                     color = "#6d28d9"; statusText = "IZIN"; bgColor = "#ede9fe"; isHadir = true;
+                } else if(r.classList.contains('status-alpa')) { 
+                    color = "#e11d48"; statusText = "ALPA"; bgColor = "#ffe4e6"; isHadir = true;
                 } else if(r.classList.contains('status-izin-keluar')) { 
                     color = "#c026d3"; statusText = "IZIN KELUAR"; bgColor = "#fae8ff"; isHadir = true;
                 }
 
                 const id = r.getAttribute('id');
                 const ketInput = document.getElementById(`ket-${id}`);
-                const keteranganSiswa = ketInput ? ketInput.value.trim() : (temporaryKeterangan[id] || "");
+                let keteranganSiswa = ketInput ? ketInput.value.trim() : (temporaryKeterangan[id] || "");
 
                 let jumlahBarisHukumanVal = "-";
                 const matchBaris = keteranganSiswa.match(/(\d+)\s*Baris/);
                 if (matchBaris) {
                     jumlahBarisHukumanVal = `${matchBaris[1]} Baris`;
+                } else if (!isHadir) {
+                    jumlahBarisHukumanVal = "80 Baris";
+                    statusText = "TANPA KETERANGAN / ALPA";
+                    keteranganSiswa = "Alpha / Tanpa Keterangan (+80 Baris)";
+                } else if (isHadir && (statusText === "TERLAMBAT" || statusText === "PERINGATAN") && (!keteranganSiswa || !keteranganSiswa.includes("Baris"))) {
+                    jumlahBarisHukumanVal = "80 Baris";
+                    keteranganSiswa = (keteranganSiswa ? keteranganSiswa + " • " : "") + "Tanpa Keterangan (+80 Baris)";
+                } else if (r.classList.contains('status-alpa')) {
+                    jumlahBarisHukumanVal = "80 Baris";
                 }
 
                 return {
@@ -2331,10 +2430,11 @@
                 };
             });
 
-            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin, .student-row.status-izin-keluar');
+            const activeRows = document.querySelectorAll('.student-row.status-hijau, .student-row.status-kuning, .student-row.status-merah, .student-row.status-sakit, .student-row.status-izin, .student-row.status-alpa, .student-row.status-izin-keluar');
             return {
                 id: Date.now(),
                 waktuSimpan: new Date().toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+                timestamp: Date.now(),
                 totalSiswa: allRows.length,
                 totalHadir: activeRows.length,
                 data: dataPayload
@@ -2457,15 +2557,190 @@
             doc.save(`Presensi_${payload.waktuSimpan.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
         }
 
-        function cetakSesiAktif() {
+        function bukaModalRentangHariPDF() {
             if (isAppDisabled) return;
-            const payload = dapatkanPayloadSesiAktif();
-            if (payload.totalHadir === 0) {
-                showToast("Isi presensi minimal satu siswa sebelum mengunduh PDF!", "warning");
+            const now = new Date();
+            const defaultStart = new Date(now.getTime() - (4 * 24 * 60 * 60 * 1000));
+            
+            document.getElementById('pdf-tgl-mulai').value = defaultStart.toISOString().split('T')[0];
+            document.getElementById('pdf-tgl-selesai').value = now.toISOString().split('T')[0];
+            document.getElementById('modalRentangHariPDF').style.display = 'flex';
+        }
+
+        function tutupModalRentangHariPDF() {
+            document.getElementById('modalRentangHariPDF').style.display = 'none';
+        }
+
+        function prosesUnduhPDFPerkembanganHari() {
+            if (isAppDisabled) return;
+            const startVal = document.getElementById('pdf-tgl-mulai').value;
+            const endVal = document.getElementById('pdf-tgl-selesai').value;
+
+            if (!startVal || !endVal) {
+                showToast("Pilih tanggal mulai dan selesai dengan lengkap!", "error");
                 return;
             }
-            cetak(payload, 'p');
-            showToast("Mengunduh laporan PDF...", "success");
+            if (new Date(startVal) > new Date(endVal)) {
+                showToast("Tanggal mulai tidak boleh melebihi tanggal selesai!", "warning");
+                return;
+            }
+
+            tutupModalRentangHariPDF();
+            cetakPDFPerkembanganHari(startVal, endVal);
+        }
+
+        function cetakPDFPerkembanganHari(startDateStr, endDateStr) {
+            const localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            const startMs = new Date(startDateStr + "T00:00:00").getTime();
+            const endMs = new Date(endDateStr + "T23:59:59").getTime();
+
+            const sesiFiltered = localDb.filter(s => {
+                const sTime = s.timestamp || s.id;
+                return sTime >= startMs && sTime <= endMs;
+            });
+
+            let dataPerHari = {};
+            let curr = new Date(startDateStr);
+            let lastDate = new Date(endDateStr);
+            while (curr <= lastDate) {
+                const dateKey = curr.toISOString().split('T')[0];
+                const namaHariIndo = curr.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
+                const namaHariOnly = curr.toLocaleDateString('id-ID', { weekday: 'long' }); 
+                
+                dataPerHari[dateKey] = {
+                    labelHari: namaHariIndo,
+                    namaHariOnly: namaHariOnly,
+                    dateStr: dateKey,
+                    records: []
+                };
+                curr.setDate(curr.getDate() + 1);
+            }
+
+            let masterSemuaSiswa = [];
+            Object.entries(dataSiswa).forEach(([kls, listNama]) => {
+                listNama.forEach(nama => {
+                    masterSemuaSiswa.push({ nama, kelas: kls });
+                });
+            });
+
+            sesiFiltered.forEach(s => {
+                const sDate = new Date(s.timestamp || s.id).toISOString().split('T')[0];
+                if (dataPerHari[sDate]) {
+                    dataPerHari[sDate].records.push(s);
+                }
+            });
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("SMP HAMALATUL QURAN RINGINAGUNG", doc.internal.pageSize.getWidth() / 2, 14, { align: "center" });
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("LAPORAN PERKEMBANGAN PRESENSI (SAKIT, IZIN, TANPA KETERANGAN & BARIS)", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+            doc.text(`Rentang Tanggal: ${startDateStr} s/d ${endDateStr}`, doc.internal.pageSize.getWidth() / 2, 25, { align: "center" });
+
+            let currentY = 32;
+
+            Object.values(dataPerHari).forEach(hariObj => {
+                let totalBarisHariIni = 0;
+                let countSakit = 0;
+                let countIzin = 0;
+                let countTanpaKeterangan = 0;
+                let detailSiswaHariIni = [];
+
+                let mapSiswaDicatat = new Map();
+                if (hariObj.records.length > 0) {
+                    hariObj.records.forEach(rec => {
+                        rec.data.forEach(d => {
+                            mapSiswaDicatat.set(d.nama, d);
+                        });
+                    });
+                }
+
+                masterSemuaSiswa.forEach(ms => {
+                    let recordSiswa = mapSiswaDicatat.get(ms.nama);
+                    if (!recordSiswa) {
+                        recordSiswa = {
+                            nama: ms.nama,
+                            kelas: ms.kelas,
+                            status: "TANPA KETERANGAN / ALPA",
+                            keterangan: "Tanpa Keterangan",
+                            jumlahBaris: "80 Baris",
+                            hadir: false
+                        };
+                    }
+
+                    let statusLabel = recordSiswa.status;
+                    let jmlBarisNum = 0;
+
+                    if (recordSiswa.status.includes("SAKIT")) {
+                        countSakit++;
+                        statusLabel = "Sakit (🔵)";
+                    } else if (recordSiswa.status.includes("IZIN")) {
+                        countIzin++;
+                        statusLabel = "Izin (🟣)";
+                    } else if (recordSiswa.status.includes("ALPA")) {
+                        countTanpaKeterangan++;
+                        jmlBarisNum = 80;
+                        totalBarisHariIni += 80;
+                        statusLabel = "Alpa (❌)";
+                    } else if (recordSiswa.status.includes("AMAN")) {
+                        statusLabel = "Ontime (🟢)";
+                    } else if (recordSiswa.status.includes("TERLAMBAT") || recordSiswa.status.includes("PERINGATAN")) {
+                        const matchB = recordSiswa.jumlahBaris ? recordSiswa.jumlahBaris.match(/(\d+)/) : null;
+                        jmlBarisNum = matchB ? parseInt(matchB[1], 10) : 80;
+                        totalBarisHariIni += jmlBarisNum;
+                        statusLabel = recordSiswa.status;
+                    } else {
+                        countTanpaKeterangan++;
+                        jmlBarisNum = 80;
+                        totalBarisHariIni += 80;
+                        statusLabel = "Tanpa Keterangan / Alpa (+80 Baris)";
+                    }
+
+                    detailSiswaHariIni.push([
+                        detailSiswaHariIni.length + 1,
+                        recordSiswa.nama,
+                        recordSiswa.kelas,
+                        hariObj.namaHariOnly,
+                        statusLabel,
+                        recordSiswa.jumlahBaris && recordSiswa.jumlahBaris !== "-" ? recordSiswa.jumlahBaris : (jmlBarisNum > 0 ? `${jmlBarisNum} Baris` : "-")
+                    ]);
+                });
+
+                if (currentY > 240) {
+                    doc.addPage();
+                    currentY = 20;
+                }
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.setTextColor(15, 23, 42);
+                doc.text(`📅 Hari / Tanggal: ${hariObj.labelHari} (${hariObj.dateStr})`, 14, currentY);
+                currentY += 5;
+
+                doc.autoTable({
+                    startY: currentY,
+                    head: [['No', 'Nama Siswa', 'Kelas', 'Hari', 'Status Kehadiran', 'Jumlah Baris']],
+                    body: detailSiswaHariIni,
+                    theme: 'grid',
+                    styles: { fontSize: 7.5, cellPadding: 2 },
+                    headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontStyle: 'bold' }
+                });
+
+                currentY = doc.lastAutoTable.finalY + 4;
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(8.5);
+                doc.setTextColor(180, 83, 9);
+                doc.text(`> Ringkasan: Sakit: ${countSakit} | Izin: ${countIzin} | Tanpa Keterangan / Alpa: ${countTanpaKeterangan} | Akumulasi Baris Hukuman: ${totalBarisHariIni} Baris`, 14, currentY);
+                currentY += 10;
+            });
+
+            doc.save(`Perkembangan_Lengkap_Sakit_Izin_Alpa_${startDateStr}_sd_${endDateStr}.pdf`);
+            showToast("PDF Perkembangan Lengkap berhasil diunduh!", "success");
         }
 
         function renderHistori() {
@@ -2583,12 +2858,12 @@
                 const startMs = new Date(customStart + "T00:00:00").getTime();
                 const endMs = new Date(customEnd + "T23:59:59").getTime();
 
-                sesiValid = localDb.filter(s => s.id >= startMs && s.id <= endMs);
+                sesiValid = localDb.filter(s => (s.timestamp || s.id) >= startMs && (s.timestamp || s.id) <= endMs);
                 textPeriode = `Rentang Custom (${customStart} s/d ${customEnd})`;
             } else {
                 const hariMundur = parseInt(opsiPeriode, 10) || 7;
                 const cutoffDate = Date.now() - (hariMundur * 24 * 60 * 60 * 1000);
-                sesiValid = localDb.filter(s => s.id >= cutoffDate);
+                sesiValid = localDb.filter(s => (s.timestamp || s.id) >= cutoffDate);
                 textPeriode = hariMundur === 7 ? "1 Minggu Terakhir" : `${hariMundur} Hari Terakhir`;
             }
             
@@ -2687,6 +2962,7 @@
                     } else {
                         profile.alpa++;
                         akumulasiAlpa++;
+                        profile.totalBarisHukuman += 80;
                     }
                 });
             });
@@ -2878,7 +3154,7 @@
             if (!tbody) return;
             
             if (listSiswa.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center text-slate-400 italic">Tidak ada nama siswa yang cocok dengan filter</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-400 italic">Tidak ada nama siswa yang cocok dengan filter</td></tr>`;
                 return;
             }
 
@@ -2893,6 +3169,7 @@
                 const cellPeringatan = s.peringatan > 0 ? `<span class="bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.peringatan}</span>` : `<span class="text-slate-300">-</span>`;
                 const cellSakit = s.sakit > 0 ? `<span class="bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.sakit}</span>` : `<span class="text-slate-300">-</span>`;
                 const cellIzin = s.izin > 0 ? `<span class="bg-violet-50 text-violet-700 border border-violet-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.izin}</span>` : `<span class="text-slate-300">-</span>`;
+                const cellAlpa = s.alpa > 0 ? `<span class="bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-1 rounded-full font-bold text-[11px] inline-block min-w-[28px]">${s.alpa}</span>` : `<span class="text-slate-300">-</span>`;
                 const cellBarisHukuman = s.totalBarisHukuman > 0 ? `<span class="bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1 rounded-full font-extrabold text-xs inline-block">${s.totalBarisHukuman} Baris</span>` : `<span class="text-slate-300">-</span>`;
 
                 return `
@@ -2905,6 +3182,7 @@
                         <td class="p-3 text-center">${cellBarisHukuman}</td>
                         <td class="p-3 text-center">${cellSakit}</td>
                         <td class="p-3 text-center">${cellIzin}</td>
+                        <td class="p-3 text-center">${cellAlpa}</td>
                         <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[11px] ${badgeColor}">${s.rasioHadir}%</span></td>
                     </tr>`;
             }).join('');
@@ -2915,14 +3193,15 @@
             if (!tbody) return;
 
             if (listSiswa.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-400 italic">Tidak ada nama santri untuk diklasifikasikan</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="11" class="p-6 text-center text-slate-400 italic">Tidak ada nama santri untuk diklasifikasikan</td></tr>`;
                 return;
             }
 
             const rankedList = [...listSiswa].sort((a, b) => {
+                if (a.totalBarisHukuman !== b.totalBarisHukuman) {
+                    return a.totalBarisHukuman - b.totalBarisHukuman; 
+                }
                 if (b.aman !== a.aman) return b.aman - a.aman;
-                if (b.poinDisiplin !== a.poinDisiplin) return b.poinDisiplin - a.poinDisiplin;
-                if (a.totalBarisHukuman !== b.totalBarisHukuman) return a.totalBarisHukuman - b.totalBarisHukuman;
                 return b.rasioHadir - a.rasioHadir;
             });
 
@@ -2960,6 +3239,7 @@
                         <td class="p-3 text-center">${cellBarisHukuman}</td>
                         <td class="p-3 text-center font-bold text-violet-600">${s.izin}</td>
                         <td class="p-3 text-center font-bold text-sky-600">${s.sakit}</td>
+                        <td class="p-3 text-center font-bold text-rose-600">${s.alpa}</td>
                         <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[11px] ${badgeColor}">${s.rasioHadir}%</span></td>
                     </tr>`;
             }).join('');
@@ -3000,8 +3280,10 @@
 
             if (isRankingMode) {
                 listTarget.sort((a, b) => {
-                    if (b.aman !== a.aman) return b.aman - a.aman;
-                    if (b.poinDisiplin !== a.poinDisiplin) return b.poinDisiplin - a.poinDisiplin;
+                    if (a.totalBarisHukuman !== b.totalBarisHukuman) {
+                        return a.totalBarisHukuman - b.totalBarisHukuman; 
+                    }
+                    if (a.aman !== b.aman) return b.aman - a.aman;
                     return b.rasioHadir - a.rasioHadir;
                 });
 
@@ -3015,13 +3297,14 @@
                     `${s.totalBarisHukuman} Baris`,
                     s.izin,
                     s.sakit,
+                    s.alpa,
                     s.peringatan,
                     `${s.rasioHadir}%`
                 ]);
 
                 doc.autoTable({
                     startY: 30,
-                    head: [['Rank', 'Nama Santri', 'Kelas', 'Skor', 'Ontime', 'Lambat', 'Total Baris', 'Izin', 'Sakit', 'Peringatan', 'Rasio']],
+                    head: [['Rank', 'Nama Santri', 'Kelas', 'Skor', 'Ontime', 'Lambat', 'Total Baris', 'Izin', 'Sakit', 'Alpa', 'Peringatan', 'Rasio']],
                     body: tableData,
                     theme: 'grid',
                     styles: { fontSize: 8, cellPadding: 2.5 },
@@ -3039,13 +3322,14 @@
                     s.peringatan,
                     s.sakit,
                     s.izin,
+                    s.alpa,
                     `${s.totalBarisHukuman} Baris`,
                     `${s.rasioHadir}%`
                 ]);
 
                 doc.autoTable({
                     startY: 30,
-                    head: [['No', 'Nama Santri / Siswa', 'Kelas', 'Ontime (🟢)', 'Lambat (🟡)', 'Peringatan (🔴)', 'Sakit (🔵)', 'Izin (🟣)', 'Akumulasi Baris', 'Rasio']],
+                    head: [['No', 'Nama Santri / Siswa', 'Kelas', 'Ontime (🟢)', 'Lambat (🟡)', 'Peringatan (🔴)', 'Sakit (🔵)', 'Izin (🟣)', 'Alpa (❌)', 'Akumulasi Baris', 'Rasio']],
                     body: tableData,
                     theme: 'grid',
                     styles: { fontSize: 8, cellPadding: 2.5 },
