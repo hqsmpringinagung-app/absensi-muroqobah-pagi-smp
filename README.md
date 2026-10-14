@@ -716,6 +716,7 @@
                             <th class="p-4">Kelas</th>
                             <th class="p-4">Waktu & Tanggal</th>
                             <th class="p-4">Status & Keterangan</th>
+                            <th class="p-4">Jumlah Baris</th>
                         </tr>
                     </thead>
                     <tbody id="bodiModal"></tbody>
@@ -1561,7 +1562,7 @@
                 } else if (row.classList.contains('status-merah')) {
                     totalHadirCount++;
                     totalPeringatanCount++;
-                } else if (row.classList.contains('status-sakit') || row.classList.contains('status-izin') || row.classList.contains('status-izin-keluar')) {
+                } else if (row.classList.contains('status-sakit') || row.classList.contains('status-izin') || row.classList.contains('status-alpa') || row.classList.contains('status-izin-keluar')) {
                     totalHadirCount++;
                 }
             });
@@ -1649,8 +1650,8 @@
                                 </div>
 
                                 <div class="mt-1 flex items-center gap-2" onclick="event.stopPropagation()">
-                                    <input type="text" id="ket-${id}" oninput="simpanKeteranganSiswa('${id}')" placeholder="Keterangan (misal: Sakit demam, Izin ada acara, dll)..." class="flex-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white/80 text-slate-700 font-medium placeholder-slate-400">
-                                    <button type="button" onclick="kunciKeteranganSiswa('${id}')" id="btn-ok-${id}" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm">OK</button>
+                                    <input type="text" id="ket-${id}" oninput="simpanKeteranganSiswa('${id}')" placeholder="Keterangan (aman, terlambat, peringatan, sakit)..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white/80 text-slate-700 font-medium placeholder-slate-400">
+                                    <button type="button" onclick="simpanKeteranganOK('${id}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all shadow-sm whitespace-nowrap">OK</button>
                                 </div>
                             </td>
                             <td style="text-align:right" class="w-1/3">
@@ -1707,28 +1708,15 @@
             }
         }
 
-        function kunciKeteranganSiswa(id) {
+        function simpanKeteranganOK(id) {
             if (isAppDisabled) return;
             const inputEl = document.getElementById(`ket-${id}`);
-            const btnOk = document.getElementById(`btn-ok-${id}`);
-            if (!inputEl) return;
-
-            if (inputEl.disabled) {
-                inputEl.disabled = false;
-                inputEl.classList.remove('bg-slate-100', 'text-slate-500');
-                inputEl.classList.add('bg-white/80', 'text-slate-700');
-                btnOk.innerText = "OK";
-                btnOk.className = "px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm";
-                showToast("Keterangan dibuka untuk diedit.", "success");
-            } else {
-                inputEl.disabled = true;
-                inputEl.classList.remove('bg-white/80', 'text-slate-700');
-                inputEl.classList.add('bg-slate-100', 'text-slate-500');
-                btnOk.innerText = "Edit";
-                btnOk.className = "px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm";
-                showToast("Keterangan disimpan dan dikunci.", "success");
+            if (inputEl) {
+                const val = inputEl.value.trim();
+                temporaryKeterangan[id] = val;
+                showToast("Keterangan berhasil disimpan (OK)!", "success");
+                broadcastActiveSelections();
             }
-            simpanKeteranganSiswa(id);
         }
 
         function saveCurrentSelections() {
@@ -2427,14 +2415,14 @@
 
             const inputKet = document.getElementById(`ket-${id}`);
             if (inputKet) {
-                inputKet.value = "Tanpa Keterangan (+80 Baris)";
-                temporaryKeterangan[id] = "Tanpa Keterangan (+80 Baris)";
+                inputKet.value = "Alpha / Tanpa Keterangan (+80 Baris)";
+                temporaryKeterangan[id] = "Alpha / Tanpa Keterangan (+80 Baris)";
             }
             if (badgeContainer) {
-                badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">❌ Tanpa Keterangan • 80 Baris Hukuman</div>`;
+                badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">❌ Alpha • 80 Baris Hukuman</div>`;
             }
             
-            showToast(`${nama} ditandai TANPA KETERANGAN ❌ (+80 Baris)`, "error");
+            showToast(`${nama} ditandai ALPA ❌ (+80 Baris)`, "error");
             broadcastActiveSelections();
             updateTopCounters();
         }
@@ -2484,7 +2472,7 @@
                 } else if(r.classList.contains('status-izin')) { 
                     color = "#6d28d9"; statusText = "IZIN"; bgColor = "#ede9fe"; isHadir = true;
                 } else if(r.classList.contains('status-alpa')) { 
-                    color = "#e11d48"; statusText = "TANPA KETERANGAN"; bgColor = "#ffe4e6"; isHadir = false;
+                    color = "#e11d48"; statusText = "ALPA"; bgColor = "#ffe4e6"; isHadir = true;
                 } else if(r.classList.contains('status-izin-keluar')) { 
                     color = "#c026d3"; statusText = "IZIN KELUAR"; bgColor = "#fae8ff"; isHadir = true;
                 }
@@ -2497,10 +2485,10 @@
                 const matchBaris = keteranganSiswa.match(/(\d+)\s*Baris/);
                 if (matchBaris) {
                     jumlahBarisHukumanVal = `${matchBaris[1]} Baris`;
-                } else if (!isHadir && !r.classList.contains('status-sakit') && !r.classList.contains('status-izin')) {
+                } else if (!isHadir) {
                     jumlahBarisHukumanVal = "80 Baris";
-                    statusText = "TANPA KETERANGAN";
-                    keteranganSiswa = keteranganSiswa || "Tanpa Keterangan (+80 Baris)";
+                    statusText = "TANPA KETERANGAN / ALPA";
+                    keteranganSiswa = "Alpha / Tanpa Keterangan (+80 Baris)";
                 } else if (r.classList.contains('status-alpa')) {
                     jumlahBarisHukumanVal = "80 Baris";
                 }
@@ -2754,7 +2742,7 @@
                         recordSiswa = {
                             nama: ms.nama,
                             kelas: ms.kelas,
-                            status: "TANPA KETERANGAN",
+                            status: "TANPA KETERANGAN / ALPA",
                             keterangan: "Tanpa Keterangan",
                             jumlahBaris: "80 Baris",
                             hadir: false
@@ -2770,6 +2758,11 @@
                     } else if (recordSiswa.status.includes("IZIN")) {
                         countIzin++;
                         statusLabel = "Izin (🟣)";
+                    } else if (recordSiswa.status.includes("ALPA")) {
+                        countTanpaKeterangan++;
+                        jmlBarisNum = 80;
+                        totalBarisHariIni += 80;
+                        statusLabel = "Alpa (❌)";
                     } else if (recordSiswa.status.includes("AMAN")) {
                         statusLabel = "Ontime (🟢)";
                     } else if (recordSiswa.status.includes("TERLAMBAT") || recordSiswa.status.includes("PERINGATAN")) {
@@ -2781,7 +2774,7 @@
                         countTanpaKeterangan++;
                         jmlBarisNum = 80;
                         totalBarisHariIni += 80;
-                        statusLabel = "Tanpa Keterangan (+80 Baris)";
+                        statusLabel = "Tanpa Keterangan / Alpa (+80 Baris)";
                     }
 
                     detailSiswaHariIni.push([
@@ -2819,11 +2812,11 @@
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(8.5);
                 doc.setTextColor(180, 83, 9);
-                doc.text(`> Ringkasan: Sakit: ${countSakit} | Izin: ${countIzin} | Tanpa Keterangan: ${countTanpaKeterangan} | Akumulasi Baris Hukuman: ${totalBarisHariIni} Baris`, 14, currentY);
+                doc.text(`> Ringkasan: Sakit: ${countSakit} | Izin: ${countIzin} | Tanpa Keterangan / Alpa: ${countTanpaKeterangan} | Akumulasi Baris Hukuman: ${totalBarisHariIni} Baris`, 14, currentY);
                 currentY += 10;
             });
 
-            doc.save(`Perkembangan_Lengkap_Sakit_Izin_TanpaKeterangan_${startDateStr}_sd_${endDateStr}.pdf`);
+            doc.save(`Perkembangan_Lengkap_Sakit_Izin_Alpa_${startDateStr}_sd_${endDateStr}.pdf`);
             showToast("PDF Perkembangan Lengkap berhasil diunduh!", "success");
         }
 
@@ -2854,23 +2847,7 @@
             const s = localDb.find(x => x.id === id);
             document.getElementById('judulModal').innerText = "Arsip: " + s.waktuSimpan;
             
-            const dataTerurut = [
-                ...s.data.filter(d => d.hadir),
-                ...s.data.filter(d => !d.hadir)
-            ];
-
-            document.getElementById('bodiModal').innerHTML = dataTerurut.map((d, i) => `
-                <tr style="background-color:${d.bgHex}; border-bottom:1px solid #e2e8f0;" class="text-xs md:text-sm">
-                    <td style="padding:14px; color:#475569; font-weight:600;">${i+1}</td>
-                    <td style="padding:14px; color:var(--primary); font-weight:700;">${d.nama}</td>
-                    <td style="padding:14px; color:#475569; font-weight:600;">${d.kelas}</td>
-                    <td style="padding:14px; color:#64748b; font-weight:600;">${d.waktu}</td>
-                    <td style="padding:14px; font-weight:800; letter-spacing:0.5px;">
-                        <span style="color:${d.hexColor};">${d.status}</span>
-                        ${d.keterangan ? '<div class="text-[11px] font-medium text-slate-600 mt-0.5">Ket: ' + d.keterangan + '</div>' : ''}
-                    </td>
-                    <td style="padding:14px; font-weight:800; color:#b45309;">${d.jumlahBaris || "-"}</td>
-                </tr>`).join('');
+            renderBodiModalArsip(s);
 
             const modalTableHead = document.querySelector('#modalDetail table thead tr');
             if (modalTableHead && modalTableHead.children.length === 5) {
@@ -2887,6 +2864,78 @@
             document.getElementById('btnPdfP').onclick = () => cetak(s, 'p');
             document.getElementById('btnPdfL').onclick = () => cetak(s, 'l');
             document.getElementById('modalDetail').style.display = 'flex';
+        }
+
+        function renderBodiModalArsip(s) {
+            const dataTerurut = [
+                ...s.data.filter(d => d.hadir),
+                ...s.data.filter(d => !d.hadir)
+            ];
+
+            document.getElementById('bodiModal').innerHTML = dataTerurut.map((d, i) => `
+                <tr style="background-color:${d.bgHex}; border-bottom:1px solid #e2e8f0;" class="text-xs md:text-sm">
+                    <td style="padding:14px; color:#475569; font-weight:600;">${i+1}</td>
+                    <td style="padding:14px; color:var(--primary); font-weight:700;">${d.nama}</td>
+                    <td style="padding:14px; color:#475569; font-weight:600;">${d.kelas}</td>
+                    <td style="padding:14px; color:#64748b; font-weight:600;">${d.waktu}</td>
+                    <td style="padding:14px; font-weight:800; letter-spacing:0.5px;">
+                        <span style="color:${d.hexColor};">${d.status}</span>
+                        ${d.keterangan ? '<div class="text-[11px] font-medium text-slate-600 mt-0.5">Ket: ' + d.keterangan + '</div>' : ''}
+                    </td>
+                    <td style="padding:14px; font-weight:800; color:#b45309;">
+                        <div class="flex items-center gap-2">
+                            <span id="arsip-baris-text-${i}">${d.jumlahBaris || "-"}</span>
+                            <input type="text" id="arsip-baris-input-${i}" value="${d.jumlahBaris || "-"}" class="hidden px-2 py-1 text-xs rounded border border-slate-300 bg-white font-bold w-24">
+                            <button type="button" id="arsip-btn-edit-${i}" onclick="mulaiEditBarisArsip(${s.id}, ${i})" class="text-indigo-600 hover:text-indigo-800 text-[10px] font-extrabold bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded transition-all">✏️ Edit</button>
+                            <button type="button" id="arsip-btn-save-${i}" onclick="simpanBarisArsip(${s.id}, ${i})" class="hidden text-emerald-700 hover:text-emerald-950 text-[10px] font-extrabold bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded transition-all">💾 Simpan</button>
+                        </div>
+                    </td>
+                </tr>`).join('');
+        }
+
+        function mulaiEditBarisArsip(idArsip, index) {
+            document.getElementById(`arsip-baris-text-${index}`).classList.add('hidden');
+            document.getElementById(`arsip-baris-input-${index}`).classList.remove('hidden');
+            document.getElementById(`arsip-btn-edit-${index}`).classList.add('hidden');
+            document.getElementById(`arsip-btn-save-${index}`).classList.remove('hidden');
+            document.getElementById(`arsip-baris-input-${index}`).focus();
+        }
+
+        async function simpanBarisArsip(idArsip, index) {
+            const inputVal = document.getElementById(`arsip-baris-input-${index}`).value.trim();
+            if (!inputVal) {
+                showToast("Jumlah baris tidak boleh kosong!", "error");
+                return;
+            }
+
+            let localDb = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+            const s = localDb.find(x => x.id === idArsip);
+            if (!s) return;
+
+            const dataTerurut = [
+                ...s.data.filter(d => d.hadir),
+                ...s.data.filter(d => !d.hadir)
+            ];
+
+            const targetItem = dataTerurut[index];
+            const originalIndexInRaw = s.data.findIndex(d => d === targetItem || (d.nama === targetItem.nama && d.kelas === targetItem.kelas));
+            if (originalIndexInRaw !== -1) {
+                s.data[originalIndexInRaw].jumlahBaris = inputVal;
+            }
+
+            localStorage.setItem(DB_KEY, JSON.stringify(localDb));
+
+            if (isCloudActive && supabaseClient) {
+                try {
+                    await supabaseClient.from('presensi_records').update({
+                        data: s.data
+                    }).eq('id', idArsip);
+                } catch(e) {}
+            }
+
+            showToast("Jumlah takziran baris pada arsip berhasil diperbarui!", "success");
+            renderBodiModalArsip(s);
+            renderHistori();
         }
 
         function hapusLaporan(id) {
@@ -3025,7 +3074,7 @@
                         profile.terlambat++;
                         akumulasiTerlambat++;
                         
-                        const matchBaris = siswa.keterangan ? siswa.keterangan.match(/(\d+)\s*Baris/) : null;
+                        const matchBaris = siswa.jumlahBaris ? siswa.jumlahBaris.match(/(\d+)/) : null;
                         if (matchBaris) {
                             profile.totalBarisHukuman += parseInt(matchBaris[1], 10);
                         }
@@ -3033,7 +3082,7 @@
                         profile.peringatan++;
                         akumulasiPeringatan++;
                         
-                        const matchBaris = siswa.keterangan ? siswa.keterangan.match(/(\d+)\s*Baris/) : null;
+                        const matchBaris = siswa.jumlahBaris ? siswa.jumlahBaris.match(/(\d+)/) : null;
                         if (matchBaris) {
                             profile.totalBarisHukuman += parseInt(matchBaris[1], 10);
                         }
