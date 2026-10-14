@@ -501,6 +501,26 @@
                     </div>
                 </div>
 
+                <!-- Daily Summary Counters Bar -->
+                <div class="mt-5 max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5 px-2">
+                    <div class="bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl p-3 text-center shadow-sm">
+                        <div class="text-[10px] uppercase tracking-wider text-white/70 font-bold">Total Hadir</div>
+                        <div class="text-xl md:text-2xl font-extrabold text-white mt-0.5" id="counter-total-hadir">0</div>
+                    </div>
+                    <div class="bg-emerald-500/20 border border-emerald-400/30 backdrop-blur-md rounded-2xl p-3 text-center shadow-sm">
+                        <div class="text-[10px] uppercase tracking-wider text-emerald-200 font-bold">Total Aman (🟢)</div>
+                        <div class="text-xl md:text-2xl font-extrabold text-emerald-300 mt-0.5" id="counter-total-aman">0</div>
+                    </div>
+                    <div class="bg-amber-500/20 border border-amber-400/30 backdrop-blur-md rounded-2xl p-3 text-center shadow-sm">
+                        <div class="text-[10px] uppercase tracking-wider text-amber-200 font-bold">Total Terlambat (🟡)</div>
+                        <div class="text-xl md:text-2xl font-extrabold text-amber-300 mt-0.5" id="counter-total-terlambat">0</div>
+                    </div>
+                    <div class="bg-rose-500/20 border border-rose-400/30 backdrop-blur-md rounded-2xl p-3 text-center shadow-sm">
+                        <div class="text-[10px] uppercase tracking-wider text-rose-200 font-bold">Total Peringatan (🔴)</div>
+                        <div class="text-xl md:text-2xl font-extrabold text-rose-300 mt-0.5" id="counter-total-peringatan">0</div>
+                    </div>
+                </div>
+
                 <div class="mt-6 flex flex-wrap justify-center gap-2 md:gap-3" id="dynamic-badge-ranges">
                     <span id="badge-tertib-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-emerald-600/90 text-white shadow-md">🟢 06:30 - 07:00 Aman</span>
                     <span id="badge-terlambat-desc" class="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-600/90 text-white shadow-md">🟡 07:01 - 07:10 Terlambat</span>
@@ -1525,6 +1545,38 @@
             }
         }
 
+        function updateTopCounters() {
+            let totalHadirCount = 0;
+            let totalAmanCount = 0;
+            let totalTerlambatCount = 0;
+            let totalPeringatanCount = 0;
+
+            document.querySelectorAll('.student-row').forEach(row => {
+                if (row.classList.contains('status-hijau')) {
+                    totalHadirCount++;
+                    totalAmanCount++;
+                } else if (row.classList.contains('status-kuning')) {
+                    totalHadirCount++;
+                    totalTerlambatCount++;
+                } else if (row.classList.contains('status-merah')) {
+                    totalHadirCount++;
+                    totalPeringatanCount++;
+                } else if (row.classList.contains('status-sakit') || row.classList.contains('status-izin') || row.classList.contains('status-izin-keluar')) {
+                    totalHadirCount++;
+                }
+            });
+
+            const elTotal = document.getElementById('counter-total-hadir');
+            const elAman = document.getElementById('counter-total-aman');
+            const elTerlambat = document.getElementById('counter-total-terlambat');
+            const elPeringatan = document.getElementById('counter-total-peringatan');
+
+            if (elTotal) elTotal.innerText = totalHadirCount;
+            if (elAman) elAman.innerText = totalAmanCount;
+            if (elTerlambat) elTerlambat.innerText = totalTerlambatCount;
+            if (elPeringatan) elPeringatan.innerText = totalPeringatanCount;
+        }
+
         function init() {
             loadTimeConfig();
             const labelTgl = document.getElementById('label-tgl');
@@ -1596,8 +1648,9 @@
                                     </button>
                                 </div>
 
-                                <div class="mt-1" onclick="event.stopPropagation()">
-                                    <input type="text" id="ket-${id}" oninput="simpanKeteranganSiswa('${id}')" placeholder="Keterangan (misal: Sakit demam, Izin ada acara, dll)..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white/80 text-slate-700 font-medium placeholder-slate-400">
+                                <div class="mt-1 flex items-center gap-2" onclick="event.stopPropagation()">
+                                    <input type="text" id="ket-${id}" oninput="simpanKeteranganSiswa('${id}')" placeholder="Keterangan (misal: Sakit demam, Izin ada acara, dll)..." class="flex-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white/80 text-slate-700 font-medium placeholder-slate-400">
+                                    <button type="button" onclick="kunciKeteranganSiswa('${id}')" id="btn-ok-${id}" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm">OK</button>
                                 </div>
                             </td>
                             <td style="text-align:right" class="w-1/3">
@@ -1617,15 +1670,65 @@
             renderHistori();
             lucide.createIcons();
             inisialisasiStatusSaklarRahasia();
+            updateTopCounters();
         }
 
         function simpanKeteranganSiswa(id) {
             if (isAppDisabled) return;
             const inputEl = document.getElementById(`ket-${id}`);
             if (inputEl) {
+                const text = inputEl.value.trim().toLowerCase();
+                const row = document.getElementById(id);
+                if (text.includes("aman")) {
+                    if (!row.classList.contains('status-hijau')) {
+                        row.className = "student-row status-hijau";
+                        row.querySelector('.check-icon').innerText = '✔';
+                        showToast("Status otomatis berubah menjadi AMAN 🟢", "success");
+                        updateTopCounters();
+                    }
+                } else if (text.includes("terlambat")) {
+                    if (!row.classList.contains('status-kuning')) {
+                        row.className = "student-row status-kuning";
+                        row.querySelector('.check-icon').innerText = '✔';
+                        showToast("Status otomatis berubah menjadi TERLAMBAT 🟡", "warning");
+                        updateTopCounters();
+                    }
+                } else if (text.includes("peringatan")) {
+                    if (!row.classList.contains('status-merah')) {
+                        row.className = "student-row status-merah";
+                        row.querySelector('.check-icon').innerText = '✔';
+                        showToast("Status otomatis berubah menjadi PERINGATAN 🔴", "error");
+                        updateTopCounters();
+                    }
+                }
+
                 temporaryKeterangan[id] = inputEl.value;
                 broadcastActiveSelections();
             }
+        }
+
+        function kunciKeteranganSiswa(id) {
+            if (isAppDisabled) return;
+            const inputEl = document.getElementById(`ket-${id}`);
+            const btnOk = document.getElementById(`btn-ok-${id}`);
+            if (!inputEl) return;
+
+            if (inputEl.disabled) {
+                inputEl.disabled = false;
+                inputEl.classList.remove('bg-slate-100', 'text-slate-500');
+                inputEl.classList.add('bg-white/80', 'text-slate-700');
+                btnOk.innerText = "OK";
+                btnOk.className = "px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm";
+                showToast("Keterangan dibuka untuk diedit.", "success");
+            } else {
+                inputEl.disabled = true;
+                inputEl.classList.remove('bg-white/80', 'text-slate-700');
+                inputEl.classList.add('bg-slate-100', 'text-slate-500');
+                btnOk.innerText = "Edit";
+                btnOk.className = "px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white font-extrabold text-xs rounded-lg transition-all shadow-sm";
+                showToast("Keterangan disimpan dan dikunci.", "success");
+            }
+            simpanKeteranganSiswa(id);
         }
 
         function saveCurrentSelections() {
@@ -1720,6 +1823,7 @@
                     `;
                 }
             }
+            updateTopCounters();
         }
 
         function bukaModalIzinKeluar(id, kls, nama) {
@@ -1830,6 +1934,7 @@
 
             showToast(`${nama} sedang IZIN KELUAR (${keperluan})`, "success");
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function tandaiSudahKembali(id) {
@@ -1878,6 +1983,7 @@
 
             showToast("Siswa telah kembali ke kelas. Status dikembalikan ke kondisi semula.", "success");
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function populateSelectOptions() {
@@ -2114,15 +2220,10 @@
                         }
 
                         let totalBarisHukuman = diffMinutes * multiplier;
-                        const inputKet = document.getElementById(`ket-${id}`);
-                        const currentKetVal = inputKet ? inputKet.value.trim() : "";
-                        if (!currentKetVal) {
-                            totalBarisHukuman += 80;
-                        }
-
-                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
+                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
                         
-                        if (inputKet) {
+                        const inputKet = document.getElementById(`ket-${id}`);
+                        if (inputKet && !inputKet.value.trim()) {
                             inputKet.value = infoHukuman;
                             temporaryKeterangan[id] = infoHukuman;
                         }
@@ -2149,15 +2250,10 @@
                         }
 
                         let totalBarisHukuman = diffMinutes * multiplier;
+                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
+
                         const inputKet = document.getElementById(`ket-${id}`);
-                        const currentKetVal = inputKet ? inputKet.value.trim() : "";
-                        if (!currentKetVal) {
-                            totalBarisHukuman += 80;
-                        }
-
-                        const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
-
-                        if (inputKet) {
+                        if (inputKet && !inputKet.value.trim()) {
                             inputKet.value = infoHukuman;
                             temporaryKeterangan[id] = infoHukuman;
                         }
@@ -2190,15 +2286,10 @@
                     }
 
                     let totalBarisHukuman = diffMinutes * multiplier;
-                    const inputKet = document.getElementById(`ket-${id}`);
-                    const currentKetVal = inputKet ? inputKet.value.trim() : "";
-                    if (!currentKetVal) {
-                        totalBarisHukuman += 80;
-                    }
-
-                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
+                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
                     
-                    if (inputKet) {
+                    const inputKet = document.getElementById(`ket-${id}`);
+                    if (inputKet && !inputKet.value.trim()) {
                         inputKet.value = infoHukuman;
                         temporaryKeterangan[id] = infoHukuman;
                     }
@@ -2223,15 +2314,10 @@
                     }
 
                     let totalBarisHukuman = diffMinutes * multiplier;
+                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris`;
+
                     const inputKet = document.getElementById(`ket-${id}`);
-                    const currentKetVal = inputKet ? inputKet.value.trim() : "";
-                    if (!currentKetVal) {
-                        totalBarisHukuman += 80;
-                    }
-
-                    const infoHukuman = `${diffMinutes} Menit Terlambat • ${totalBarisHukuman} Baris${!currentKetVal ? ' (Tanpa Keterangan +80)' : ''}`;
-
-                    if (inputKet) {
+                    if (inputKet && !inputKet.value.trim()) {
                         inputKet.value = infoHukuman;
                         temporaryKeterangan[id] = infoHukuman;
                     }
@@ -2254,6 +2340,7 @@
             }
 
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function setSakit(id, kls, nama) {
@@ -2284,6 +2371,7 @@
 
             showToast(`${nama} ditandai SAKIT 🔵`, "success");
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function setIzin(id, kls, nama) {
@@ -2314,6 +2402,7 @@
             
             showToast(`${nama} ditandai IZIN 🟣`, "success");
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function setAlpa(id, kls, nama) {
@@ -2338,15 +2427,16 @@
 
             const inputKet = document.getElementById(`ket-${id}`);
             if (inputKet) {
-                inputKet.value = "Alpha / Tanpa Keterangan (+80 Baris)";
-                temporaryKeterangan[id] = "Alpha / Tanpa Keterangan (+80 Baris)";
+                inputKet.value = "Tanpa Keterangan (+80 Baris)";
+                temporaryKeterangan[id] = "Tanpa Keterangan (+80 Baris)";
             }
             if (badgeContainer) {
-                badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">❌ Alpha • 80 Baris Hukuman</div>`;
+                badgeContainer.innerHTML = `<div class="penalty-badge bg-rose-100 text-rose-900 border border-rose-300">❌ Tanpa Keterangan • 80 Baris Hukuman</div>`;
             }
             
-            showToast(`${nama} ditandai ALPA ❌ (+80 Baris)`, "error");
+            showToast(`${nama} ditandai TANPA KETERANGAN ❌ (+80 Baris)`, "error");
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function resetAbsen(id, kls, nama) {
@@ -2372,6 +2462,7 @@
             
             showToast(`Status ${nama} di-reset`, "warning");
             broadcastActiveSelections();
+            updateTopCounters();
         }
 
         function dapatkanPayloadSesiAktif() {
@@ -2393,7 +2484,7 @@
                 } else if(r.classList.contains('status-izin')) { 
                     color = "#6d28d9"; statusText = "IZIN"; bgColor = "#ede9fe"; isHadir = true;
                 } else if(r.classList.contains('status-alpa')) { 
-                    color = "#e11d48"; statusText = "ALPA"; bgColor = "#ffe4e6"; isHadir = true;
+                    color = "#e11d48"; statusText = "TANPA KETERANGAN"; bgColor = "#ffe4e6"; isHadir = false;
                 } else if(r.classList.contains('status-izin-keluar')) { 
                     color = "#c026d3"; statusText = "IZIN KELUAR"; bgColor = "#fae8ff"; isHadir = true;
                 }
@@ -2406,13 +2497,10 @@
                 const matchBaris = keteranganSiswa.match(/(\d+)\s*Baris/);
                 if (matchBaris) {
                     jumlahBarisHukumanVal = `${matchBaris[1]} Baris`;
-                } else if (!isHadir) {
+                } else if (!isHadir && !r.classList.contains('status-sakit') && !r.classList.contains('status-izin')) {
                     jumlahBarisHukumanVal = "80 Baris";
-                    statusText = "TANPA KETERANGAN / ALPA";
-                    keteranganSiswa = "Alpha / Tanpa Keterangan (+80 Baris)";
-                } else if (isHadir && (statusText === "TERLAMBAT" || statusText === "PERINGATAN") && (!keteranganSiswa || !keteranganSiswa.includes("Baris"))) {
-                    jumlahBarisHukumanVal = "80 Baris";
-                    keteranganSiswa = (keteranganSiswa ? keteranganSiswa + " • " : "") + "Tanpa Keterangan (+80 Baris)";
+                    statusText = "TANPA KETERANGAN";
+                    keteranganSiswa = keteranganSiswa || "Tanpa Keterangan (+80 Baris)";
                 } else if (r.classList.contains('status-alpa')) {
                     jumlahBarisHukumanVal = "80 Baris";
                 }
@@ -2516,6 +2604,7 @@
                 temporaryIzinKeluar = {};
                 renderHistori();
             }
+            updateTopCounters();
         }
 
         function cetak(payload, mode = 'p') {
@@ -2665,7 +2754,7 @@
                         recordSiswa = {
                             nama: ms.nama,
                             kelas: ms.kelas,
-                            status: "TANPA KETERANGAN / ALPA",
+                            status: "TANPA KETERANGAN",
                             keterangan: "Tanpa Keterangan",
                             jumlahBaris: "80 Baris",
                             hadir: false
@@ -2681,11 +2770,6 @@
                     } else if (recordSiswa.status.includes("IZIN")) {
                         countIzin++;
                         statusLabel = "Izin (🟣)";
-                    } else if (recordSiswa.status.includes("ALPA")) {
-                        countTanpaKeterangan++;
-                        jmlBarisNum = 80;
-                        totalBarisHariIni += 80;
-                        statusLabel = "Alpa (❌)";
                     } else if (recordSiswa.status.includes("AMAN")) {
                         statusLabel = "Ontime (🟢)";
                     } else if (recordSiswa.status.includes("TERLAMBAT") || recordSiswa.status.includes("PERINGATAN")) {
@@ -2697,7 +2781,7 @@
                         countTanpaKeterangan++;
                         jmlBarisNum = 80;
                         totalBarisHariIni += 80;
-                        statusLabel = "Tanpa Keterangan / Alpa (+80 Baris)";
+                        statusLabel = "Tanpa Keterangan (+80 Baris)";
                     }
 
                     detailSiswaHariIni.push([
@@ -2735,11 +2819,11 @@
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(8.5);
                 doc.setTextColor(180, 83, 9);
-                doc.text(`> Ringkasan: Sakit: ${countSakit} | Izin: ${countIzin} | Tanpa Keterangan / Alpa: ${countTanpaKeterangan} | Akumulasi Baris Hukuman: ${totalBarisHariIni} Baris`, 14, currentY);
+                doc.text(`> Ringkasan: Sakit: ${countSakit} | Izin: ${countIzin} | Tanpa Keterangan: ${countTanpaKeterangan} | Akumulasi Baris Hukuman: ${totalBarisHariIni} Baris`, 14, currentY);
                 currentY += 10;
             });
 
-            doc.save(`Perkembangan_Lengkap_Sakit_Izin_Alpa_${startDateStr}_sd_${endDateStr}.pdf`);
+            doc.save(`Perkembangan_Lengkap_Sakit_Izin_TanpaKeterangan_${startDateStr}_sd_${endDateStr}.pdf`);
             showToast("PDF Perkembangan Lengkap berhasil diunduh!", "success");
         }
 
